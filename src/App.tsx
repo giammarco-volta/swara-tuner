@@ -290,14 +290,6 @@ function getRagaSearchScore(name: string, search: string): number {
   return Number.POSITIVE_INFINITY;
 }
 
-function normalizeText(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .trim();
-}
-
 const ALL_RAGAS: RagaPreset[] = [
   ...loadRagasFromJson(hindustaniRagasJson, "hindustani"),
   ...loadRagasFromJson(carnaticRagamsJson, "carnatic"),
