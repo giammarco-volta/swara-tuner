@@ -1,8 +1,13 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
 import "./App.css";
 
-import { type SwaraId } from "./music/swaras";
 import { analyzeDetectedPitch, type RagaConfig } from "./music/swaraMapper";
+
+import { type SwaraId, SWARA_CENTRAL_RANGES, getSwaraCentralCenter } from "./music/swaras";
+
+import hindustaniRagasJson from "./data/hindustani_ragas.json";
+import carnaticRagamsJson from "./data/carnatic_ragas.json";
 
 type RiChoice = "" | "Ri1" | "Ri2" | "Ri3";
 type GaChoice = "" | "Ga1" | "Ga2" | "Ga3";
@@ -27,29 +32,276 @@ const PA_OPTIONS: PaChoice[] = ["", "Pa"];
 const DHA_OPTIONS: DhaChoice[] = ["", "Dha1", "Dha2", "Dha3"];
 const NI_OPTIONS: NiChoice[] = ["", "Ni1", "Ni2", "Ni3"];
 
-function midiToFrequency(midi: number): number {
-  return 440 * Math.pow(2, (midi - 69) / 12);
+type Tradition = "hindustani" | "carnatic";
+
+interface RagaPreset  {
+  id: string;
+  name: string;
+  tradition: Tradition;
+  arohana: OrderedScaleChoices;
+  avarohana: OrderedScaleChoices;
 }
+
+  function midiToFrequency(midi: number): number {
+    return 440 * Math.pow(2, (midi - 69) / 12);
+  }
 
   function ChoiceSelect<T extends string>({
     value,
     options,
     onChange,
+    tradition,
   }: {
     value: T;
     options: T[];
     onChange: (value: T) => void;
+    tradition: Tradition;
   }) {
     return (
       <select value={value} onChange={(e) => onChange(e.target.value as T)}>
         {options.map((option) => (
           <option key={option || "none"} value={option}>
-            {option === "" ? "— none —" : option}
+            {option === "" ? "— none —" : getSwaraLabel(option, tradition)}
           </option>
         ))}
       </select>
     );
   }
+
+  function getVisibleOptions<T extends string>(options: T[], tradition: Tradition): T[] {
+    return options.filter((option) => {
+      if (option === "") return true;
+      const label = getSwaraLabel(option, tradition);
+      return label !== "";
+    });
+  }
+
+  function getSwaraLabel(swara: string, tradition: Tradition): string {
+  if (!swara) return "— none —";
+
+  if (tradition === "carnatic") {
+    const carnaticMap: Record<string, string> = {
+      Sa: "sa",
+      Ri1: "r1",
+      Ri2: "r2",
+      Ri3: "r3",
+      Ga1: "g1",
+      Ga2: "g2",
+      Ga3: "g3",
+      Ma1: "m1",
+      Ma2: "m2",
+      Pa: "pa",
+      Dha1: "d1",
+      Dha2: "d2",
+      Dha3: "d3",
+      Ni1: "n1",
+      Ni2: "n2",
+      Ni3: "n3",
+    };
+
+    return carnaticMap[swara] ?? swara;
+  }
+
+  const hindustaniMap: Record<string, string> = {
+    Sa: "S",
+    Ri1: "r",
+    Ri2: "R",
+    Ri3: "",
+    Ga1: "",
+    Ga2: "g",
+    Ga3: "G",
+    Ma1: "M",
+    Ma2: "m",
+    Pa: "P",
+    Dha1: "d",
+    Dha2: "D",
+    Dha3: "",
+    Ni1: "",
+    Ni2: "n",
+    Ni3: "N",
+  };
+
+  return hindustaniMap[swara] ?? "";
+}
+
+function parseSwaraToken(token: string, tradition: Tradition): SwaraId | null {
+  const t = token.trim();
+
+  if (tradition === "hindustani") {
+    const map: Record<string, SwaraId | null> = {
+      S: "Sa",
+      r: "Ri1",
+      R: "Ri2",
+      g: "Ga2",
+      G: "Ga3",
+      M: "Ma1",
+      m: "Ma2",
+      P: "Pa",
+      d: "Dha1",
+      D: "Dha2",
+      n: "Ni2",
+      N: "Ni3",
+    };
+    return map[t] ?? null;
+  }
+
+  const lower = t.toLowerCase();
+
+  const map: Record<string, SwaraId | null> = {
+    sa: "Sa",
+    r1: "Ri1",
+    r2: "Ri2",
+    r3: "Ri3",
+    g1: "Ga1",
+    g2: "Ga2",
+    g3: "Ga3",
+    m1: "Ma1",
+    m2: "Ma2",
+    pa: "Pa",
+    d1: "Dha1",
+    d2: "Dha2",
+    d3: "Dha3",
+    n1: "Ni1",
+    n2: "Ni2",
+    n3: "Ni3",
+  };
+
+  return map[lower] ?? null;
+}
+
+function swaraListToChoices(swaras: SwaraId[]): OrderedScaleChoices {
+  const result: OrderedScaleChoices = {
+    ri: "",
+    ga: "",
+    ma: "",
+    pa: "",
+    dha: "",
+    ni: "",
+  };
+
+  for (const swara of swaras) {
+    if (swara.startsWith("Ri")) result.ri = swara as RiChoice;
+    else if (swara.startsWith("Ga")) result.ga = swara as GaChoice;
+    else if (swara.startsWith("Ma")) result.ma = swara as MaChoice;
+    else if (swara === "Pa") result.pa = "Pa";
+    else if (swara.startsWith("Dha")) result.dha = swara as DhaChoice;
+    else if (swara.startsWith("Ni")) result.ni = swara as NiChoice;
+  }
+
+  return result;
+}
+
+function extractStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.filter((x): x is string => typeof x === "string");
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(/[\s,]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function normalizeRagaRecord(
+  item: any,
+  tradition: Tradition
+): RagaPreset | null {
+  const name =
+    item.name ??
+    item.raga ??
+    item.raag ??
+    item.ragam ??
+    item.title ??
+    null;
+
+  if (!name || typeof name !== "string") {
+    return null;
+  }
+
+  const arohanaRaw = extractStringArray(
+    item.arohana ?? item.aroha ?? item.aroganam ?? item.arohanam
+  );
+
+  const avarohanaRaw = extractStringArray(
+    item.avarohana ?? item.avaroha ?? item.avaroganam ?? item.avarohanam
+  );
+
+  const arohanaParsed = arohanaRaw
+    .map((token) => parseSwaraToken(token, tradition))
+    .filter((x): x is SwaraId => x !== null);
+
+  const avarohanaParsed = avarohanaRaw
+    .map((token) => parseSwaraToken(token, tradition))
+    .filter((x): x is SwaraId => x !== null);
+
+  return {
+    id: String(item.id ?? name).toLowerCase().replace(/\s+/g, "-"),
+    name,
+    tradition,
+    arohana: swaraListToChoices(arohanaParsed),
+    avarohana: swaraListToChoices(avarohanaParsed),
+  };
+}
+
+function loadRagasFromJson(data: any, tradition: Tradition): RagaPreset[] {
+  const arr: any[] = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.ragas)
+    ? data.ragas
+    : Array.isArray(data?.raags)
+    ? data.raags
+    : Array.isArray(data?.ragams)
+    ? data.ragams
+    : [];
+
+  return arr
+    .map((item: any) => normalizeRagaRecord(item, tradition))
+    .filter((x: RagaPreset | null): x is RagaPreset => x !== null);
+}
+
+function normalizeRagaName(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/^(raag|raga|ragam)\s+/i, "")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .trim();
+}
+
+function getRagaSearchScore(name: string, search: string): number {
+  const n = normalizeRagaName(name);
+  const s = normalizeRagaName(search);
+
+  if (!s) return 1000;
+
+  if (n === s) return 0;
+  if (n.startsWith(s)) return 1;
+
+  const wordIndex = n.split(/\s+/).findIndex((word) => word.startsWith(s));
+  if (wordIndex >= 0) return 10 + wordIndex;
+
+  const includesIndex = n.indexOf(s);
+  if (includesIndex >= 0) return 100 + includesIndex;
+
+  return Number.POSITIVE_INFINITY;
+}
+
+function normalizeText(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .trim();
+}
+
+const ALL_RAGAS: RagaPreset[] = [
+  ...loadRagasFromJson(hindustaniRagasJson, "hindustani"),
+  ...loadRagasFromJson(carnaticRagamsJson, "carnatic"),
+];
 
 function App() {
   const [saHz, setSaHz] = useState(midiToFrequency(61)); // C#4
@@ -60,6 +312,11 @@ function App() {
 
   const [isSaCalibrated, setIsSaCalibrated] = useState(false);
   const [smoothedDetectedPitch, setSmoothedDetectedPitch] = useState<number | null>(null);
+
+  const [tradition, setTradition] = useState<Tradition>("hindustani");
+  const [selectedRagaId, setSelectedRagaId] = useState("");
+
+  const [ragaSearch, setRagaSearch] = useState("");
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -92,6 +349,51 @@ function App() {
     ni: "Ni2",
   });
 
+  const availableRagas = useMemo(() => {
+    const search = normalizeRagaName(ragaSearch);
+
+    return ALL_RAGAS
+      .filter((raga) => raga.tradition === tradition)
+      .map((raga) => ({
+        raga,
+        score: getRagaSearchScore(raga.name, search),
+      }))
+      .filter(({ score }) => Number.isFinite(score))
+      .sort((a, b) => {
+        if (a.score !== b.score) return a.score - b.score;
+
+        return normalizeRagaName(a.raga.name).localeCompare(
+          normalizeRagaName(b.raga.name),
+          undefined,
+          { sensitivity: "base" }
+        );
+      })
+      .map(({ raga }) => raga);
+  }, [tradition, ragaSearch]);
+
+  useEffect(() => {
+      if (availableRagas.length > 0 && !selectedRagaId) {
+        setSelectedRagaId(availableRagas[0].id);
+      }
+    }, [availableRagas]);
+
+    useEffect(() => {
+      if (!selectedRagaId) return;
+
+      const selected = ALL_RAGAS.find((raga) => raga.id === selectedRagaId);
+      if (!selected) return;
+
+      setArohanaChoices(selected.arohana);
+      setAvarohanaChoices(selected.avarohana);
+    }, [selectedRagaId]);
+
+    useEffect(() => {
+      if (ragaSearch.trim() !== "") return;
+      if (availableRagas.length > 0 && !selectedRagaId) {
+        setSelectedRagaId(availableRagas[0].id);
+      }
+    }, [availableRagas, selectedRagaId, ragaSearch]);
+
   const config: RagaConfig = useMemo(
     () => ({
       arohana: buildArohana(arohanaChoices),
@@ -103,28 +405,69 @@ function App() {
   const tunerFrequencyHz = smoothedDetectedPitch;
 
   const result = useMemo(
-    () => (isCalibrating ? null : analyzeDetectedPitch(tunerFrequencyHz, saHz, config)),
-    [isCalibrating, tunerFrequencyHz, saHz, config]
+    () =>
+      isCalibrating
+        ? null
+        : analyzeDetectedPitch(tunerFrequencyHz, saHz, config, toleranceCents),
+    [isCalibrating, tunerFrequencyHz, saHz, config, toleranceCents]
   );
+
+  const swaraColorClass =
+    isCalibrating || !result
+      ? ""
+      : result.allowed === false
+      ? "swara-out"
+      : result.tuningZone === "perfect"
+      ? "swara-perfect"
+      : result.tuningZone === "tolerated"
+      ? "swara-tolerated"
+      : "swara-out";
 
   const meterOffset =
     isCalibrating || !result || result.deviationCents === null
       ? 0
       : Math.max(-50, Math.min(50, result.deviationCents));
   const needleLeftPercent = ((meterOffset + 50) / 100) * 100;
-  const toleranceLeftPercent = ((-toleranceCents + 50) / 100) * 100;
-  const toleranceRightPercent = ((toleranceCents + 50) / 100) * 100;
-  const toleranceWidthPercent = toleranceRightPercent - toleranceLeftPercent;
-  const inTune =
-    !isCalibrating &&
-    result?.deviationCents !== null &&
-    result?.deviationCents !== undefined &&
-    Math.abs(result.deviationCents) <= toleranceCents;
 
-  const greenLedOn = !isCalibrating && result?.allowed === true && inTune;
-  const redLedOn =
-    !isCalibrating &&
-    (result?.allowed === false || (result?.allowed === true && !inTune));
+  const displayedSwara = result?.displayedSwara ?? null;
+  const displayedRange =
+    displayedSwara !== null ? SWARA_CENTRAL_RANGES[displayedSwara] : null;
+
+  const centralCenter =
+    displayedSwara !== null ? getSwaraCentralCenter(displayedSwara) : null;
+
+  const centralLeftOffset =
+    displayedRange && centralCenter !== null ? displayedRange.min - centralCenter : null;
+  const centralRightOffset =
+    displayedRange && centralCenter !== null ? displayedRange.max - centralCenter : null;
+
+  const outerLeftOffset =
+    centralLeftOffset !== null ? centralLeftOffset - toleranceCents : null;
+  const outerRightOffset =
+    centralRightOffset !== null ? centralRightOffset + toleranceCents : null;
+
+  function offsetToPercent(offset: number): number {
+    return ((offset + 50) / 100) * 100;
+  }
+
+  const centralLeftPercent =
+    centralLeftOffset !== null ? offsetToPercent(centralLeftOffset) : 50;
+  const centralRightPercent =
+    centralRightOffset !== null ? offsetToPercent(centralRightOffset) : 50;
+  const centralWidthPercent = centralRightPercent - centralLeftPercent;
+
+  const outerLeftPercent =
+    outerLeftOffset !== null ? offsetToPercent(outerLeftOffset) : 50;
+  const outerRightPercent =
+    outerRightOffset !== null ? offsetToPercent(outerRightOffset) : 50;
+  const outerWidthPercent = outerRightPercent - outerLeftPercent;
+
+  console.log(
+    "Loaded ragas:",
+    ALL_RAGAS.length,
+    ALL_RAGAS.filter((r) => r.tradition === "hindustani").length,
+    ALL_RAGAS.filter((r) => r.tradition === "carnatic").length
+  );
 
   async function startSaCalibration() {
     setMicStatus("Requesting microphone...");
@@ -455,11 +798,11 @@ function App() {
     const absDelta = Math.abs(delta);
 
     // caso normale: piccoli spostamenti
-    if (absDelta <= 40) {
+    if (absDelta <= 35) {
       largeJumpCandidateRef.current = null;
       largeJumpCountRef.current = 0;
 
-      const alpha = 0.22;
+      const alpha = 0.14;
       const smoothedCents = previousCents + alpha * delta;
       smoothedCentsRef.current = smoothedCents;
       return saHz * Math.pow(2, smoothedCents / 1200);
@@ -485,8 +828,8 @@ function App() {
     }
 
     // se il salto grande si ripete per abbastanza frame, aggancia rapidamente
-    if (largeJumpCountRef.current >= 2) {
-      const alpha = 0.55;
+    if (largeJumpCountRef.current >= 3) {
+      const alpha = 0.38;
       const smoothedCents = previousCents + alpha * delta;
       smoothedCentsRef.current = smoothedCents;
 
@@ -507,8 +850,6 @@ function App() {
 
       <div className="grid">
         <section className="panel">
-          <h2>Sa</h2>
-
           {/* Enable microphone */}
           <div style={{ marginTop: 12 }}>
             <button
@@ -569,16 +910,87 @@ function App() {
               ? "Keep holding the button and sing steadily."
               : "Press and hold to calibrate Sa from your voice."}
           </div>
+          <div style={{ height: 20 }} />
+
+          <div className="subsection-label">Tradition</div>
+
+          <div className="tradition-row">
+            <label>
+              <input
+                type="radio"
+                name="tradition"
+                checked={tradition === "hindustani"}
+                onChange={() => setTradition("hindustani")}
+              />
+              Hindustani
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                name="tradition"
+                checked={tradition === "carnatic"}
+                onChange={() => setTradition("carnatic")}
+              />
+              Carnatic
+            </label>
+          </div>
+
+          <div style={{ height: 16 }} />
+
+          <div className="subsection-label">
+            {tradition === "hindustani" ? "Raag" : "Ragam"}
+          </div>
+
+          <input
+            type="text"
+            placeholder={tradition === "hindustani" ? "Search raag..." : "Search ragam..."}
+            value={ragaSearch}
+            onChange={(e) => setRagaSearch(e.target.value)}
+            style={{ width: "100%", marginBottom: 8 }}
+          />
+
+          <div className="hint" style={{ marginTop: 6, marginBottom: 8 }}>
+            {availableRagas.length}{" "}
+            {tradition === "hindustani"
+              ? availableRagas.length === 1
+                ? "raag found"
+                : "raags found"
+              : availableRagas.length === 1
+              ? "ragam found"
+              : "ragams found"}
+          </div>
+
+          {availableRagas.length > 0 ? (
+            <select
+              value={selectedRagaId}
+              onChange={(e) => setSelectedRagaId(e.target.value)}
+              style={{ width: "100%" }}
+            >
+              <option value="">— none —</option>
+              {availableRagas.map((raga) => (
+                <option key={raga.id} value={raga.id}>
+                  {raga.name}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <div className="hint" style={{ marginTop: 8 }}>
+              No matches found
+            </div>
+          )}
+
         </section>
 
         <section className="panel">
-          <h2>Arohana</h2>
+          <h2>{tradition === "hindustani" ? "Arohana" : "Aroganam"}</h2>
           <div className="ordered-scale">
             <div className="fixed-swara">Sa</div>
 
             <ChoiceSelect
               value={arohanaChoices.ri}
-              options={RI_OPTIONS}
+              options={getVisibleOptions(RI_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setArohanaChoices((prev) => ({ ...prev, ri: newValue }))
               }
@@ -586,7 +998,8 @@ function App() {
 
             <ChoiceSelect
               value={arohanaChoices.ga}
-              options={GA_OPTIONS}
+              options={getVisibleOptions(GA_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setArohanaChoices((prev) => ({ ...prev, ga: newValue }))
               }
@@ -594,7 +1007,8 @@ function App() {
 
             <ChoiceSelect
               value={arohanaChoices.ma}
-              options={MA_OPTIONS}
+              options={getVisibleOptions(MA_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setArohanaChoices((prev) => ({ ...prev, ma: newValue }))
               }
@@ -602,7 +1016,8 @@ function App() {
 
             <ChoiceSelect
               value={arohanaChoices.pa}
-              options={PA_OPTIONS}
+              options={getVisibleOptions(PA_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setArohanaChoices((prev) => ({ ...prev, pa: newValue }))
               }
@@ -610,7 +1025,8 @@ function App() {
 
             <ChoiceSelect
               value={arohanaChoices.dha}
-              options={DHA_OPTIONS}
+              options={getVisibleOptions(DHA_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setArohanaChoices((prev) => ({ ...prev, dha: newValue }))
               }
@@ -618,18 +1034,22 @@ function App() {
 
             <ChoiceSelect
               value={arohanaChoices.ni}
-              options={NI_OPTIONS}
+              options={getVisibleOptions(NI_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setArohanaChoices((prev) => ({ ...prev, ni: newValue }))
               }
             />
           </div>
 
-          <h2 style={{ marginTop: 20 }}>Avarohana</h2>
+          <h2 style={{ marginTop: 20 }}>
+            {tradition === "hindustani" ? "Avarohana" : "Avaroganam"}
+          </h2>
           <div className="ordered-scale">
             <ChoiceSelect
               value={avarohanaChoices.ni}
-              options={NI_OPTIONS}
+              options={getVisibleOptions(NI_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setAvarohanaChoices((prev) => ({ ...prev, ni: newValue }))
               }
@@ -637,7 +1057,8 @@ function App() {
 
             <ChoiceSelect
               value={avarohanaChoices.dha}
-              options={DHA_OPTIONS}
+              options={getVisibleOptions(DHA_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setAvarohanaChoices((prev) => ({ ...prev, dha: newValue }))
               }
@@ -645,7 +1066,8 @@ function App() {
 
             <ChoiceSelect
               value={avarohanaChoices.pa}
-              options={PA_OPTIONS}
+              options={getVisibleOptions(PA_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setAvarohanaChoices((prev) => ({ ...prev, pa: newValue }))
               }
@@ -653,7 +1075,8 @@ function App() {
 
             <ChoiceSelect
               value={avarohanaChoices.ma}
-              options={MA_OPTIONS}
+              options={getVisibleOptions(MA_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setAvarohanaChoices((prev) => ({ ...prev, ma: newValue }))
               }
@@ -661,7 +1084,8 @@ function App() {
 
             <ChoiceSelect
               value={avarohanaChoices.ga}
-              options={GA_OPTIONS}
+              options={getVisibleOptions(GA_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setAvarohanaChoices((prev) => ({ ...prev, ga: newValue }))
               }
@@ -669,13 +1093,14 @@ function App() {
 
             <ChoiceSelect
               value={avarohanaChoices.ri}
-              options={RI_OPTIONS}
+              options={getVisibleOptions(RI_OPTIONS, tradition)}
+              tradition={tradition}
               onChange={(newValue) =>
                 setAvarohanaChoices((prev) => ({ ...prev, ri: newValue }))
               }
             />
 
-            <div className="fixed-swara">Sa</div>
+            <div className="fixed-swara">{getSwaraLabel("Sa", tradition)}</div>
           </div>
         </section>
 
@@ -692,6 +1117,17 @@ function App() {
             style={{ width: "100%" }}
           />
 
+          <div className="hint" style={{ marginTop: 6, marginBottom: 8 }}>
+            {availableRagas.length}{" "}
+            {tradition === "hindustani"
+              ? availableRagas.length === 1
+                ? "raag found"
+                : "raags found"
+              : availableRagas.length === 1
+              ? "ragam found"
+              : "ragams found"}
+          </div>
+
           <div className="readout">±{toleranceCents} cents</div>
 
           <div className="hint">
@@ -704,8 +1140,12 @@ function App() {
       </div>
 
       <section className="panel tuner-panel">
-        <div className="current-swara">
-          {isCalibrating ? "Calibrating Sa..." : result?.displayedSwara ?? "--"}
+        <div className={`current-swara ${swaraColorClass}`}>
+          {isCalibrating
+            ? `Calibrating ${getSwaraLabel("Sa", tradition)}...`
+            : result?.displayedSwara
+            ? getSwaraLabel(result.displayedSwara, tradition)
+            : "--"}
         </div>
         <div className="current-cents">
           {isCalibrating
@@ -716,16 +1156,30 @@ function App() {
         </div>
 
         <div className="meter">
-          <div
-            className="meter-tolerance-band"
-            style={{
-              left: `${toleranceLeftPercent}%`,
-              width: `${toleranceWidthPercent}%`,
-            }}
-          />
+          {!isCalibrating && result && (
+            <>
+              <div
+                className="meter-outer-band"
+                style={{
+                  left: `${outerLeftPercent}%`,
+                  width: `${outerWidthPercent}%`,
+                }}
+              />
+              <div
+                className="meter-central-band"
+                style={{
+                  left: `${centralLeftPercent}%`,
+                  width: `${centralWidthPercent}%`,
+                }}
+              />
+              <div className="meter-band-mark" style={{ left: `${outerLeftPercent}%` }} />
+              <div className="meter-band-mark" style={{ left: `${outerRightPercent}%` }} />
+              <div className="meter-band-mark central" style={{ left: `${centralLeftPercent}%` }} />
+              <div className="meter-band-mark central" style={{ left: `${centralRightPercent}%` }} />
+            </>
+          )}
+
           <div className="meter-center-line" />
-          <div className="meter-tolerance-mark" style={{ left: `${toleranceLeftPercent}%` }} />
-          <div className="meter-tolerance-mark" style={{ left: `${toleranceRightPercent}%` }} />
           <div className="meter-needle" style={{ left: `${needleLeftPercent}%` }} />
           <div className="meter-label meter-left">-50</div>
           <div className="meter-label meter-center">0</div>
@@ -733,21 +1187,19 @@ function App() {
         </div>
 
         <div className="led-row">
-          <div className={`led ${greenLedOn ? "green" : "off"}`} />
-
           <div className="led-text">
             {isCalibrating
               ? "Calibrating Sa"
               : result?.allowed === null || result?.allowed === undefined
               ? "No note detected"
-              : greenLedOn
-              ? "Allowed and in tune"
-              : result.allowed
-              ? "Allowed but out of tune"
-              : "Not allowed"}
+              : result.allowed === false
+              ? "Not allowed"
+              : result.tuningZone === "perfect"
+              ? "Perfectly in tune"
+              : result.tuningZone === "tolerated"
+              ? "Tolerated"
+              : "Out of tune"}
           </div>
-
-          <div className={`led ${redLedOn ? "red" : "off"}`} />
         </div>
 
         <div className="debug">

@@ -77,7 +77,7 @@ input[type="range"] {
 .current-swara {
   text-align: center;
   font-size: 3rem;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .current-cents {
@@ -156,6 +156,11 @@ input[type="range"] {
 .led.green {
   background: #32d74b;
   box-shadow: 0 0 10px #32d74b;
+}
+
+.led.yellow {
+  background: #ffcc00;
+  box-shadow: 0 0 10px #ffcc00;
 }
 
 .led.red {
@@ -243,6 +248,76 @@ button:hover {
 .led-text {
   width: 240px;
   text-align: center;
+}
+
+.meter-outer-band {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 16px;
+  border-radius: 999px;
+  background: rgba(255, 214, 10, 0.28);
+}
+
+.meter-central-band {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 16px;
+  border-radius: 999px;
+  background: rgba(50, 215, 75, 0.5);
+}
+
+.meter-band-mark {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 24px;
+  background: rgba(255, 214, 10, 0.9);
+}
+
+.meter-band-mark.central {
+  background: rgba(50, 215, 75, 0.95);
+}
+
+.current-swara.swara-perfect {
+  color: #32d74b;
+}
+
+.current-swara.swara-tolerated {
+  color: #ffd60a;
+}
+
+.current-swara.swara-out {
+  color: #ff453a;
+}
+
+.status-text {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 1rem;
+  color: #d0d0d0;
+}
+
+.subsection-label {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ddd;
+}
+
+.tradition-row {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.tradition-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ddd;
 }
 
 @media (max-width: 900px) {

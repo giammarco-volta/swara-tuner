@@ -1,0 +1,865 @@
+[
+  {
+    "name": "Aabhogi",
+    "thaat": "Kafi",
+    "arohana": "S R g M D S.",
+    "avarohana": "S. D M g R S",
+    "vadi": "S",
+    "samvadi": "M",
+    "pakad": "D S R g M R S",
+    "time": "morning"
+  },
+  {
+    "name": "Abhogi Kanhra",
+    "thaat": "Kafi",
+    "arohana": "S R g M D S.",
+    "avarohana": "S. D M g R S",
+    "vadi": "S",
+    "samvadi": "M",
+    "pakad": ".D S MgRS, .DSRg, MDMg, RS,",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Adana",
+    "thaat": "Asavari",
+    "arohana": "S R M P d N S.",
+    "avarohana": "S. d n P M P, g M R S",
+    "vadi": "S.",
+    "samvadi": "P",
+    "pakad": "S. d N S., d, n PMP, g M R S",
+    "time": "1 to 4 am"
+  },
+  {
+    "name": "Ahir Bhairav",
+    "thaat": "Bhairav",
+    "arohana": "S r G M, P D n S.",
+    "avarohana": "S. n D P, M G r S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "G M r S, .D .N r S",
+    "time": "morning"
+  },
+  {
+    "name": "Alahiya Bilaval",
+    "thaat": "Bilaval",
+    "arohana": "S R GMGR, GP, D N S.",
+    "avarohana": "S. NDP, DnDP, MG MRS",
+    "vadi": "D",
+    "samvadi": "G",
+    "pakad": "G R GP, MGMR, GPDnDP",
+    "time": "morning"
+  },
+  {
+    "name": "Asavari",
+    "thaat": "Asavari",
+    "arohana": "S R M P d S.",
+    "avarohana": "S. n d P M g R S",
+    "vadi": "D",
+    "samvadi": "G",
+    "pakad": "R M P, n d P, d M P, g R S",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Bageshri",
+    "thaat": "Kafi",
+    "arohana": "S g M D n S.",
+    "avarohana": "S. n D M g R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "S .n .D S, M g, M D n D, Mg, M g R S",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Bahar",
+    "thaat": "Kafi",
+    "arohana": ".n S, g M P, g M, n D N S.",
+    "avarohana": "S. n D n P, M P g M R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "M P g M D N S.",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Basant",
+    "thaat": "Poorvi",
+    "arohana": "S G M’ d r. S",
+    "avarohana": "r. N d P, M’ G, M’ d M’ G, r S",
+    "vadi": "M’",
+    "samvadi": "P",
+    "pakad": "M’ d r. S., r. N d P, M’ G",
+    "time": "4 to 7 am"
+  },
+  {
+    "name": "Bhairav",
+    "thaat": "Bhairav",
+    "arohana": "S r G M P d N S.",
+    "avarohana": "S. N d P M G r S",
+    "vadi": "D",
+    "samvadi": "R",
+    "pakad": "DM r, GMP, MG, r S",
+    "time": "7 to 10 am"
+  },
+  {
+    "name": "Bhairavi",
+    "thaat": "Bhairavi",
+    "arohana": "S r g M P d n S.",
+    "avarohana": "S. n d P M g r S",
+    "vadi": "S",
+    "samvadi": "M",
+    "pakad": "S g M P, d - p M",
+    "time": "morning"
+  },
+  {
+    "name": "Bhimpalasi",
+    "thaat": "Kafi",
+    "arohana": ".n S g M P n S.",
+    "avarohana": "S. n D P M g R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": ".n S M, M P g, M g R S",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Bhupali",
+    "thaat": "Kalyan",
+    "arohana": "S R G P D S.",
+    "avarohana": "S. D P G R S",
+    "vadi": "G",
+    "samvadi": "D",
+    "pakad": "GRS.D, SRG, PG, DPG, R S",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Bihag",
+    "thaat": "Bilaval",
+    "arohana": ".N S G M P N S.",
+    "avarohana": "S. N D P M G R S",
+    "vadi": "G",
+    "samvadi": "N",
+    "pakad": ".NS, GMP, GMG, RS",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Bihagra",
+    "thaat": "Bilaval",
+    "arohana": ".N S G, G M P D n D P, N S.",
+    "avarohana": "S. N D, n D P, G M G R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "GMPDnDP, GMGRS",
+    "time": "10 pm to 1 am",
+    "remarks": "Some use M’ also"
+  },
+  {
+    "name": "Bilaskhani Todi",
+    "thaat": "Bhairavi",
+    "arohana": "S r g, M g, P d, n d, S.",
+    "avarohana": "S. r. n d P, M g r g r S",
+    "vadi": "d",
+    "samvadi": "g",
+    "pakad": ".d S r g, Mg, r g, r S",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Bilaval",
+    "thaat": "Bilaval",
+    "arohana": "S R G M P D S.",
+    "avarohana": "S. N D P M G R S",
+    "vadi": "D",
+    "samvadi": "G",
+    "pakad": "G R GP, DNS.",
+    "time": "morning"
+  },
+  {
+    "name": "Chandrakauns",
+    "thaat": null,
+    "arohana": ".N S g M d N S.",
+    "avarohana": "S. N d M g M g S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "g M N d M g M g .N S",
+    "time": "mid night"
+  },
+  {
+    "name": "Chayanat",
+    "thaat": "Kalyan",
+    "arohana": "S, RGMP, DP, ND, S.",
+    "avarohana": "S. NDP, M’ PDP, RGMP, GMRS",
+    "vadi": "R",
+    "samvadi": "P",
+    "pakad": "P-R, RGMP, MG MR, S",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Darbari Kanhdra",
+    "thaat": "Asavari",
+    "arohana": ".n S R g R S, M P d n R. S.",
+    "avarohana": "S. d n P, M P, g M R S",
+    "vadi": "R",
+    "samvadi": "P",
+    "pakad": "g M R S, .d .n S R S",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Des",
+    "thaat": "Kamaj",
+    "arohana": "S R M P N S.",
+    "avarohana": "S. n D P M G R G S",
+    "vadi": "P",
+    "samvadi": "R",
+    "pakad": "RMP, nDP, DMGR, G.NS",
+    "time": "7 to 10 pm",
+    "remarks": "Some consider R vadi and P samvadi"
+  },
+  {
+    "name": "Deshkar",
+    "thaat": "Bilaval",
+    "arohana": "S R G P D S.",
+    "avarohana": "S. D P, G R S",
+    "vadi": "D",
+    "samvadi": "G",
+    "pakad": "D D P, G P D P, G R S",
+    "time": "7 to 10 am"
+  },
+  {
+    "name": "Desi",
+    "thaat": "Asavari",
+    "arohana": "R g R S R .n S, R M P n S.",
+    "avarohana": "S. P -, D M P R g S",
+    "vadi": "P",
+    "samvadi": "R",
+    "pakad": "R .n S RgRSR.nS, RMPDMPgRgRSR.nS",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Dhanashri",
+    "thaat": "Kafi",
+    "arohana": ".n S, g M P, n S.",
+    "avarohana": "S. n D P, M P g, M g R S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": ".n S, GMP, g, MgRS",
+    "time": "1 to 4 pm"
+  },
+  {
+    "name": "Durga",
+    "thaat": "Bilaval",
+    "arohana": "S R M P D S.",
+    "avarohana": "S. D P M R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "DMR, MPDMR, .DS",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Gaur Malhar",
+    "thaat": "Kafi",
+    "arohana": "R G R M, G R S, M R P M P, D S.",
+    "avarohana": "S. n D n P, D G P M, R G R M G R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "RGRM, GRS, PM, PD, S., D P M",
+    "time": "1 to 4 pm",
+    "remarks": "Some consider thaat Bilaval"
+  },
+  {
+    "name": "Gaur Sarang",
+    "thaat": "Kalyan",
+    "arohana": "S, GR, M’ G, PM’, DP, ND, S.",
+    "avarohana": "S. DNP, DM’ PG, MR, PR, S",
+    "vadi": "G",
+    "samvadi": "D",
+    "pakad": "S, GRMG, PRS",
+    "time": "7 to 10 am"
+  },
+  {
+    "name": "Gurjari Todi",
+    "thaat": "Todi",
+    "arohana": "S r g M’ d N S.",
+    "avarohana": "S. n d M’ g r, g r S",
+    "vadi": "d",
+    "samvadi": "r",
+    "pakad": ".d .n S r g, r S, M’ g r g r S",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Hamir",
+    "thaat": "Kalyan",
+    "arohana": "S R S, G M D, N D S.",
+    "avarohana": "S. N D P, M’ P D P, G M R S",
+    "vadi": "D",
+    "samvadi": "G",
+    "pakad": "S R S, G M D",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Hansadhvani",
+    "thaat": "Bilaval",
+    "arohana": "S G R, G P, N S.",
+    "avarohana": "S. N P, G P G R, S",
+    "vadi": "S",
+    "samvadi": "P",
+    "pakad": "SGRS, .N.P, GR, GPGR",
+    "time": "7 to 10 pm",
+    "remarks": "Some consider G vadi and N samvadi"
+  },
+  {
+    "name": "Hindol",
+    "thaat": "Kalyan",
+    "arohana": "S G, M’ D N D, S.",
+    "avarohana": "S. N D, M’ G, S",
+    "vadi": "D",
+    "samvadi": "G",
+    "pakad": "SG, M’DND, M’GS",
+    "time": "7 to 10 am",
+    "remarks": "N is used less to avoid Sohni"
+  },
+  {
+    "name": "Jai Jai Vanti",
+    "thaat": "Kamaj",
+    "arohana": "S, R g R S, .n .D.P, R, GMP, NS.",
+    "avarohana": "S. n D P, G M, R g R S",
+    "vadi": "R",
+    "samvadi": "P",
+    "pakad": "R g RS, .n.D.P, R, GM, R g R S",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Jaunpuri",
+    "thaat": "Asavari",
+    "arohana": "S R M P d n S.",
+    "avarohana": "S. n d P, M g R S",
+    "vadi": "d",
+    "samvadi": "g",
+    "pakad": "RMP, n d P, d M P, gRS",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Jhinjhoti",
+    "thaat": "Khamaj",
+    "arohana": "S R G M P D n S.",
+    "avarohana": "S. n D P M G R S",
+    "vadi": "G",
+    "samvadi": "n",
+    "pakad": ".DS, RM, G, PMGR, S.n.D.P",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Jogiya",
+    "thaat": "Bhairav",
+    "arohana": "S r M P d S.",
+    "avarohana": "S. N d P M r S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "M, r S, S r r M r S",
+    "time": "morning"
+  },
+  {
+    "name": "Kafi",
+    "thaat": "Kafi",
+    "arohana": "S R g M P D n S.",
+    "avarohana": "S. n D P M g R S",
+    "vadi": "P",
+    "samvadi": "R",
+    "pakad": "SS RR gg MM P",
+    "time": "1 to 3 pm"
+  },
+  {
+    "name": "Kalavati",
+    "thaat": "Khamaj",
+    "arohana": "S G P D n S.",
+    "avarohana": "S. n D P G S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": "G P D n D P, G P G S",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Kamod",
+    "thaat": "Kalyan",
+    "arohana": "S, RP, M’ PDP, NDS.",
+    "avarohana": "S.NDP, M’ PDP, GMP, GM, RS",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": "RP, M’ PDP, GMP, GMRS",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Kausi Kanhda",
+    "thaat": "Asavari",
+    "arohana": "S R g M P D n S.",
+    "avarohana": "S. n D P M g R S",
+    "vadi": "S",
+    "samvadi": "M",
+    "pakad": "",
+    "time": "10 pm to 1 am",
+    "remarks": "Bageshri Ang"
+  },
+  {
+    "name": "Kedar",
+    "thaat": "Kalyan",
+    "arohana": "S M, M P, D P, N D S.",
+    "avarohana": "S. NDP, M’ PDPM, PMRS",
+    "vadi": "S",
+    "samvadi": "M",
+    "pakad": "S M, M P, D P M, P M R S",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Khamaj",
+    "thaat": "Khamaj",
+    "arohana": "S G M P D N S.",
+    "avarohana": "S. n D P M G R S",
+    "vadi": "G",
+    "samvadi": "N",
+    "pakad": "G M P D n D, M P D, MG",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Lalit",
+    "thaat": "Marva",
+    "arohana": ".N r G M, M’ M G, M’ D S.",
+    "avarohana": "R. N D, M’ D M’ M G, R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": ".NRGM, DM’, MG, M’GRS",
+    "time": "4 to 7 am"
+  },
+  {
+    "name": "Madhuvanti",
+    "thaat": "Todi",
+    "arohana": ".N S g M’ P N S.",
+    "avarohana": "S. N D P M’ g R S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": ".NSGM’P, M’GRS",
+    "time": "4 to 7 pm"
+  },
+  {
+    "name": "Madhyamad Sarang",
+    "thaat": "Kafi",
+    "arohana": ".n S R M P n S.",
+    "avarohana": "S. n P, M R S",
+    "vadi": "R",
+    "samvadi": "P",
+    "pakad": ".nSR, RMRPR, nP, MRS",
+    "time": "7 to 10 am"
+  },
+  {
+    "name": "Malgunji",
+    "thaat": "Kafi",
+    "arohana": ".D .N S R G M, G M, D N S.",
+    "avarohana": "S. N D P M G, M g R S",
+    "vadi": "S",
+    "samvadi": "M",
+    "pakad": "GMgRS, .D.nSRGM",
+    "time": "night"
+  },
+  {
+    "name": "Malkauns",
+    "thaat": "Bharavi",
+    "arohana": ".n S g M d n S.",
+    "avarohana": "S. n d M g M g S",
+    "vadi": "S",
+    "samvadi": "M",
+    "pakad": "M g, M d n d, M g, M g",
+    "time": "1 to 4 am"
+  },
+  {
+    "name": "Maluha Kedar",
+    "thaat": "Bilaval",
+    "arohana": ".N R S, G M P, D P M, M P N S.",
+    "avarohana": "S. N D P, G M P G M R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": ".NSGMP, GMRS, .D.P.M.P.NS",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Mand",
+    "thaat": "Bilaval",
+    "arohana": "S G R M G, P M D P, N D S.",
+    "avarohana": "S. D N P, D M P G M S",
+    "vadi": "S",
+    "samvadi": "P",
+    "pakad": "S, RG, S, R, MMP, D, PDS.",
+    "time": "all time"
+  },
+  {
+    "name": "Maru Bihag",
+    "thaat": "Kalyan",
+    "arohana": ".N S G M P N S.",
+    "avarohana": "S. N D P, M’ G M’ G R S",
+    "vadi": "G",
+    "samvadi": "N",
+    "pakad": "M’ G, RS, RS, SMGP, M’ G M’ G RS",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Marva",
+    "thaat": "Marva",
+    "arohana": ".N r G M’ D N S.",
+    "avarohana": "S. N D M’ G r S",
+    "vadi": "D",
+    "samvadi": "R",
+    "pakad": "D, M’ G r, G M’ G r S",
+    "time": "evening",
+    "remarks": "Sandhi Prakash Raag"
+  },
+  {
+    "name": "Miya Ki Sarang",
+    "thaat": "Kafi",
+    "arohana": "S R M R, M P n D N S.",
+    "avarohana": "S. n D n P, M P, M R M R, S",
+    "vadi": "R",
+    "samvadi": "P",
+    "pakad": "SRS, .nD.nP, .M.P.n.D.NS, R, MR, PMR.NS",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Miya Malhar",
+    "thaat": "Kafi",
+    "arohana": "R M R S, M R P, M P n D, N S.",
+    "avarohana": "S. n D, n M P, g M R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "RMR S .n .p, .M .P .n .D .N S, P g M R S",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Multani",
+    "thaat": "Todi",
+    "arohana": ".N S g M’ P N S.",
+    "avarohana": "S. N d P M’ g r S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": ".N S, M’ g, P g, r S",
+    "time": "1 to 4 pm"
+  },
+  {
+    "name": "Nand – Anandi",
+    "thaat": "Kalyan",
+    "arohana": "S G M, P D, N P S.",
+    "avarohana": "S. D, N P, D M’ P, G M D P R S",
+    "vadi": "S",
+    "samvadi": "P",
+    "pakad": "GMDP, RSGM",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Pahadi",
+    "thaat": "Bilaval",
+    "arohana": "S R G P D S.",
+    "avarohana": "S. D P, G P, G R S",
+    "vadi": "S",
+    "samvadi": "P",
+    "pakad": "G, RS, .D, .P.DS",
+    "time": "all time"
+  },
+  {
+    "name": "Paraj",
+    "thaat": "Poorvi",
+    "arohana": ".N S G, M’ d N S.",
+    "avarohana": "S. N d P, M’ P d P, G M G, M’ G r S",
+    "vadi": "S.",
+    "samvadi": "P",
+    "pakad": "S., N d P, M’ P d P, G M G",
+    "time": "4 to 7 am"
+  },
+  {
+    "name": "Patdeep",
+    "thaat": "Kafi",
+    "arohana": "S g M P N S.",
+    "avarohana": "S. N D P M g R S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": "D P, g, M P N S.",
+    "time": "1 to 4 pm (towards 4 pm)",
+    "remarks": "N is a little sharper"
+  },
+  {
+    "name": "Piloo or Pilu",
+    "thaat": "Kafi",
+    "arohana": ".N S G M P N S.",
+    "avarohana": "S. n D P n d P d P M g S",
+    "vadi": "G",
+    "samvadi": "N",
+    "pakad": ".N S .P .N S R g S, G M P g S, .N S G",
+    "time": "1 to 4 pm",
+    "remarks": "All 12 notes are used in this raag"
+  },
+  {
+    "name": "Pooriya",
+    "thaat": "Marva",
+    "arohana": ".N r S, G, M’ D, N r. S.",
+    "avarohana": "S. N D M’ G r S",
+    "vadi": "G",
+    "samvadi": "M’",
+    "pakad": "G, .N r S, .N.D.N.M’.D, r S",
+    "time": "evening",
+    "remarks": "Sandhi Prakash Raag"
+  },
+  {
+    "name": "Pooriya Dhanashri",
+    "thaat": "Poorvi",
+    "arohana": ".N r G M’ P, d P, N S.",
+    "avarohana": "S. N d P, M’ G M’ r G, r S",
+    "vadi": "P",
+    "samvadi": "r",
+    "pakad": ".N r G, M’ P, dP, M’ G, M’ r G, r S",
+    "time": "evening",
+    "remarks": "Sandhi Prakash Raag"
+  },
+  {
+    "name": "Poorvi",
+    "thaat": "Poorvi",
+    "arohana": ".N r G, M’ P, d N S.",
+    "avarohana": "S. N d P M’, GMG, r S",
+    "vadi": "G",
+    "samvadi": "N",
+    "pakad": ".N, S r G, MG, M’ G r S",
+    "time": "evening",
+    "remarks": "Sandhi Prakash Raag"
+  },
+  {
+    "name": "Rageshwari",
+    "thaat": "Khamaj",
+    "arohana": "S G M D N S.",
+    "avarohana": "S. n D M G R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "GMDN S. n DM, GMRS, .D .n S G M",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Ramdasi Malhar",
+    "thaat": "Kafi",
+    "arohana": ".N S, R G M, n D n P N S.",
+    "avarohana": "S. n D n P, D P M, P g, M P g, M R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "RPMGM, nPgMRS",
+    "time": "rainy season"
+  },
+  {
+    "name": "Ramkali",
+    "thaat": "Bhairav",
+    "arohana": "S r G M P d N S.",
+    "avarohana": "S. N d P, M’ P d n d P, G M r S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": "d P, M’PdndP, GM’, r PMG r S",
+    "time": "morning"
+  },
+  {
+    "name": "Rasranjani",
+    "thaat": "Bilaval",
+    "arohana": "S R M D N S.",
+    "avarohana": "S. N D M, D M R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "",
+    "time": "midnight"
+  },
+  {
+    "name": "Saraswati",
+    "thaat": "Khamaj",
+    "arohana": "S R M’ P, n D P, n D S.",
+    "avarohana": "R. n D P M’ R M P, M’ R S",
+    "vadi": "P",
+    "samvadi": "R",
+    "pakad": "",
+    "time": "midnight"
+  },
+  {
+    "name": "Shankara",
+    "thaat": "Bilaval",
+    "arohana": "S G P N S.",
+    "avarohana": "S. NP, ND S. NP, GPGS",
+    "vadi": "G",
+    "samvadi": "N",
+    "pakad": "S. NP, ND S. NP, GPGS",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Shivranjani",
+    "thaat": "Kafi",
+    "arohana": "S R g P D S.",
+    "avarohana": "S. D P g R S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": "",
+    "time": "midnight"
+  },
+  {
+    "name": "Shri",
+    "thaat": "Poorvi",
+    "arohana": "S r r S, r M’ P N S.",
+    "avarohana": "S. N d P, M’ P d M’ G r, P r G r S",
+    "vadi": "R",
+    "samvadi": "P",
+    "pakad": "S r r S, r M’ P, d M’ G r G r S",
+    "time": "evening",
+    "remarks": "Sandhi Prakash Raag"
+  },
+  {
+    "name": "Shuddh Kalyan",
+    "thaat": "Kalyan",
+    "arohana": "S R G P D S.",
+    "avarohana": "S. N D, N D P, M’ G R, G R P R G R S",
+    "vadi": "G",
+    "samvadi": "D",
+    "pakad": "GRS, .N.D.N.D.P, S, GR, PR, GRS",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Shuddh Sarang",
+    "thaat": "Kafi",
+    "arohana": "S R M P, M’ P N S.",
+    "avarohana": "S. N D P M’ G R S",
+    "vadi": "R",
+    "samvadi": "P",
+    "pakad": "",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Shyam Kalyan",
+    "thaat": "Kalyan",
+    "arohana": ".N S R M’ P N S.",
+    "avarohana": "S. N D P M’ P G M R .N S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": ".N S R M’ P, G M R .N S",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Sindhu Bhairavi",
+    "thaat": "Asavari",
+    "arohana": "S R g M P d n S.",
+    "avarohana": "S. n d P M g R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Sohni",
+    "thaat": "Marva",
+    "arohana": "S G M’ D N S.",
+    "avarohana": "S. r. S. N D, G M’ D, G M’ G, M’ G r S",
+    "vadi": "D",
+    "samvadi": "G",
+    "pakad": "S. N D, G M’ DNS. r. S.",
+    "time": "4 to 7 am"
+  },
+  {
+    "name": "Sughrai",
+    "thaat": "Kafi",
+    "arohana": ".n S R g, M P, N S.",
+    "avarohana": "S. D, N P, M P, g, M R S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": ".n S R g, MP n P, DP, MP g MRS",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Tilak Kamod",
+    "thaat": "Khamaj",
+    "arohana": "S R G S, R M P D, M P, S.",
+    "avarohana": "S. P D M G, S R G, S .N .P.NSRG",
+    "vadi": "P",
+    "samvadi": "R",
+    "pakad": "S, RPMG, S.N R",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Tilang",
+    "thaat": "Khamaj",
+    "arohana": "S G M P N S.",
+    "avarohana": "S. n P M G S",
+    "vadi": "G",
+    "samvadi": "N",
+    "pakad": ".NSGMP, NS., S. nP, GMGS",
+    "time": "10 pm to 1 am"
+  },
+  {
+    "name": "Todi",
+    "thaat": "Todi",
+    "arohana": "S r g M’ P d N S.",
+    "avarohana": "S. N d P M’ g r S",
+    "vadi": "d",
+    "samvadi": "g",
+    "pakad": ".d NS, r, g r, s, M’g r g r S",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Vibhas",
+    "thaat": "Bhairav",
+    "arohana": "S r G P d P S.",
+    "avarohana": "S. d P G P d P, G r S",
+    "vadi": "d",
+    "samvadi": "G",
+    "pakad": "d, P, GP, G r S",
+    "time": "morning"
+  },
+  {
+    "name": "Vridavani Sarang",
+    "thaat": "Kafi",
+    "arohana": "S R M P N S.",
+    "avarohana": "S. n P M R S",
+    "vadi": "S",
+    "samvadi": "P",
+    "pakad": ".N S R, MR, PMR",
+    "time": "10 am to 1 pm"
+  },
+  {
+    "name": "Yaman Kalyan",
+    "thaat": "Kalyan",
+    "arohana": "S R G M’ P D N S.",
+    "avarohana": "S. N D P M’ G R S",
+    "vadi": "G",
+    "samvadi": "N",
+    "pakad": ".N R G, R S, P M’ G R S",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Yamani Bilaval",
+    "thaat": "Bilaval",
+    "arohana": ".N R G, M R G P, M’ P, D N S.",
+    "avarohana": "S. N D P, M’ P M G, R G R S",
+    "vadi": "P",
+    "samvadi": "S",
+    "pakad": ".N R G, M’ PMG, RGRS",
+    "time": "morning"
+  },
+  {
+    "name": "Hemant",
+    "thaat": "Bilaval",
+    "arohana": "S G M D N S.",
+    "avarohana": "S. N D P M G R S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "G M D N D, M P M, N D P M, G M G R S",
+    "time": "9pm to 12 night"
+  },
+  {
+    "name": "Kirwani",
+    "thaat": null,
+    "arohana": "S R g M P d N S.",
+    "avarohana": "S. N d P M g R S",
+    "vadi": null,
+    "samvadi": null,
+    "pakad": "d P g R S R, R g M P d P",
+    "time": "Midnight"
+  },
+  {
+    "name": "Jog",
+    "thaat": "Kafi",
+    "arohana": "S G M P n S.",
+    "avarohana": "S n P M G M g S",
+    "vadi": "M",
+    "samvadi": "S",
+    "pakad": "G M P n P, P n P M G M g S",
+    "time": "9pm to 12night"
+  }
+]

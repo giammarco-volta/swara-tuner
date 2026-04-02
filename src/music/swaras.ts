@@ -60,3 +60,38 @@ export const DEFAULT_CHROMATIC_MAP: Record<number, SwaraId> = {
 export function normalizePitchClass(semitone: number): number {
   return ((semitone % 12) + 12) % 12;
 }
+
+export interface SwaraCentralRange {
+  min: number;
+  max: number;
+}
+
+export const SWARA_CENTRAL_RANGES: Record<SwaraId, SwaraCentralRange> = {
+  Sa:   { min: -6,  max: 6 },
+
+  Ri1:  { min: 90,  max: 112 },
+  Ri2:  { min: 182, max: 204 },
+  Ri3:  { min: 296, max: 318 },
+
+  Ga1:  { min: 180, max: 202 },
+  Ga2:  { min: 294, max: 316 },
+  Ga3:  { min: 386, max: 408 },
+
+  Ma1:  { min: 492, max: 504 },
+  Ma2:  { min: 590, max: 612 },
+
+  Pa:   { min: 696, max: 708 },
+
+  Dha1: { min: 792, max: 814 },
+  Dha2: { min: 884, max: 906 },
+  Dha3: { min: 998, max: 1020 },
+
+  Ni1:  { min: 882, max: 904 },
+  Ni2:  { min: 996, max: 1018 },
+  Ni3:  { min: 1088, max: 1110 },
+};
+
+export function getSwaraCentralCenter(swara: SwaraId): number {
+  const range = SWARA_CENTRAL_RANGES[swara];
+  return (range.min + range.max) / 2;
+}
