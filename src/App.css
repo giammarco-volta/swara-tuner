@@ -336,6 +336,78 @@ button:hover {
   margin-bottom: 10px;
 }
 
+.landing {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.landing__hero {
+  margin-bottom: 32px;
+  padding-top: 16px;   /* spazio sopra titolo */
+}
+
+.landing__hero h1 {
+  color: #ffffff;
+}
+
+.landing__hero h1 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.landing__hero h1 {
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.landing__subtitle {
+  margin-bottom: 4px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.landing__block h2 {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.landing__block p,
+.landing__block li {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.landing__inner {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.landing__block {
+  margin-bottom: 32px;
+}
+
+.landing__block ul {
+  padding-left: 20px;
+  line-height: 1.8;
+}
+
+.landing__cta {
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.landing__button {
+  display: inline-block;
+  margin-top: 20px;     /* spazio sopra (tra testo e bottone) */
+  margin-bottom: 8px;   /* spazio sotto */
+  padding: 12px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  border: 1px solid currentColor;
+  font-weight: 600;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
