@@ -842,7 +842,6 @@ function App() {
 
       <div className="grid">
         <section className="panel">
-          {/* Enable microphone */}
           <div style={{ marginTop: 12 }}>
             <button
               onClick={async () => {
@@ -869,14 +868,12 @@ function App() {
             </span>
           </div>
 
-          {/* spazio */}
           <div style={{ height: 16 }} />
 
           <div className={`readout ${isSaCalibrated ? "calibrated" : ""}`}>
             Sa = {saHz.toFixed(2)} Hz ({formatWesternNoteWithCents(saHz)})
           </div>
 
-          {/* Hold and sing */}
           <div>
             <button
               onMouseDown={startSaCalibration}
@@ -902,76 +899,29 @@ function App() {
               ? "Keep holding the button and sing steadily."
               : "Press and hold to calibrate Sa from your voice."}
           </div>
+
           <div style={{ height: 20 }} />
 
-          <div className="subsection-label">Tradition</div>
-
-          <div className="tradition-row">
-            <label>
-              <input
-                type="radio"
-                name="tradition"
-                checked={tradition === "hindustani"}
-                onChange={() => setTradition("hindustani")}
-              />
-              Hindustani
-            </label>
-
-            <label>
-              <input
-                type="radio"
-                name="tradition"
-                checked={tradition === "carnatic"}
-                onChange={() => setTradition("carnatic")}
-              />
-              Carnatic
-            </label>
-          </div>
-
-          <div style={{ height: 16 }} />
-
-          <div className="subsection-label">
-            {tradition === "hindustani" ? "Raag" : "Ragam"}
-          </div>
+          <h2>Tolerance</h2>
 
           <input
-            type="text"
-            placeholder={tradition === "hindustani" ? "Search raag..." : "Search ragam..."}
-            value={ragaSearch}
-            onChange={(e) => setRagaSearch(e.target.value)}
-            style={{ width: "100%", marginBottom: 8 }}
+            type="range"
+            min={1}
+            max={50}
+            step={1}
+            value={toleranceCents}
+            onChange={(e) => setToleranceCents(Number(e.target.value))}
+            style={{ width: "100%" }}
           />
 
-          <div className="hint" style={{ marginTop: 6, marginBottom: 8 }}>
-            {availableRagas.length}{" "}
-            {tradition === "hindustani"
-              ? availableRagas.length === 1
-                ? "raag found"
-                : "raags found"
-              : availableRagas.length === 1
-              ? "ragam found"
-              : "ragams found"}
+          <div className="readout">±{toleranceCents} cents</div>
+
+          <div className="hint">
+            The green LED turns on only if the note is allowed and within this tolerance.
           </div>
-
-          {availableRagas.length > 0 ? (
-            <select
-              value={selectedRagaId}
-              onChange={(e) => setSelectedRagaId(e.target.value)}
-              style={{ width: "100%" }}
-            >
-              <option value="">— none —</option>
-              {availableRagas.map((raga) => (
-                <option key={raga.id} value={raga.id}>
-                  {raga.name}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <div className="hint" style={{ marginTop: 8 }}>
-              No matches found
-            </div>
-          )}
-
+          <div className="hint">
+            Current pitch: {smoothedDetectedPitch ? `${smoothedDetectedPitch.toFixed(2)} Hz` : "--"}
+          </div>
         </section>
 
         <section className="panel">
@@ -1097,16 +1047,42 @@ function App() {
         </section>
 
         <section className="panel">
-          <h2>Tolerance</h2>
+          <div className="subsection-label">Tradition</div>
+
+          <div className="tradition-row">
+            <label>
+              <input
+                type="radio"
+                name="tradition"
+                checked={tradition === "hindustani"}
+                onChange={() => setTradition("hindustani")}
+              />
+              Hindustani
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                name="tradition"
+                checked={tradition === "carnatic"}
+                onChange={() => setTradition("carnatic")}
+              />
+              Carnatic
+            </label>
+          </div>
+
+          <div style={{ height: 16 }} />
+
+          <div className="subsection-label">
+            {tradition === "hindustani" ? "Raag" : "Ragam"}
+          </div>
 
           <input
-            type="range"
-            min={1}
-            max={50}
-            step={1}
-            value={toleranceCents}
-            onChange={(e) => setToleranceCents(Number(e.target.value))}
-            style={{ width: "100%" }}
+            type="text"
+            placeholder={tradition === "hindustani" ? "Search raag..." : "Search ragam..."}
+            value={ragaSearch}
+            onChange={(e) => setRagaSearch(e.target.value)}
+            style={{ width: "100%", marginBottom: 8 }}
           />
 
           <div className="hint" style={{ marginTop: 6, marginBottom: 8 }}>
@@ -1120,14 +1096,24 @@ function App() {
               : "ragams found"}
           </div>
 
-          <div className="readout">±{toleranceCents} cents</div>
-
-          <div className="hint">
-            The green LED turns on only if the note is allowed and within this tolerance.
-          </div>
-          <div className="hint">
-            Current pitch: {smoothedDetectedPitch ? `${smoothedDetectedPitch.toFixed(2)} Hz` : "--"}
-          </div>
+          {availableRagas.length > 0 ? (
+            <select
+              value={selectedRagaId}
+              onChange={(e) => setSelectedRagaId(e.target.value)}
+              style={{ width: "100%" }}
+            >
+              <option value="">— none —</option>
+              {availableRagas.map((raga) => (
+                <option key={raga.id} value={raga.id}>
+                  {raga.name}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <div className="hint" style={{ marginTop: 8 }}>
+              No matches found
+            </div>
+          )}
         </section>
       </div>
 

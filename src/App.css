@@ -320,6 +320,10 @@ button:hover {
   color: #ddd;
 }
 
+.panel h2 {
+  color: white;
+}
+
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
