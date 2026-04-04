@@ -295,6 +295,9 @@ const ALL_RAGAS: RagaPreset[] = [
   ...loadRagasFromJson(carnaticRagamsJson, "carnatic"),
 ];
 
+type PitchDetectorMode = "autocorrelation" | "mpm";
+type TunerViewMode = "meter" | "circle";
+
 function App() {
   const [saHz, setSaHz] = useState(midiToFrequency(61)); // C#4
   const [toleranceCents, setToleranceCents] = useState(20);
@@ -310,6 +313,9 @@ function App() {
 
   const [ragaSearch, setRagaSearch] = useState("");
 
+  const [pitchDetectorMode] = useState<PitchDetectorMode>("mpm");
+  const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>("meter");
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null);
@@ -322,6 +328,7 @@ function App() {
   const smoothedCentsRef = useRef<number | null>(null);
   const largeJumpCandidateRef = useRef<number | null>(null);
   const largeJumpCountRef = useRef(0);
+  const emaCentsRef = useRef<number | null>(null);
 
   const [arohanaChoices, setArohanaChoices] = useState<OrderedScaleChoices>({
     ri: "Ri2",
@@ -414,6 +421,17 @@ function App() {
       : result.tuningZone === "tolerated"
       ? "swara-tolerated"
       : "swara-out";
+
+  const circleSwaraColor =
+    isCalibrating || !result
+      ? "white"
+      : result.allowed === false
+      ? "#ff453a"
+      : result.tuningZone === "perfect"
+      ? "#32d74b"
+      : result.tuningZone === "tolerated"
+      ? "#ffd60a"
+      : "#ff453a";
 
   const meterOffset =
     isCalibrating || !result || result.deviationCents === null
@@ -555,7 +573,10 @@ function App() {
 
         const rms = computeRms(data);
 
-        const estimatedPitch = estimatePitchAutocorrelation(data, audioContext.sampleRate);
+        const estimatedPitch =
+          pitchDetectorMode === "mpm"
+            ? estimatePitchMpm(data, audioContext.sampleRate)
+            : estimatePitchAutocorrelation(data, audioContext.sampleRate);
         const smoothedPitch = smoothPitchMusically(estimatedPitch, saHz);
         setSmoothedDetectedPitch(smoothedPitch);
 
@@ -713,6 +734,115 @@ function App() {
     return frequency;
   }
 
+  function estimatePitchMpm(
+    buffer: Float32Array,
+    sampleRate: number
+  ): number | null {
+    const size = buffer.length;
+
+    let rms = 0;
+    for (let i = 0; i < size; i++) {
+      const v = buffer[i];
+      rms += v * v;
+    }
+    rms = Math.sqrt(rms / size);
+
+    if (rms < 0.01) {
+      return null;
+    }
+
+    // rimozione offset DC
+    let mean = 0;
+    for (let i = 0; i < size; i++) {
+      mean += buffer[i];
+    }
+    mean /= size;
+
+    const x = new Float32Array(size);
+    for (let i = 0; i < size; i++) {
+      x[i] = buffer[i] - mean;
+    }
+
+    const minFreq = 80;
+    const maxFreq = 500;
+
+    const minLag = Math.floor(sampleRate / maxFreq);
+    const maxLag = Math.floor(sampleRate / minFreq);
+
+    if (maxLag >= size) {
+      return null;
+    }
+
+    // NSDF = 2 * acf / (energy1 + energy2)
+    const nsdf = new Float32Array(maxLag + 1);
+
+    for (let tau = minLag; tau <= maxLag; tau++) {
+      let acf = 0;
+      let divisor = 0;
+
+      for (let i = 0; i < size - tau; i++) {
+        const x1 = x[i];
+        const x2 = x[i + tau];
+        acf += x1 * x2;
+        divisor += x1 * x1 + x2 * x2;
+      }
+
+      nsdf[tau] = divisor > 0 ? (2 * acf) / divisor : 0;
+    }
+
+    // cerchiamo il miglior picco positivo locale
+    let bestLag = -1;
+    let bestValue = -1;
+
+    for (let tau = minLag + 1; tau < maxLag - 1; tau++) {
+      const prev = nsdf[tau - 1];
+      const curr = nsdf[tau];
+      const next = nsdf[tau + 1];
+
+      const isLocalPeak = curr > prev && curr >= next;
+      if (!isLocalPeak) continue;
+
+      // soglia minima di affidabilità
+      if (curr < 0.75) continue;
+
+      if (curr > bestValue) {
+        bestValue = curr;
+        bestLag = tau;
+      }
+    }
+
+    if (bestLag < 0) {
+      return null;
+    }
+
+    // raffinamento parabolico
+    let refinedLag = bestLag;
+    {
+      const y1 = nsdf[bestLag - 1];
+      const y2 = nsdf[bestLag];
+      const y3 = nsdf[bestLag + 1];
+
+      const a = (y1 + y3 - 2 * y2) / 2;
+      const b = (y3 - y1) / 2;
+
+      if (a !== 0) {
+        refinedLag = bestLag - b / (2 * a);
+      }
+    }
+
+    if (refinedLag <= 0) {
+      return null;
+    }
+
+    const frequency = sampleRate / refinedLag;
+
+    if (frequency < minFreq || frequency > maxFreq) {
+      return null;
+    }
+
+    return frequency;
+  }
+
   function frequencyToMidiFloat(frequencyHz: number): number {
     return 69 + 12 * Math.log2(frequencyHz / 440);
   }
@@ -767,13 +897,28 @@ function App() {
   function smoothPitchMusically(newPitch: number | null, saHz: number): number | null {
     if (newPitch === null) {
       smoothedCentsRef.current = null;
+      emaCentsRef.current = null;
       largeJumpCandidateRef.current = null;
       largeJumpCountRef.current = 0;
       return null;
     }
 
     const newCents = 1200 * Math.log2(newPitch / saHz);
-    const previousCents = smoothedCentsRef.current;
+    let emaCents = newCents;
+
+  if (emaCentsRef.current === null) {
+    emaCentsRef.current = newCents;
+  } else {
+    let deltaEma = newCents - emaCentsRef.current;
+    while (deltaEma > 600) deltaEma -= 1200;
+    while (deltaEma < -600) deltaEma += 1200;
+
+    const emaAlpha = 0.18;
+    emaCentsRef.current = emaCentsRef.current + emaAlpha * deltaEma;
+  }
+
+  emaCents = emaCentsRef.current;
+  const previousCents = smoothedCentsRef.current;
 
     if (previousCents === null) {
       smoothedCentsRef.current = newCents;
@@ -782,7 +927,7 @@ function App() {
       return newPitch;
     }
 
-    let delta = newCents - previousCents;
+    let delta = emaCents - previousCents;
 
     while (delta > 600) delta -= 1200;
     while (delta < -600) delta += 1200;
@@ -804,23 +949,23 @@ function App() {
     const candidate = largeJumpCandidateRef.current;
 
     if (candidate !== null) {
-      let candidateDelta = newCents - candidate;
+      let candidateDelta = emaCents - candidate;
       while (candidateDelta > 600) candidateDelta -= 1200;
       while (candidateDelta < -600) candidateDelta += 1200;
 
-      if (Math.abs(candidateDelta) <= 25) {
+      if (Math.abs(candidateDelta) <= 35) {
         largeJumpCountRef.current += 1;
       } else {
-        largeJumpCandidateRef.current = newCents;
+        largeJumpCandidateRef.current = emaCents;
         largeJumpCountRef.current = 1;
       }
     } else {
-      largeJumpCandidateRef.current = newCents;
+      largeJumpCandidateRef.current = emaCents;
       largeJumpCountRef.current = 1;
     }
 
     // se il salto grande si ripete per abbastanza frame, aggancia rapidamente
-    if (largeJumpCountRef.current >= 3) {
+    if (largeJumpCountRef.current >= 2) {
       const alpha = 0.38;
       const smoothedCents = previousCents + alpha * delta;
       smoothedCentsRef.current = smoothedCents;
@@ -835,6 +980,171 @@ function App() {
     // finché non siamo convinti, manteniamo il valore precedente
     return saHz * Math.pow(2, previousCents / 1200);
   }
+
+
+  function normalizeCentsToOctave(cents: number): number {
+    let wrapped = cents % 1200;
+    if (wrapped < 0) wrapped += 1200;
+    return wrapped;
+  }
+
+  function centsToCircleAngle(cents: number): number {
+    return normalizeCentsToOctave(cents) / 1200 * Math.PI * 2 - Math.PI / 2;
+  }
+
+  function polarToCartesian(cx: number, cy: number, radius: number, angle: number) {
+    return {
+      x: cx + radius * Math.cos(angle),
+      y: cy + radius * Math.sin(angle),
+    };
+  }
+
+  function describeArcPath(
+    cx: number,
+    cy: number,
+    radius: number,
+    startCents: number,
+    endCents: number
+  ): string {
+    const startAngle = centsToCircleAngle(startCents);
+    const endAngle = centsToCircleAngle(endCents);
+
+    const start = polarToCartesian(cx, cy, radius, startAngle);
+    const end = polarToCartesian(cx, cy, radius, endAngle);
+
+    let delta = normalizeCentsToOctave(endCents - startCents);
+    if (delta === 0) delta = 1200;
+
+    const largeArcFlag = delta > 600 ? 1 : 0;
+
+    return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${end.x} ${end.y}`;
+  }
+
+  function splitOctaveArc(startCents: number, endCents: number): Array<{ start: number; end: number }> {
+    const start = normalizeCentsToOctave(startCents);
+    const spanRaw = endCents - startCents;
+    const span = Math.max(0, Math.min(1200, spanRaw));
+
+    if (span <= 0) return [];
+
+    const end = start + span;
+    if (end <= 1200) {
+      return [{ start, end }];
+    }
+
+    return [
+      { start, end: 1200 },
+      { start: 0, end: end - 1200 },
+    ];
+  }
+
+  function getAllowedSwaraIds(): SwaraId[] {
+    const ordered = [...config.arohana, ...config.avarohana];
+    const seen = new Set<SwaraId>();
+    const resultIds: SwaraId[] = [];
+
+    for (const swara of ordered) {
+      if (!seen.has(swara)) {
+        seen.add(swara);
+        resultIds.push(swara);
+      }
+    }
+
+    return resultIds;
+  }
+
+  function getCircleStatusText(): string {
+    if (isCalibrating) return `Calibrating ${getSwaraLabel("Sa", tradition)}`;
+    if (result?.allowed === null || result?.allowed === undefined) return "No note detected";
+    if (result.allowed === false) return "Not allowed";
+    if (result.tuningZone === "perfect") return "Perfectly in tune";
+    if (result.tuningZone === "tolerated") return "Tolerated";
+    return "Out of tune";
+  }
+
+  const circleSize = 280;
+  const circleCenter = circleSize / 2;
+  const circleRadius = 102;
+  const circleStrokeWidth = 18;
+
+  const allowedSwaraIds = useMemo(() => getAllowedSwaraIds(), [config]);
+
+  const circleSegments = useMemo(() => {
+    const outerSegments: Array<{ key: string; start: number; end: number; color: string; swara: SwaraId }> = [];
+    const centralSegments: Array<{ key: string; start: number; end: number; color: string; swara: SwaraId }> = [];
+
+    for (const swara of allowedSwaraIds) {
+      const range = SWARA_CENTRAL_RANGES[swara];
+      const center = getSwaraCentralCenter(swara);
+
+      const centralStart = range.min;
+      const centralEnd = range.max;
+
+      const outerStart = center + (range.min - center) - toleranceCents;
+      const outerEnd = center + (range.max - center) + toleranceCents;
+
+      for (const seg of splitOctaveArc(outerStart, outerEnd)) {
+        outerSegments.push({
+          key: `${swara}-outer-${seg.start}-${seg.end}`,
+          start: seg.start,
+          end: seg.end,
+          color: "#d6c64b",
+          swara,
+        });
+      }
+
+      for (const seg of splitOctaveArc(centralStart, centralEnd)) {
+        centralSegments.push({
+          key: `${swara}-central-${seg.start}-${seg.end}`,
+          start: seg.start,
+          end: seg.end,
+          color: "#32d74b",
+          swara,
+        });
+      }
+    }
+
+    return { outerSegments, centralSegments };
+  }, [allowedSwaraIds, toleranceCents]);
+
+  const circleSwaraLabels = useMemo(() => {
+    return allowedSwaraIds.map((swara) => {
+      const centerCents = normalizeCentsToOctave(getSwaraCentralCenter(swara));
+      const angle = centsToCircleAngle(centerCents);
+
+      const labelPos = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius + 26,
+        angle
+      );
+
+      return {
+        key: `label-${swara}`,
+        x: labelPos.x,
+        y: labelPos.y,
+        text: getSwaraLabel(swara, tradition),
+      };
+    });
+  }, [allowedSwaraIds, tradition]);
+  
+  const circleNeedleAngle =
+    isCalibrating || !result || result.centsFromSa === null
+      ? null
+      : centsToCircleAngle(result.centsFromSa);
+
+  const circleNeedleEnd =
+    circleNeedleAngle === null
+      ? null
+      : polarToCartesian(circleCenter, circleCenter, circleRadius - 10, circleNeedleAngle);
+
+  const circleCenterSwaraText = isCalibrating
+    ? getSwaraLabel("Sa", tradition)
+    : result?.displayedSwara
+    ? getSwaraLabel(result.displayedSwara, tradition)
+    : "--";
+
+  const circleStatusText = getCircleStatusText();
 
   return (
     <div className="app">
@@ -1118,73 +1428,211 @@ function App() {
       </div>
 
       <section className="panel tuner-panel">
-        <div className={`current-swara ${swaraColorClass}`}>
-          {isCalibrating
-            ? `Calibrating ${getSwaraLabel("Sa", tradition)}...`
-            : result?.displayedSwara
-            ? getSwaraLabel(result.displayedSwara, tradition)
-            : "--"}
+        <div className="view-toggle">
+          <button
+            type="button"
+            onClick={() => setTunerViewMode("meter")}
+            style={{
+              opacity: tunerViewMode === "meter" ? 1 : 0.7,
+              fontWeight: tunerViewMode === "meter" ? 700 : 400,
+            }}
+          >
+            Meter
+          </button>
+          <button
+            type="button"
+            onClick={() => setTunerViewMode("circle")}
+            style={{
+              opacity: tunerViewMode === "circle" ? 1 : 0.7,
+              fontWeight: tunerViewMode === "circle" ? 700 : 400,
+            }}
+          >
+            Circle
+          </button>
         </div>
-        <div className="current-cents">
-          {isCalibrating
-            ? ""
-            : result?.deviationCents === null || result?.deviationCents === undefined
-            ? "--"
-            : `${result.deviationCents >= 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 8,
+            marginBottom: 16,
+            flexWrap: "wrap",
+          }}
+        >
         </div>
 
-        <div className="meter">
-          {!isCalibrating && result && (
-            <>
-              <div
-                className="meter-outer-band"
-                style={{
-                  left: `${outerLeftPercent}%`,
-                  width: `${outerWidthPercent}%`,
-                }}
+        {tunerViewMode === "meter" ? (
+          <>
+            <div className={`current-swara ${swaraColorClass}`}>
+              {isCalibrating
+                ? `Calibrating ${getSwaraLabel("Sa", tradition)}...`
+                : result?.displayedSwara
+                ? getSwaraLabel(result.displayedSwara, tradition)
+                : "--"}
+            </div>
+            <div className="current-cents">
+              {isCalibrating
+                ? ""
+                : result?.deviationCents === null || result?.deviationCents === undefined
+                ? "--"
+                : `${result.deviationCents >= 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`}
+            </div>
+
+            <div className="meter">
+              {!isCalibrating && result && (
+                <>
+                  <div
+                    className="meter-outer-band"
+                    style={{
+                      left: `${outerLeftPercent}%`,
+                      width: `${outerWidthPercent}%`,
+                    }}
+                  />
+                  <div
+                    className="meter-central-band"
+                    style={{
+                      left: `${centralLeftPercent}%`,
+                      width: `${centralWidthPercent}%`,
+                    }}
+                  />
+                  <div className="meter-band-mark" style={{ left: `${outerLeftPercent}%` }} />
+                  <div className="meter-band-mark" style={{ left: `${outerRightPercent}%` }} />
+                  <div className="meter-band-mark central" style={{ left: `${centralLeftPercent}%` }} />
+                  <div className="meter-band-mark central" style={{ left: `${centralRightPercent}%` }} />
+                </>
+              )}
+
+              <div className="meter-center-line" />
+              <div className="meter-needle" style={{ left: `${needleLeftPercent}%` }} />
+              <div className="meter-label meter-left">-50</div>
+              <div className="meter-label meter-center">0</div>
+              <div className="meter-label meter-right">+50</div>
+            </div>
+
+            <div className="led-row">
+              <div className="led-text">
+                {isCalibrating
+                  ? "Calibrating Sa"
+                  : result?.allowed === null || result?.allowed === undefined
+                  ? "No note detected"
+                  : result.allowed === false
+                  ? "Not allowed"
+                  : result.tuningZone === "perfect"
+                  ? "Perfectly in tune"
+                  : result.tuningZone === "tolerated"
+                  ? "Tolerated"
+                  : "Out of tune"}
+              </div>
+            </div>
+
+            <div className="debug">
+              <div>
+                Cents from Sa: {isCalibrating || !result || result.centsFromSa === null ? "--" : Math.round(result.centsFromSa)}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div
+            className="circle-container"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <svg
+              width={circleSize}
+              height={circleSize}
+              viewBox={`0 0 ${circleSize} ${circleSize}`}
+              role="img"
+              aria-label="Pitch circle"
+              style={{ overflow: "visible" }}
+            >
+              <circle
+                cx={circleCenter}
+                cy={circleCenter}
+                r={circleRadius}
+                fill="none"
+                stroke="rgba(255,255,255,0.16)"
+                strokeWidth={circleStrokeWidth}
               />
-              <div
-                className="meter-central-band"
-                style={{
-                  left: `${centralLeftPercent}%`,
-                  width: `${centralWidthPercent}%`,
-                }}
-              />
-              <div className="meter-band-mark" style={{ left: `${outerLeftPercent}%` }} />
-              <div className="meter-band-mark" style={{ left: `${outerRightPercent}%` }} />
-              <div className="meter-band-mark central" style={{ left: `${centralLeftPercent}%` }} />
-              <div className="meter-band-mark central" style={{ left: `${centralRightPercent}%` }} />
-            </>
-          )}
 
-          <div className="meter-center-line" />
-          <div className="meter-needle" style={{ left: `${needleLeftPercent}%` }} />
-          <div className="meter-label meter-left">-50</div>
-          <div className="meter-label meter-center">0</div>
-          <div className="meter-label meter-right">+50</div>
-        </div>
+              {circleSegments.outerSegments.map((segment) => (
+                <path
+                  key={segment.key}
+                  d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
+                  fill="none"
+                  stroke={segment.color}
+                  strokeWidth={circleStrokeWidth}
+                  strokeLinecap="round"
+                  opacity={0.95}
+                />
+              ))}
 
-        <div className="led-row">
-          <div className="led-text">
-            {isCalibrating
-              ? "Calibrating Sa"
-              : result?.allowed === null || result?.allowed === undefined
-              ? "No note detected"
-              : result.allowed === false
-              ? "Not allowed"
-              : result.tuningZone === "perfect"
-              ? "Perfectly in tune"
-              : result.tuningZone === "tolerated"
-              ? "Tolerated"
-              : "Out of tune"}
+              {circleSegments.centralSegments.map((segment) => (
+                <path
+                  key={segment.key}
+                  d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
+                  fill="none"
+                  stroke={segment.color}
+                  strokeWidth={circleStrokeWidth}
+                  strokeLinecap="round"
+                />
+              ))}
+
+              {circleNeedleEnd && (
+                <>
+                  <line
+                    x1={circleCenter}
+                    y1={circleCenter}
+                    x2={circleNeedleEnd.x}
+                    y2={circleNeedleEnd.y}
+                    stroke="white"
+                    strokeWidth={3}
+                    strokeLinecap="round"
+                  />
+                  <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
+                </>
+              )}
+
+              {circleSwaraLabels.map((label) => (
+                <text
+                  key={label.key}
+                  x={label.x}
+                  y={label.y}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="rgba(255,255,255,0.92)"
+                  fontSize="14"
+                  fontWeight="600"
+                >
+                  {label.text}
+                </text>
+              ))}
+
+              <text
+                x={circleCenter}
+                y={circleCenter - 8}
+                textAnchor="middle"
+                fill={circleSwaraColor}
+                fontSize="36"
+                fontWeight="700"
+              >
+                {circleCenterSwaraText}
+              </text>
+
+              <text
+                x={circleCenter}
+                y={circleCenter + 24}
+                textAnchor="middle"
+                fill="rgba(255,255,255,0.88)"
+                fontSize="15"
+              >
+                {circleStatusText}
+              </text>
+            </svg>
           </div>
-        </div>
-
-        <div className="debug">
-          <div>
-            Cents from Sa: {isCalibrating || !result || result.centsFromSa === null ? "--" : Math.round(result.centsFromSa)}
-          </div>
-        </div>
+        )}
       </section>
     </div>
   );

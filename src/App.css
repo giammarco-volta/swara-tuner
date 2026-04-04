@@ -70,7 +70,7 @@ input[type="range"] {
 }
 
 .tuner-panel {
-  padding-top: 28px;
+  padding-top: 8px;
   padding-bottom: 28px;
 }
 
@@ -134,6 +134,11 @@ input[type="range"] {
 
 .meter-right {
   right: 8px;
+}
+
+.circle-container {
+  width: 100%;
+  margin-top: -48px;
 }
 
 .led-row {
@@ -322,6 +327,13 @@ button:hover {
 
 .panel h2 {
   color: white;
+}
+
+.view-toggle {
+  display: flex;
+  justify-content: flex-start;  /* ← sinistra */
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 @media (max-width: 900px) {
