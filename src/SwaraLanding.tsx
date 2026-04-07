@@ -9,7 +9,7 @@ export default function SwaraLanding() {
             Designed for musicians who care about intonation, not just pitch.
           </p>
           <a href="#tuner" className="landing__button">
-            Open Swara Tuner
+            Go to Swara Tuner
           </a>
         </header>
 

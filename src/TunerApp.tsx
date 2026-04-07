@@ -40,6 +40,8 @@ interface RagaPreset  {
   tradition: Tradition;
   arohana: OrderedScaleChoices;
   avarohana: OrderedScaleChoices;
+  vadi?: SwaraId | null;
+  samvadi?: SwaraId | null;
 }
 
   function midiToFrequency(midi: number): number {
@@ -238,7 +240,12 @@ function normalizeRagaRecord(
     .map((token) => parseSwaraToken(token, tradition))
     .filter((x): x is SwaraId => x !== null);
 
+  const vadi = parseSwaraToken(String(item.vadi ?? ""), tradition);
+  const samvadi = parseSwaraToken(String(item.samvadi ?? ""), tradition);
+
   return {
+    vadi,
+    samvadi,
     id: String(item.id ?? name).toLowerCase().replace(/\s+/g, "-"),
     name,
     tradition,
@@ -314,7 +321,7 @@ export default function TunerApp() {
   const [ragaSearch, setRagaSearch] = useState("");
 
   const [pitchDetectorMode] = useState<PitchDetectorMode>("mpm");
-  const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>("meter");
+  const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>("circle");
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -376,22 +383,27 @@ export default function TunerApp() {
       }
     }, [availableRagas]);
 
-    useEffect(() => {
-      if (!selectedRagaId) return;
+  const selectedRaga = useMemo(
+    () => ALL_RAGAS.find((raga) => raga.id === selectedRagaId) ?? null,
+    [selectedRagaId]
+  );
 
-      const selected = ALL_RAGAS.find((raga) => raga.id === selectedRagaId);
-      if (!selected) return;
+  useEffect(() => {
+    if (!selectedRagaId) return;
 
-      setArohanaChoices(selected.arohana);
-      setAvarohanaChoices(selected.avarohana);
-    }, [selectedRagaId]);
+    const selected = ALL_RAGAS.find((raga) => raga.id === selectedRagaId);
+    if (!selected) return;
 
-    useEffect(() => {
-      if (ragaSearch.trim() !== "") return;
-      if (availableRagas.length > 0 && !selectedRagaId) {
-        setSelectedRagaId(availableRagas[0].id);
-      }
-    }, [availableRagas, selectedRagaId, ragaSearch]);
+    setArohanaChoices(selected.arohana);
+    setAvarohanaChoices(selected.avarohana);
+  }, [selectedRagaId]);
+
+  useEffect(() => {
+    if (ragaSearch.trim() !== "") return;
+    if (availableRagas.length > 0 && !selectedRagaId) {
+      setSelectedRagaId(availableRagas[0].id);
+    }
+  }, [availableRagas, selectedRagaId, ragaSearch]);
 
   const config: RagaConfig = useMemo(
     () => ({
@@ -1053,11 +1065,23 @@ export default function TunerApp() {
     return resultIds;
   }
 
+  function getSwaraMembership(swara: SwaraId) {
+    const inAro = config.arohana.includes(swara);
+    const inAva = config.avarohana.includes(swara);
+
+    return {
+      inAro,
+      inAva,
+      inRaga: inAro || inAva,
+      arrow: inAro && !inAva ? "↑" : !inAro && inAva ? "↓" : "",
+    };
+  }
+
   function getCircleStatusText(): string {
     if (isCalibrating) return `Calibrating ${getSwaraLabel("Sa", tradition)}`;
     if (result?.allowed === null || result?.allowed === undefined) return "No note detected";
     if (result.allowed === false) return "Not allowed";
-    if (result.tuningZone === "perfect") return "Perfectly in tune";
+    if (result.tuningZone === "perfect") return "In tune";
     if (result.tuningZone === "tolerated") return "Tolerated";
     return "Out of tune";
   }
@@ -1107,26 +1131,124 @@ export default function TunerApp() {
     return { outerSegments, centralSegments };
   }, [allowedSwaraIds, toleranceCents]);
 
-  const circleSwaraLabels = useMemo(() => {
-    return allowedSwaraIds.map((swara) => {
-      const centerCents = normalizeCentsToOctave(getSwaraCentralCenter(swara));
-      const angle = centsToCircleAngle(centerCents);
+  interface CircleSlot {
+    key: string;
+    cents: number;
+    primary: SwaraId;
+    aliases: SwaraId[];
+  }
 
-      const labelPos = polarToCartesian(
-        circleCenter,
-        circleCenter,
-        circleRadius + 26,
-        angle
-      );
+  const CIRCLE_SLOTS: CircleSlot[] = [
+    { key: "Sa",     cents: 0,    primary: "Sa",   aliases: ["Sa"] },
+    { key: "Ri1",    cents: 100,  primary: "Ri1",  aliases: ["Ri1"] },
+    { key: "Ri2Ga1", cents: 200,  primary: "Ri2",  aliases: ["Ri2", "Ga1"] },
+    { key: "Ri3Ga2", cents: 300,  primary: "Ri3",  aliases: ["Ri3", "Ga2"] },
+    { key: "Ga3",    cents: 400,  primary: "Ga3",  aliases: ["Ga3"] },
+    { key: "Ma1",    cents: 500,  primary: "Ma1",  aliases: ["Ma1"] },
+    { key: "Ma2",    cents: 600,  primary: "Ma2",  aliases: ["Ma2"] },
+    { key: "Pa",     cents: 700,  primary: "Pa",   aliases: ["Pa"] },
+    { key: "Dha1",   cents: 800,  primary: "Dha1", aliases: ["Dha1"] },
+    { key: "Dha2Ni1", cents: 900, primary: "Dha2", aliases: ["Dha2", "Ni1"] },
+    { key: "Dha3Ni2", cents: 1000, primary: "Dha3", aliases: ["Dha3", "Ni2"] },
+    { key: "Ni3",    cents: 1100, primary: "Ni3",  aliases: ["Ni3"] },
+  ];
+
+  function getFirstVisibleSlotSwara(slot: CircleSlot, tradition: Tradition): SwaraId | null {
+    for (const swara of slot.aliases) {
+      if (getSwaraLabel(swara, tradition) !== "") {
+        return swara;
+      }
+    }
+    return null;
+  }
+
+  function getSlotDisplaySwara(slot: CircleSlot, tradition: Tradition): SwaraId | null {
+    const allowed = slot.aliases.filter((swara) =>
+      config.arohana.includes(swara) || config.avarohana.includes(swara)
+    );
+
+    for (const swara of allowed) {
+      if (getSwaraLabel(swara, tradition) !== "") {
+        return swara;
+      }
+    }
+
+    return getFirstVisibleSlotSwara(slot, tradition);
+  }
+
+  const circleSwaraLabels = useMemo(() => {
+    return CIRCLE_SLOTS
+      .filter((slot) => getFirstVisibleSlotSwara(slot, tradition) !== null)
+      .map((slot) => {
+        const displaySwara = getSlotDisplaySwara(slot, tradition);
+        if (!displaySwara) return null;
+
+        const membership = getSwaraMembership(displaySwara);
+
+        const angle = centsToCircleAngle(slot.cents);
+        const labelPos = polarToCartesian(
+          circleCenter,
+          circleCenter,
+          circleRadius + 26,
+          angle
+        );
+
+        const isVadi = selectedRaga?.vadi === displaySwara;
+        const isSamvadi = selectedRaga?.samvadi === displaySwara;
+
+        let fill = "#444";
+        let fontWeight: string | number = 500;
+        let fontSize = 14;
+
+        if (membership.inRaga) {
+          if (isVadi) {
+            fill = "#9EC5FF";
+            fontWeight = 900;
+            fontSize = 20;
+          } else if (isSamvadi) {
+            fill = "#6FA8FF";
+            fontWeight = 700;
+            fontSize = 17;
+          } else {
+            fill = "#4A7FD1";
+            fontWeight = 500;
+            fontSize = 14;
+          }
+        }
+
+        const baseLabel = getSwaraLabel(displaySwara, tradition);
+        const text = membership.arrow ? `${baseLabel} ${membership.arrow}` : baseLabel;
+
+        return {
+          key: `label-${slot.key}`,
+          x: labelPos.x,
+          y: labelPos.y,
+          text,
+          fill,
+          fontWeight,
+          fontSize,
+          centerCents: slot.cents,
+        };
+      })
+      .filter((label): label is NonNullable<typeof label> => label !== null);
+  }, [tradition, selectedRaga, config]);
+
+  const circlePitchTicks = useMemo(() => {
+    return circleSwaraLabels.map((label) => {
+      const angle = centsToCircleAngle(label.centerCents);
+
+      const inner = polarToCartesian(circleCenter, circleCenter, circleRadius - circleStrokeWidth / 2 - 4, angle);
+      const outer = polarToCartesian(circleCenter, circleCenter, circleRadius + circleStrokeWidth / 2 + 4, angle);
 
       return {
-        key: `label-${swara}`,
-        x: labelPos.x,
-        y: labelPos.y,
-        text: getSwaraLabel(swara, tradition),
+        key: `tick-${label.key}`,
+        x1: inner.x,
+        y1: inner.y,
+        x2: outer.x,
+        y2: outer.y,
       };
     });
-  }, [allowedSwaraIds, tradition]);
+  }, [circleSwaraLabels]);  
 
   const circleNeedleAngle =
     isCalibrating || !result || result.centsFromSa === null
@@ -1577,6 +1699,19 @@ export default function TunerApp() {
                 />
               ))}
 
+              {circlePitchTicks.map((tick) => (
+                <line
+                  key={tick.key}
+                  x1={tick.x1}
+                  y1={tick.y1}
+                  x2={tick.x2}
+                  y2={tick.y2}
+                  stroke="#000"
+                  strokeWidth={1.5}
+                  strokeLinecap="round"
+                />
+              ))}              
+
               {circleNeedleEnd && (
                 <>
                   <line
@@ -1599,9 +1734,9 @@ export default function TunerApp() {
                   y={label.y}
                   textAnchor="middle"
                   dominantBaseline="middle"
-                  fill="rgba(255,255,255,0.92)"
-                  fontSize="14"
-                  fontWeight="600"
+                  fill={label.fill}
+                  fontSize={label.fontSize}
+                  fontWeight={label.fontWeight}
                 >
                   {label.text}
                 </text>

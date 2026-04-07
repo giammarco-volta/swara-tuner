@@ -64,34 +64,41 @@ export function normalizePitchClass(semitone: number): number {
 export interface SwaraCentralRange {
   min: number;
   max: number;
+  default: number;
 }
 
 export const SWARA_CENTRAL_RANGES: Record<SwaraId, SwaraCentralRange> = {
-  Sa:   { min: -6,  max: 6 },
+  Sa:   { min: -2,  max: 2, default: 0 },
 
-  Ri1:  { min: 90,  max: 112 },
-  Ri2:  { min: 182, max: 204 },
-  Ri3:  { min: 296, max: 318 },
+  Ri1:  { min: 90,  max: 112, default: 112 },
+  Ri2:  { min: 182, max: 204, default: 204 },
+  Ri3:  { min: 294, max: 316, default: 294 },
 
-  Ga1:  { min: 180, max: 202 },
-  Ga2:  { min: 294, max: 316 },
-  Ga3:  { min: 386, max: 408 },
+  Ga1:  { min: 182, max: 204, default: 204 },
+  Ga2:  { min: 294, max: 316, default: 294 },
+  Ga3:  { min: 386, max: 408, default: 386 },
 
-  Ma1:  { min: 492, max: 504 },
-  Ma2:  { min: 590, max: 612 },
+  Ma1:  { min: 498, max: 520, default: 498 },
+  Ma2:  { min: 590, max: 610, default: 590 },
 
-  Pa:   { min: 696, max: 708 },
+  Pa:   { min: 700, max: 704, default: 702 },
 
-  Dha1: { min: 792, max: 814 },
-  Dha2: { min: 884, max: 906 },
-  Dha3: { min: 998, max: 1020 },
+  Dha1: { min: 792, max: 814, default: 792 },
+  Dha2: { min: 884, max: 906, default: 884 },
+  Dha3: { min: 996, max: 1018, default: 996 },
 
-  Ni1:  { min: 882, max: 904 },
-  Ni2:  { min: 996, max: 1018 },
-  Ni3:  { min: 1088, max: 1110 },
+  Ni1:  { min: 884, max: 906, default: 884 },
+  Ni2:  { min: 996, max: 1018, default: 996 },
+  Ni3:  { min: 1088, max: 1110, default: 1088 },
 };
 
 export function getSwaraCentralCenter(swara: SwaraId): number {
   const range = SWARA_CENTRAL_RANGES[swara];
   return (range.min + range.max) / 2;
+}
+
+
+export function getSwaraDefaultCents(swara: SwaraId): number {
+  const range = SWARA_CENTRAL_RANGES[swara];
+  return range.default;
 }
