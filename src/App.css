@@ -491,11 +491,26 @@ tr:nth-child(14) {
 .ni { background: #c4b5fd; }
 
 .intonation-scale {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  margin-top: 4px;
-  opacity: 0.7;
+  position: relative;
+  height: 20px;
+  margin-top: 8px;
+}
+
+.intonation-scale span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.intonation-scale .scale-start {
+  left: 4px;
+  transform: none;
+}
+
+.intonation-scale .scale-end {
+  right: 4px;
+  transform: none;
 }
 
 .intonation-bar.precise {
@@ -503,6 +518,13 @@ tr:nth-child(14) {
   height: 28px;
   background: #000;
   border-radius: 6px;
+}
+
+.tick-line {
+  width: 1px;
+  height: 6px;
+  background: #888;
+  margin: 0 auto 2px;
 }
 
 .window {

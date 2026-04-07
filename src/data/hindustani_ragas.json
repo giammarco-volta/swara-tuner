@@ -813,10 +813,20 @@
     "time": "10 am to 1 pm"
   },
   {
-    "name": "Yaman Kalyan",
+    "name": "Yaman",
     "thaat": "Kalyan",
     "arohana": "S R G M’ P D N S.",
     "avarohana": "S. N D P M’ G R S",
+    "vadi": "G",
+    "samvadi": "N",
+    "pakad": ".N R G, R S, P M’ G R S",
+    "time": "7 to 10 pm"
+  },
+  {
+    "name": "Yaman Kalyan",
+    "thaat": "Kalyan",
+    "arohana": "S R G M’ P D N S.",
+    "avarohana": "S. N D P M G R S",
     "vadi": "G",
     "samvadi": "N",
     "pakad": ".N R G, R S, P M’ G R S",

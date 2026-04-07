@@ -132,3 +132,106 @@ export function analyzeDetectedPitch(
     tuningZone,
   };
 }
+
+function normalizeRagaText(input: string): string {
+  return input
+    .replace(/[’‘`´]/g, "'")     // normalizza apostrofi
+    .replace(/[.,;:|()[\]{}]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function hindustaniTokenToSwaraId(token: string): SwaraId | null {
+  switch (token) {
+    case "S": return "Sa";
+
+    case "r": return "Ri1";
+    case "R": return "Ri2";
+
+    case "g": return "Ga2";
+    case "G": return "Ga3";
+
+    case "M": return "Ma1";
+    case "M'": return "Ma2";
+
+    case "P": return "Pa";
+
+    case "d": return "Dha1";
+    case "D": return "Dha2";
+
+    case "n": return "Ni2";
+    case "N": return "Ni3";
+
+    default:
+      return null;
+  }
+}
+
+export function extractHindustaniSwaras(text: string): SwaraId[] {
+  const s = normalizeRagaText(text);
+  const result: SwaraId[] = [];
+
+  let i = 0;
+  while (i < s.length) {
+    const ch = s[i];
+    const next = i + 1 < s.length ? s[i + 1] : "";
+
+    if (ch === "M" && next === "'") {
+      result.push("Ma2");
+      i += 2;
+      continue;
+    }
+
+    const mapped = hindustaniTokenToSwaraId(ch);
+    if (mapped) {
+      result.push(mapped);
+    }
+
+    i += 1;
+  }
+
+  return result;
+}
+
+export function getUniqueHindustaniSwaras(
+  arohana?: string,
+  avarohana?: string,
+  pakad?: string,
+  chalan?: string
+): SwaraId[] {
+  const allText = [arohana, avarohana, pakad, chalan]
+    .filter(Boolean)
+    .join(" ");
+
+  const found = extractHindustaniSwaras(allText);
+  const set = new Set(found);
+
+  const order: SwaraId[] = [
+    "Sa",
+    "Ri1", "Ri2", "Ri3",
+    "Ga1", "Ga2", "Ga3",
+    "Ma1", "Ma2",
+    "Pa",
+    "Dha1", "Dha2", "Dha3",
+    "Ni1", "Ni2", "Ni3",
+  ];
+
+  return order.filter((sw) => set.has(sw));
+}
+
+export function getUniqueHindustaniSwarasFromText(text?: string): SwaraId[] {
+  const found = extractHindustaniSwaras(text ?? "");
+  const set = new Set(found);
+
+  const order: SwaraId[] = [
+    "Sa",
+    "Ri1", "Ri2", "Ri3",
+    "Ga1", "Ga2", "Ga3",
+    "Ma1", "Ma2",
+    "Pa",
+    "Dha1", "Dha2", "Dha3",
+    "Ni1", "Ni2", "Ni3",
+  ];
+
+  return order.filter((sw) => set.has(sw));
+}

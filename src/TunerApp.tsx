@@ -3,14 +3,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 
 import { analyzeDetectedPitch, type RagaConfig } from "./music/swaraMapper";
+import { getUniqueHindustaniSwarasFromText } from "./music/swaraMapper";
 
 import { type SwaraId, SWARA_CENTRAL_RANGES, getSwaraCentralCenter } from "./music/swaras";
 
-import hindustaniRagasJson from "./data/hindustani_ragas.json";
+import { hindustaniRagas } from "./music/ragas";
 import carnaticRagamsJson from "./data/carnatic_ragas.json";
 
 type RiChoice = "" | "Ri1" | "Ri2" | "Ri3";
-type GaChoice = "" | "Ga1" | "Ga2" | "Ga3";
+type GaChoice = "" | "Ga1" | "Ga2" | "Ga3"
 type MaChoice = "" | "Ma1" | "Ma2";
 type PaChoice = "" | "Pa";
 type DhaChoice = "" | "Dha1" | "Dha2" | "Dha3";
@@ -113,7 +114,7 @@ interface RagaPreset  {
     Ga2: "g",
     Ga3: "G",
     Ma1: "M",
-    Ma2: "m",
+    Ma2: "M'",
     Pa: "P",
     Dha1: "d",
     Dha2: "D",
@@ -224,21 +225,44 @@ function normalizeRagaRecord(
     return null;
   }
 
-  const arohanaRaw = extractStringArray(
-    item.arohana ?? item.aroha ?? item.aroganam ?? item.arohanam
-  );
+  const arohanaText =
+    item.arohana ?? item.aroha ?? item.aroganam ?? item.arohanam ?? "";
 
-  const avarohanaRaw = extractStringArray(
-    item.avarohana ?? item.avaroha ?? item.avaroganam ?? item.avarohanam
-  );
+  const avarohanaText =
+    item.avarohana ?? item.avaroha ?? item.avaroganam ?? item.avarohanam ?? "";
 
-  const arohanaParsed = arohanaRaw
-    .map((token) => parseSwaraToken(token, tradition))
-    .filter((x): x is SwaraId => x !== null);
+  let arohanaParsed: SwaraId[] = [];
+  let avarohanaParsed: SwaraId[] = [];
 
-  const avarohanaParsed = avarohanaRaw
-    .map((token) => parseSwaraToken(token, tradition))
-    .filter((x): x is SwaraId => x !== null);
+  if (tradition === "hindustani") {
+    if (Array.isArray(item.swaras) && item.swaras.length > 0) {
+      // Se il record ha già solo l’insieme totale, lo usiamo come fallback.
+      // Ma quando abbiamo i testi di arohana/avarohana è meglio parsarli separatamente.
+      arohanaParsed =
+        typeof arohanaText === "string" && arohanaText.trim()
+          ? getUniqueHindustaniSwarasFromText(String(arohanaText))
+          : (item.swaras as SwaraId[]);
+
+      avarohanaParsed =
+        typeof avarohanaText === "string" && avarohanaText.trim()
+          ? getUniqueHindustaniSwarasFromText(String(avarohanaText))
+          : (item.swaras as SwaraId[]);
+    } else {
+      arohanaParsed = getUniqueHindustaniSwarasFromText(String(arohanaText));
+      avarohanaParsed = getUniqueHindustaniSwarasFromText(String(avarohanaText));
+    }
+  } else {
+    const arohanaRaw = extractStringArray(arohanaText);
+    const avarohanaRaw = extractStringArray(avarohanaText);
+
+    arohanaParsed = arohanaRaw
+      .map((token) => parseSwaraToken(token, tradition))
+      .filter((x): x is SwaraId => x !== null);
+
+    avarohanaParsed = avarohanaRaw
+      .map((token) => parseSwaraToken(token, tradition))
+      .filter((x): x is SwaraId => x !== null);
+  }
 
   const vadi = parseSwaraToken(String(item.vadi ?? ""), tradition);
   const samvadi = parseSwaraToken(String(item.samvadi ?? ""), tradition);
@@ -298,7 +322,7 @@ function getRagaSearchScore(name: string, search: string): number {
 }
 
 const ALL_RAGAS: RagaPreset[] = [
-  ...loadRagasFromJson(hindustaniRagasJson, "hindustani"),
+  ...loadRagasFromJson(hindustaniRagas, "hindustani"),
   ...loadRagasFromJson(carnaticRagamsJson, "carnatic"),
 ];
 

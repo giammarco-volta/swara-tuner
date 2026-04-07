@@ -1,3 +1,16 @@
+import { SWARA_CENTRAL_RANGES } from "./music/swaras";
+
+function pct(cents: number): string {
+  return `${(cents / 1200) * 100}%`;
+}
+
+function segmentStyle(min: number, max: number) {
+  return {
+    left: pct(min),
+    width: pct(max - min),
+  };
+}
+
 export default function SwaraLanding() {
   return (
     <section className="landing">
@@ -149,36 +162,38 @@ export default function SwaraLanding() {
               <div className="intonation-map">
                 <div className="intonation-bar precise">
 
-                  <div className="tick sa" style={{ left: "0%" }}>S</div>
+                  <div className="tick sa" style={{ left: pct(0) }}>S</div>
 
-                  <div className="segment re" style={{ left: "7%", width: "2%" }}>r1</div>
-                  <div className="segment re" style={{ left: "12%", width: "2%" }}>r2</div>
+                  <div className="segment re" style={segmentStyle(SWARA_CENTRAL_RANGES.Ri1.min, SWARA_CENTRAL_RANGES.Ri1.max)}>r1</div>
+                  <div className="segment re" style={segmentStyle(SWARA_CENTRAL_RANGES.Ri2.min, SWARA_CENTRAL_RANGES.Ri2.max)}>r2</div>
 
-                  <div className="segment ga" style={{ left: "22%", width: "2%" }}>g2</div>
-                  <div className="segment ga" style={{ left: "27%", width: "2%" }}>g3</div>
+                  <div className="segment ga" style={segmentStyle(SWARA_CENTRAL_RANGES.Ga2.min, SWARA_CENTRAL_RANGES.Ga2.max)}>g2</div>
+                  <div className="segment ga" style={segmentStyle(SWARA_CENTRAL_RANGES.Ga3.min, SWARA_CENTRAL_RANGES.Ga3.max)}>g3</div>
 
-                  <div className="segment ma" style={{ left: "40%", width: "2%" }}>m1</div>
-                  <div className="segment ma" style={{ left: "45%", width: "2%" }}>m2</div>
+                  <div className="segment ma" style={segmentStyle(SWARA_CENTRAL_RANGES.Ma1.min, SWARA_CENTRAL_RANGES.Ma1.max)}>m1</div>
+                  <div className="segment ma" style={segmentStyle(SWARA_CENTRAL_RANGES.Ma2.min, SWARA_CENTRAL_RANGES.Ma2.max)}>m2</div>
 
-                  <div className="tick pa" style={{ left: "58%" }}>P</div>
+                  <div className="tick pa" style={{ left: pct(SWARA_CENTRAL_RANGES.Pa.default) }}>P</div>
 
-                  <div className="segment dha" style={{ left: "65%", width: "2%" }}>d1</div>
-                  <div className="segment dha" style={{ left: "70%", width: "2%" }}>d2</div>
+                  <div className="segment dha" style={segmentStyle(SWARA_CENTRAL_RANGES.Dha1.min, SWARA_CENTRAL_RANGES.Dha1.max)}>d1</div>
+                  <div className="segment dha" style={segmentStyle(SWARA_CENTRAL_RANGES.Dha2.min, SWARA_CENTRAL_RANGES.Dha2.max)}>d2</div>
 
-                  <div className="segment ni" style={{ left: "80%", width: "2%" }}>n2</div>
-                  <div className="segment ni" style={{ left: "85%", width: "2%" }}>n3</div>
+                  <div className="segment ni" style={segmentStyle(SWARA_CENTRAL_RANGES.Ni2.min, SWARA_CENTRAL_RANGES.Ni2.max)}>n2</div>
+                  <div className="segment ni" style={segmentStyle(SWARA_CENTRAL_RANGES.Ni3.min, SWARA_CENTRAL_RANGES.Ni3.max)}>n3</div>
 
                 </div>
 
                 <div className="intonation-scale">
-                  <span>0</span>
-                  <span>200</span>
-                  <span>400</span>
-                  <span>600</span>
-                  <span>800</span>
-                  <span>1000</span>
-                  <span>1200</span>
-                </div>
+                  <span className="scale-start">0</span>
+
+                  {[200, 400, 600, 800, 1000].map((c) => (
+                    <span key={c} style={{ left: pct(c) }}>
+                      {c}
+                    </span>
+                  ))}
+
+                  <span className="scale-end">1200</span>
+                </div>              
               </div>
             </div>            
           </details>
