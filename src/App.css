@@ -404,6 +404,43 @@ button:hover {
   font-weight: 600;
 }
 
+.landing details {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.landing summary {
+  cursor: pointer;
+  padding: 14px 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  list-style: none;
+  text-align: left;   /* ← domanda allineata a sinistra */
+}
+
+.landing summary::-webkit-details-marker {
+  display: none;
+}
+
+.landing summary::after {
+  content: "+";
+  float: right;
+  opacity: 0.8;
+}
+
+.landing details[open] summary::after {
+  content: "−";
+}
+
+.landing details p,
+.landing details ul {
+  padding: 0 16px 14px 16px;
+  text-align: left;   /* ← risposta allineata a sinistra */
+}
+
 html {
   scroll-behavior: smooth;
 }

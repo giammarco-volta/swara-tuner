@@ -388,6 +388,8 @@ export default function TunerApp() {
     [selectedRagaId]
   );
 
+  const currentRagaName = selectedRaga?.name ?? "";
+
   useEffect(() => {
     if (!selectedRagaId) return;
 
@@ -1547,27 +1549,49 @@ export default function TunerApp() {
       </div>
 
       <section className="panel tuner-panel">
-        <div className="view-toggle">
-          <button
-            type="button"
-            onClick={() => setTunerViewMode("meter")}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: 12,
+            flexWrap: "wrap",
+          }}
+        >
+          <div className="view-toggle" style={{ marginBottom: 0 }}>
+            <button
+              type="button"
+              onClick={() => setTunerViewMode("meter")}
+              style={{
+                opacity: tunerViewMode === "meter" ? 1 : 0.7,
+                fontWeight: tunerViewMode === "meter" ? 700 : 400,
+              }}
+            >
+              Meter
+            </button>
+            <button
+              type="button"
+              onClick={() => setTunerViewMode("circle")}
+              style={{
+                opacity: tunerViewMode === "circle" ? 1 : 0.7,
+                fontWeight: tunerViewMode === "circle" ? 700 : 400,
+              }}
+            >
+              Circle
+            </button>
+          </div>
+
+          <div
             style={{
-              opacity: tunerViewMode === "meter" ? 1 : 0.7,
-              fontWeight: tunerViewMode === "meter" ? 700 : 400,
+              fontSize: 15,
+              fontWeight: 600,
+              color: "rgba(255,255,255,0.88)",
+              textAlign: "right",
             }}
           >
-            Meter
-          </button>
-          <button
-            type="button"
-            onClick={() => setTunerViewMode("circle")}
-            style={{
-              opacity: tunerViewMode === "circle" ? 1 : 0.7,
-              fontWeight: tunerViewMode === "circle" ? 700 : 400,
-            }}
-          >
-            Circle
-          </button>
+            {currentRagaName}
+          </div>
         </div>
         <div
           style={{
@@ -1683,7 +1707,7 @@ export default function TunerApp() {
                   fill="none"
                   stroke={segment.color}
                   strokeWidth={circleStrokeWidth}
-                  strokeLinecap="round"
+                  strokeLinecap="butt"
                   opacity={0.95}
                 />
               ))}
@@ -1695,7 +1719,7 @@ export default function TunerApp() {
                   fill="none"
                   stroke={segment.color}
                   strokeWidth={circleStrokeWidth}
-                  strokeLinecap="round"
+                  strokeLinecap="butt"
                 />
               ))}
 
