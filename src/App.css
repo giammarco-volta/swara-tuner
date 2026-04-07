@@ -441,6 +441,93 @@ button:hover {
   text-align: left;   /* ← risposta allineata a sinistra */
 }
 
+table td {
+  text-align: left;
+}
+
+td:last-child {
+  text-align: right;
+}
+
+td:thead {
+  text-align: left;
+}
+
+tr:nth-child(1),
+tr:nth-child(14) {
+  font-weight: bold;
+}
+
+.intonation-map {
+  margin-top: 16px;
+}
+
+.intonation-bar {
+  position: relative;
+  height: 32px;
+  background: #000;
+  border-radius: 6px;
+}
+
+.segment {
+  position: absolute;
+  height: 100%;
+  border-radius: 4px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: bold;
+}
+
+/* colori (puoi adattarli al tuo tema) */
+.sa { background: #ffffff; }
+.pa { background: #ffffff; }
+.re { background: #7dd3fc; }
+.ga { background: #86efac; }
+.ma { background: #fde68a; }
+.dha { background: #fca5a5; }
+.ni { background: #c4b5fd; }
+
+.intonation-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-top: 4px;
+  opacity: 0.7;
+}
+
+.intonation-bar.precise {
+  position: relative;
+  height: 28px;
+  background: #000;
+  border-radius: 6px;
+}
+
+.window {
+  position: absolute;
+  height: 100%;
+  background: #7dd3fc;
+  border-radius: 2px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+}
+
+.tick {
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background: #fff;
+}
+
+.tick::after {
+  content: attr(data-label);
+}
+
 html {
   scroll-behavior: smooth;
 }
