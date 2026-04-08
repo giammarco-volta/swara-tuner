@@ -1349,8 +1349,8 @@ export default function TunerApp() {
     return circleSwaraLabels.map((label) => {
       const angle = centsToCircleAngle(label.centerCents);
 
-      const inner = polarToCartesian(circleCenter, circleCenter, circleRadius - circleStrokeWidth / 2 - 4, angle);
-      const outer = polarToCartesian(circleCenter, circleCenter, circleRadius + circleStrokeWidth / 2 + 4, angle);
+      const inner = polarToCartesian(circleCenter, circleCenter, circleRadius - circleStrokeWidth / 2, angle);
+      const outer = polarToCartesian(circleCenter, circleCenter, circleRadius + circleStrokeWidth / 2, angle);
 
       return {
         key: `tick-${label.key}`,
@@ -1400,15 +1400,24 @@ export default function TunerApp() {
 
       <section className="panel tuner-panel">
         <div className="tuner-toolbar">
-          <button
-            type="button"
-            onClick={handleMicButtonClick}
-            disabled={micStatus === "Requesting microphone..." || micStatus === "Listening..." || micStatus === "Microphone ready"}
-            className={`mic-toggle-button ${micButtonClass}`}
-          >
-            {getMicButtonLabel()}
-          </button>
+          <div className="mic-toolbar-group">
+            <button
+              type="button"
+              onClick={handleMicButtonClick}
+              disabled={
+                micStatus === "Requesting microphone..." ||
+                micStatus === "Listening..." ||
+                micStatus === "Microphone ready"
+              }
+              className={`mic-toggle-button ${micButtonClass}`}
+            >
+              {getMicButtonLabel()}
+            </button>
 
+            <a href="#mic-panel" className="panel-link">
+              Mic settings
+            </a>
+          </div>          
           <div className="view-toggle">
             <button
               type="button"
@@ -1426,7 +1435,21 @@ export default function TunerApp() {
             </button>
           </div>
 
-          <div className="current-raga-name">{currentRagaName || " "}</div>
+          <div style={{ textAlign: "right", marginLeft: "auto" }}>
+            <div
+              style={{
+                fontSize: 15,
+                fontWeight: 600,
+                color: "rgba(255,255,255,0.88)",
+              }}
+            >
+              {currentRagaName}
+            </div>
+
+            <a href="#music-panel" className="panel-link">
+              {tradition === "hindustani" ? "Change Rāg" : "Change Ragam"}
+            </a>
+          </div>
         </div>
 
         {tunerViewMode === "meter" ? (
@@ -1494,7 +1517,6 @@ export default function TunerApp() {
                             : "Out of tune"}
               </div>
             </div>
-
             <div className="debug">
               <div>
                 Cents from Sa: {isCalibrating || !result || result.centsFromSa === null ? "--" : Math.round(result.centsFromSa)}
@@ -1662,7 +1684,7 @@ export default function TunerApp() {
       </section>
 
       <div className="top-controls-grid">
-        <section className="panel music-panel">
+        <section id="music-panel" className="panel music-panel">
           <div className="subsection-label">Tradition</div>
 
           <div className="tradition-toggle" role="radiogroup" aria-label="Tradition">
@@ -1686,12 +1708,12 @@ export default function TunerApp() {
           <div className="panel-spacer" />
 
           <div className="subsection-label">
-            {tradition === "hindustani" ? "Raag" : "Ragam"}
+            {tradition === "hindustani" ? "Rāg" : "Ragam"}
           </div>
 
           <input
             type="text"
-            placeholder={tradition === "hindustani" ? "Search raag..." : "Search ragam..."}
+            placeholder={tradition === "hindustani" ? "Search rāg..." : "Search ragam..."}
             value={ragaSearch}
             onChange={(e) => setRagaSearch(e.target.value)}
           />
@@ -1700,8 +1722,8 @@ export default function TunerApp() {
             {availableRagas.length}{" "}
             {tradition === "hindustani"
               ? availableRagas.length === 1
-                ? "raag found"
-                : "raags found"
+                ? "rāg found"
+                : "rāgs found"
               : availableRagas.length === 1
                 ? "ragam found"
                 : "ragams found"}
@@ -1750,7 +1772,7 @@ export default function TunerApp() {
           </div>
         </section>
 
-        <section className="panel mic-panel">
+        <section id="mic-panel" className="panel mic-panel">
           <h2>Microphone input</h2>
 
           <div className="subsection-label">Gain</div>
