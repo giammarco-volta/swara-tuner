@@ -1435,7 +1435,7 @@ export default function TunerApp() {
             </button>
           </div>
 
-          <div style={{ textAlign: "right", marginLeft: "auto" }}>
+          <div className="raga-toolbar">
             <div
               style={{
                 fontSize: 15,
