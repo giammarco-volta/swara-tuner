@@ -1512,11 +1512,6 @@ export default function TunerApp() {
                             : "Out of tune"}
               </div>
             </div>
-            <div className="debug">
-              <div>
-                Cents from Sa: {isCalibrating || !result || result.centsFromSa === null ? "--" : Math.round(result.centsFromSa)}
-              </div>
-            </div>
           </>
         ) : (
           <div className="circle-container">
@@ -1671,9 +1666,16 @@ export default function TunerApp() {
             />
 
             <div className="readout">±{toleranceCents} cents</div>
-            <div className="hint">
-              Current pitch: {smoothedDetectedPitch ? `${smoothedDetectedPitch.toFixed(2)} Hz` : "--"}
-            </div>
+            <div className="hint current-pitch">
+              Current pitch:{" "}
+              {result?.displayedSwara && result.deviationCents !== null && result.deviationCents !== undefined
+                ? `${getSwaraLabel(result.displayedSwara, tradition)}${
+                    Math.round(result.deviationCents) === 0
+                      ? ""
+                      : ` ${result.deviationCents > 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`
+                  }`
+                : "--"}
+            </div>            
           </div>
         </div>
       </section>
@@ -1702,43 +1704,47 @@ export default function TunerApp() {
 
           <div className="panel-spacer" />
 
-          <div className="subsection-label">
-            {tradition === "hindustani" ? "Rāg" : "Ragam"}
+          <div className="raga-header-row">
+            <div className="subsection-label">
+              {tradition === "hindustani" ? "Rāg" : "Ragam"}
+            </div>
+
+            <div className="hint raga-found-count">
+              {availableRagas.length}{" "}
+              {tradition === "hindustani"
+                ? availableRagas.length === 1
+                  ? "rāg found"
+                  : "rāgs found"
+                : availableRagas.length === 1
+                  ? "ragam found"
+                  : "ragams found"}
+            </div>
           </div>
 
-          <input
-            type="text"
-            placeholder={tradition === "hindustani" ? "Search rāg..." : "Search ragam..."}
-            value={ragaSearch}
-            onChange={(e) => setRagaSearch(e.target.value)}
-          />
+          <div className="raga-select-row">
+            <input
+              type="text"
+              placeholder={tradition === "hindustani" ? "Search rāg..." : "Search ragam..."}
+              value={ragaSearch}
+              onChange={(e) => setRagaSearch(e.target.value)}
+            />
 
-          <div className="hint">
-            {availableRagas.length}{" "}
-            {tradition === "hindustani"
-              ? availableRagas.length === 1
-                ? "rāg found"
-                : "rāgs found"
-              : availableRagas.length === 1
-                ? "ragam found"
-                : "ragams found"}
+            {availableRagas.length > 0 ? (
+              <select
+                value={selectedRagaId}
+                onChange={(e) => setSelectedRagaId(e.target.value)}
+              >
+                <option value="">— none —</option>
+                {availableRagas.map((raga) => (
+                  <option key={raga.id} value={raga.id}>
+                    {raga.name}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div className="hint raga-no-matches">No matches found</div>
+            )}
           </div>
-
-          {availableRagas.length > 0 ? (
-            <select
-              value={selectedRagaId}
-              onChange={(e) => setSelectedRagaId(e.target.value)}
-            >
-              <option value="">— none —</option>
-              {availableRagas.map((raga) => (
-                <option key={raga.id} value={raga.id}>
-                  {raga.name}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <div className="hint">No matches found</div>
-          )}
 
           <div className="panel-spacer" />
 

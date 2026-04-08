@@ -814,3 +814,58 @@ tr:nth-child(14) {
     align-self: start;
   }
 }
+
+.raga-header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.raga-found-count {
+  margin-top: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.raga-select-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.raga-no-matches {
+  margin-top: 0;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.current-pitch {
+  text-align: left;
+  font-family: monospace;
+  opacity: 0.9;
+}
+
+@media (max-width: 700px) {
+  .raga-header-row {
+    align-items: center;
+  }
+
+  .raga-select-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .tradition-toggle {
+    flex-wrap: nowrap;
+  }
+
+  .tradition-toggle button {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
