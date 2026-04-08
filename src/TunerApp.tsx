@@ -3,12 +3,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 
 import { analyzeDetectedPitch, type RagaConfig } from "./music/swaraMapper";
-import { getUniqueHindustaniSwarasFromText } from "./music/swaraMapper";
 
 import { type SwaraId, SWARA_CENTRAL_RANGES, getSwaraCentralCenter } from "./music/swaras";
 
 import { hindustaniRagas } from "./music/ragas";
 import carnaticRagamsJson from "./data/carnatic_ragas.json";
+
+import { buildDirectionalHindustaniSwaras } from "./music/ragaParsing";
 
 type RiChoice = "" | "Ri1" | "Ri2" | "Ri3";
 type GaChoice = "" | "Ga1" | "Ga2" | "Ga3";
@@ -251,19 +252,13 @@ function normalizeRagaRecord(
   let avarohanaParsed: SwaraId[] = [];
 
   if (tradition === "hindustani") {
-    if (Array.isArray(item.swaras) && item.swaras.length > 0) {
-      arohanaParsed =
-        typeof arohanaText === "string" && arohanaText.trim()
-          ? getUniqueHindustaniSwarasFromText(String(arohanaText))
-          : (item.swaras as SwaraId[]);
-
-      avarohanaParsed =
-        typeof avarohanaText === "string" && avarohanaText.trim()
-          ? getUniqueHindustaniSwarasFromText(String(avarohanaText))
-          : (item.swaras as SwaraId[]);
+    if (Array.isArray(item.arohanaSwaras) && Array.isArray(item.avarohanaSwaras)) {
+      arohanaParsed = item.arohanaSwaras as SwaraId[];
+      avarohanaParsed = item.avarohanaSwaras as SwaraId[];
     } else {
-      arohanaParsed = getUniqueHindustaniSwarasFromText(String(arohanaText));
-      avarohanaParsed = getUniqueHindustaniSwarasFromText(String(avarohanaText));
+      const directional = buildDirectionalHindustaniSwaras(item);
+      arohanaParsed = directional.arohana;
+      avarohanaParsed = directional.avarohana;
     }
   } else {
     const arohanaRaw = extractStringArray(arohanaText);
