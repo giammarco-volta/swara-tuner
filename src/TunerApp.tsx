@@ -11,7 +11,7 @@ import { hindustaniRagas } from "./music/ragas";
 import carnaticRagamsJson from "./data/carnatic_ragas.json";
 
 type RiChoice = "" | "Ri1" | "Ri2" | "Ri3";
-type GaChoice = "" | "Ga1" | "Ga2" | "Ga3"
+type GaChoice = "" | "Ga1" | "Ga2" | "Ga3";
 type MaChoice = "" | "Ma1" | "Ma2";
 type PaChoice = "" | "Pa";
 type DhaChoice = "" | "Dha1" | "Dha2" | "Dha3";
@@ -35,7 +35,7 @@ const NI_OPTIONS: NiChoice[] = ["", "Ni1", "Ni2", "Ni3"];
 
 type Tradition = "hindustani" | "carnatic";
 
-interface RagaPreset  {
+interface RagaPreset {
   id: string;
   name: string;
   tradition: Tradition;
@@ -45,42 +45,20 @@ interface RagaPreset  {
   samvadi?: SwaraId | null;
 }
 
-  function midiToFrequency(midi: number): number {
-    return 440 * Math.pow(2, (midi - 69) / 12);
-  }
+function midiToFrequency(midi: number): number {
+  return 440 * Math.pow(2, (midi - 69) / 12);
+}
 
-  function ChoiceSelect<T extends string>({
-    value,
-    options,
-    onChange,
-    tradition,
-  }: {
-    value: T;
-    options: T[];
-    onChange: (value: T) => void;
-    tradition: Tradition;
-  }) {
-    return (
-      <select value={value} onChange={(e) => onChange(e.target.value as T)}>
-        {options.map((option) => (
-          <option key={option || "none"} value={option}>
-            {option === "" ? "— none —" : getSwaraLabel(option, tradition)}
-          </option>
-        ))}
-      </select>
-    );
-  }
+function getVisibleOptions<T extends string>(options: T[], tradition: Tradition): T[] {
+  return options.filter((option) => {
+    if (option === "") return true;
+    const label = getSwaraLabel(option, tradition);
+    return label !== "";
+  });
+}
 
-  function getVisibleOptions<T extends string>(options: T[], tradition: Tradition): T[] {
-    return options.filter((option) => {
-      if (option === "") return true;
-      const label = getSwaraLabel(option, tradition);
-      return label !== "";
-    });
-  }
-
-  function getSwaraLabel(swara: string, tradition: Tradition): string {
-  if (!swara) return "— none —";
+function getSwaraLabel(swara: string, tradition: Tradition): string {
+  if (!swara) return "—";
 
   if (tradition === "carnatic") {
     const carnaticMap: Record<string, string> = {
@@ -125,6 +103,44 @@ interface RagaPreset  {
   };
 
   return hindustaniMap[swara] ?? "";
+}
+
+function ChoiceCycleButton<T extends string>({
+  title,
+  value,
+  options,
+  onChange,
+  tradition,
+  isFixed = false,
+}: {
+  title: string;
+  value: T;
+  options: T[];
+  onChange?: (value: T) => void;
+  tradition: Tradition;
+  isFixed?: boolean;
+}) {
+  const display = value ? getSwaraLabel(value, tradition) : "—";
+
+  const handleClick = () => {
+    if (isFixed || !onChange || options.length === 0) return;
+    const currentIndex = Math.max(0, options.indexOf(value));
+    const nextIndex = (currentIndex + 1) % options.length;
+    onChange(options[nextIndex]);
+  };
+
+  return (
+    <button
+      type="button"
+      className={`swara-chip ${isFixed ? "fixed" : ""}`}
+      onClick={handleClick}
+      disabled={isFixed}
+      title={isFixed ? title : `${title}: tap to change`}
+    >
+      <span className="swara-chip__title">{title}</span>
+      <span className="swara-chip__value">{display}</span>
+    </button>
+  );
 }
 
 function parseSwaraToken(token: string, tradition: Tradition): SwaraId | null {
@@ -236,8 +252,6 @@ function normalizeRagaRecord(
 
   if (tradition === "hindustani") {
     if (Array.isArray(item.swaras) && item.swaras.length > 0) {
-      // Se il record ha già solo l’insieme totale, lo usiamo come fallback.
-      // Ma quando abbiamo i testi di arohana/avarohana è meglio parsarli separatamente.
       arohanaParsed =
         typeof arohanaText === "string" && arohanaText.trim()
           ? getUniqueHindustaniSwarasFromText(String(arohanaText))
@@ -282,12 +296,12 @@ function loadRagasFromJson(data: any, tradition: Tradition): RagaPreset[] {
   const arr: any[] = Array.isArray(data)
     ? data
     : Array.isArray(data?.ragas)
-    ? data.ragas
-    : Array.isArray(data?.raags)
-    ? data.raags
-    : Array.isArray(data?.ragams)
-    ? data.ragams
-    : [];
+      ? data.ragas
+      : Array.isArray(data?.raags)
+        ? data.raags
+        : Array.isArray(data?.ragams)
+          ? data.ragams
+          : [];
 
   return arr
     .map((item: any) => normalizeRagaRecord(item, tradition))
@@ -341,11 +355,15 @@ export default function TunerApp() {
 
   const [tradition, setTradition] = useState<Tradition>("hindustani");
   const [selectedRagaId, setSelectedRagaId] = useState("");
-
   const [ragaSearch, setRagaSearch] = useState("");
 
   const [pitchDetectorMode] = useState<PitchDetectorMode>("mpm");
   const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>("circle");
+
+  const [inputGain, setInputGain] = useState(2.5);
+  const [useCompression, setUseCompression] = useState(true);
+
+  const [inputLevel, setInputLevel] = useState(0);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -360,6 +378,11 @@ export default function TunerApp() {
   const largeJumpCandidateRef = useRef<number | null>(null);
   const largeJumpCountRef = useRef(0);
   const emaCentsRef = useRef<number | null>(null);
+
+  const gainNodeRef = useRef<GainNode | null>(null);
+  const compressorRef = useRef<DynamicsCompressorNode | null>(null);
+
+  const inputLevelRef = useRef(0);
 
   const [arohanaChoices, setArohanaChoices] = useState<OrderedScaleChoices>({
     ri: "Ri2",
@@ -402,10 +425,10 @@ export default function TunerApp() {
   }, [tradition, ragaSearch]);
 
   useEffect(() => {
-      if (availableRagas.length > 0 && !selectedRagaId) {
-        setSelectedRagaId(availableRagas[0].id);
-      }
-    }, [availableRagas]);
+    if (availableRagas.length > 0 && !selectedRagaId) {
+      setSelectedRagaId(availableRagas[0].id);
+    }
+  }, [availableRagas, selectedRagaId]);
 
   const selectedRaga = useMemo(
     () => ALL_RAGAS.find((raga) => raga.id === selectedRagaId) ?? null,
@@ -431,6 +454,18 @@ export default function TunerApp() {
     }
   }, [availableRagas, selectedRagaId, ragaSearch]);
 
+  useEffect(() => {
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = inputGain;
+    }
+  }, [inputGain]);
+
+  useEffect(() => {
+    if (sourceNodeRef.current && audioContextRef.current) {
+      rebuildAudioGraph();
+    }
+  }, [useCompression]);
+
   const config: RagaConfig = useMemo(
     () => ({
       arohana: buildArohana(arohanaChoices),
@@ -440,6 +475,7 @@ export default function TunerApp() {
   );
 
   const tunerFrequencyHz = smoothedDetectedPitch;
+  const levelNormalized = Math.min(inputLevel / 0.05, 1);
 
   const result = useMemo(
     () =>
@@ -453,23 +489,23 @@ export default function TunerApp() {
     isCalibrating || !result
       ? ""
       : result.allowed === false
-      ? "swara-out"
-      : result.tuningZone === "perfect"
-      ? "swara-perfect"
-      : result.tuningZone === "tolerated"
-      ? "swara-tolerated"
-      : "swara-out";
+        ? "swara-out"
+        : result.tuningZone === "perfect"
+          ? "swara-perfect"
+          : result.tuningZone === "tolerated"
+            ? "swara-tolerated"
+            : "swara-out";
 
   const circleSwaraColor =
     isCalibrating || !result
       ? "white"
       : result.allowed === false
-      ? "#ff453a"
-      : result.tuningZone === "perfect"
-      ? "#32d74b"
-      : result.tuningZone === "tolerated"
-      ? "#ffd60a"
-      : "#ff453a";
+        ? "#ff453a"
+        : result.tuningZone === "perfect"
+          ? "#32d74b"
+          : result.tuningZone === "tolerated"
+            ? "#ffd60a"
+            : "#ff453a";
 
   const meterOffset =
     isCalibrating || !result || result.deviationCents === null
@@ -510,13 +546,6 @@ export default function TunerApp() {
     outerRightOffset !== null ? offsetToPercent(outerRightOffset) : 50;
   const outerWidthPercent = outerRightPercent - outerLeftPercent;
 
-  console.log(
-    "Loaded ragas:",
-    ALL_RAGAS.length,
-    ALL_RAGAS.filter((r) => r.tradition === "hindustani").length,
-    ALL_RAGAS.filter((r) => r.tradition === "carnatic").length
-  );
-
   async function startSaCalibration() {
     setMicStatus("Requesting microphone...");
     const ok = await ensureMicrophoneReady();
@@ -526,7 +555,6 @@ export default function TunerApp() {
       return;
     }
 
-    //smoothedCentsRef.current = null;
     calibrationPitchesRef.current = [];
 
     setIsCalibrating(true);
@@ -580,15 +608,8 @@ export default function TunerApp() {
         );
       }
 
-      if (!analyserRef.current && audioContextRef.current && sourceNodeRef.current) {
-        const analyser = audioContextRef.current.createAnalyser();
-        analyser.fftSize = 4096;
-        analyser.smoothingTimeConstant = 0.85;
-
-        sourceNodeRef.current.connect(analyser);
-
-        analyserRef.current = analyser;
-        timeDomainDataRef.current = new Float32Array(analyser.fftSize);
+      if (!analyserRef.current) {
+        rebuildAudioGraph();
       }
 
       setMicStatus("Microphone ready");
@@ -598,6 +619,31 @@ export default function TunerApp() {
       setMicStatus("Microphone access denied or unavailable");
       return false;
     }
+  }
+
+  async function handleMicButtonClick() {
+    if (micStatus === "Microphone ready" || micStatus === "Listening..." || micStatus === "Requesting microphone...") {
+      return;
+    }
+
+    setMicStatus("Requesting microphone...");
+    const ok = await ensureMicrophoneReady();
+    if (!ok) return;
+
+    smoothedCentsRef.current = null;
+    largeJumpCandidateRef.current = null;
+    largeJumpCountRef.current = 0;
+
+    startAudioMonitoring();
+    setMicStatus("Microphone ready");
+  }
+
+  function getMicButtonLabel(): string {
+    if (micStatus === "Requesting microphone...") return "Requesting microphone...";
+    if (micStatus === "Listening...") return "Listening…";
+    if (micStatus === "Microphone ready") return "Microphone ready";
+    if (micStatus === "Microphone access denied or unavailable") return "Microphone unavailable";
+    return "Enable microphone";
   }
 
   function startAudioMonitoring() {
@@ -610,6 +656,11 @@ export default function TunerApp() {
         analyser.getFloatTimeDomainData(data as Float32Array<ArrayBuffer>);
 
         const rms = computeRms(data);
+        const prev = inputLevelRef.current;
+        const smoothed = prev * 0.8 + rms * 0.2;
+
+        inputLevelRef.current = smoothed;
+        setInputLevel(smoothed);
 
         const estimatedPitch =
           pitchDetectorMode === "mpm"
@@ -618,7 +669,7 @@ export default function TunerApp() {
         const smoothedPitch = smoothPitchMusically(estimatedPitch, saHz);
         setSmoothedDetectedPitch(smoothedPitch);
 
-        if (isCalibratingRef.current && smoothedPitch !== null && rms >= 0.03) {
+        if (isCalibratingRef.current && smoothedPitch !== null && rms >= 0.015) {
           calibrationPitchesRef.current.push(smoothedPitch);
         }
       }
@@ -629,6 +680,57 @@ export default function TunerApp() {
     if (animationFrameRef.current === null) {
       animationFrameRef.current = requestAnimationFrame(update);
     }
+  }
+
+  function rebuildAudioGraph() {
+    const audioContext = audioContextRef.current;
+    const sourceNode = sourceNodeRef.current;
+
+    if (!audioContext || !sourceNode) return;
+
+    try {
+      sourceNode.disconnect();
+    } catch {}
+
+    try {
+      gainNodeRef.current?.disconnect();
+    } catch {}
+
+    try {
+      compressorRef.current?.disconnect();
+    } catch {}
+
+    try {
+      analyserRef.current?.disconnect();
+    } catch {}
+
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = inputGain;
+
+    const compressor = audioContext.createDynamicsCompressor();
+    compressor.threshold.value = -50;
+    compressor.knee.value = 40;
+    compressor.ratio.value = 12;
+    compressor.attack.value = 0;
+    compressor.release.value = 0.25;
+
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 4096;
+    analyser.smoothingTimeConstant = 0.85;
+
+    if (useCompression) {
+      sourceNode.connect(compressor);
+      compressor.connect(gainNode);
+    } else {
+      sourceNode.connect(gainNode);
+    }
+
+    gainNode.connect(analyser);
+
+    gainNodeRef.current = gainNode;
+    compressorRef.current = compressor;
+    analyserRef.current = analyser;
+    timeDomainDataRef.current = new Float32Array(analyser.fftSize);
   }
 
   function computeRms(buffer: Float32Array): number {
@@ -669,7 +771,6 @@ export default function TunerApp() {
       return null;
     }
 
-    // Rimuove l'offset DC
     let mean = 0;
     for (let i = 0; i < size; i++) {
       mean += buffer[i];
@@ -681,7 +782,6 @@ export default function TunerApp() {
       centered[i] = buffer[i] - mean;
     }
 
-    // Range frequenze voce che ci interessa
     const minFreq = 80;
     const maxFreq = 500;
 
@@ -713,7 +813,7 @@ export default function TunerApp() {
         continue;
       }
 
-      const corr = sum / denom; // correlazione normalizzata [-1..1]
+      const corr = sum / denom;
 
       if (corr > bestCorr) {
         bestCorr = corr;
@@ -721,12 +821,10 @@ export default function TunerApp() {
       }
     }
 
-    // soglia minima di affidabilità
     if (bestLag < 0 || bestCorr < 0.65) {
       return null;
     }
 
-    // raffinamento parabolico attorno al massimo
     const corrAt = (lag: number): number => {
       let sum = 0;
       let norm1 = 0;
@@ -789,7 +887,6 @@ export default function TunerApp() {
       return null;
     }
 
-    // rimozione offset DC
     let mean = 0;
     for (let i = 0; i < size; i++) {
       mean += buffer[i];
@@ -811,7 +908,6 @@ export default function TunerApp() {
       return null;
     }
 
-    // NSDF = 2 * acf / (energy1 + energy2)
     const nsdf = new Float32Array(maxLag + 1);
 
     for (let tau = minLag; tau <= maxLag; tau++) {
@@ -828,7 +924,6 @@ export default function TunerApp() {
       nsdf[tau] = divisor > 0 ? (2 * acf) / divisor : 0;
     }
 
-    // cerchiamo il miglior picco positivo locale
     let bestLag = -1;
     let bestValue = -1;
 
@@ -839,8 +934,6 @@ export default function TunerApp() {
 
       const isLocalPeak = curr > prev && curr >= next;
       if (!isLocalPeak) continue;
-
-      // soglia minima di affidabilità
       if (curr < 0.75) continue;
 
       if (curr > bestValue) {
@@ -853,7 +946,6 @@ export default function TunerApp() {
       return null;
     }
 
-    // raffinamento parabolico
     let refinedLag = bestLag;
     {
       const y1 = nsdf[bestLag - 1];
@@ -944,19 +1036,19 @@ export default function TunerApp() {
     const newCents = 1200 * Math.log2(newPitch / saHz);
     let emaCents = newCents;
 
-  if (emaCentsRef.current === null) {
-    emaCentsRef.current = newCents;
-  } else {
-    let deltaEma = newCents - emaCentsRef.current;
-    while (deltaEma > 600) deltaEma -= 1200;
-    while (deltaEma < -600) deltaEma += 1200;
+    if (emaCentsRef.current === null) {
+      emaCentsRef.current = newCents;
+    } else {
+      let deltaEma = newCents - emaCentsRef.current;
+      while (deltaEma > 600) deltaEma -= 1200;
+      while (deltaEma < -600) deltaEma += 1200;
 
-    const emaAlpha = 0.18;
-    emaCentsRef.current = emaCentsRef.current + emaAlpha * deltaEma;
-  }
+      const emaAlpha = 0.18;
+      emaCentsRef.current = emaCentsRef.current + emaAlpha * deltaEma;
+    }
 
-  emaCents = emaCentsRef.current;
-  const previousCents = smoothedCentsRef.current;
+    emaCents = emaCentsRef.current;
+    const previousCents = smoothedCentsRef.current;
 
     if (previousCents === null) {
       smoothedCentsRef.current = newCents;
@@ -972,7 +1064,6 @@ export default function TunerApp() {
 
     const absDelta = Math.abs(delta);
 
-    // caso normale: piccoli spostamenti
     if (absDelta <= 35) {
       largeJumpCandidateRef.current = null;
       largeJumpCountRef.current = 0;
@@ -983,7 +1074,6 @@ export default function TunerApp() {
       return saHz * Math.pow(2, smoothedCents / 1200);
     }
 
-    // caso salto ampio: lo accettiamo solo se persiste in modo coerente
     const candidate = largeJumpCandidateRef.current;
 
     if (candidate !== null) {
@@ -1002,23 +1092,19 @@ export default function TunerApp() {
       largeJumpCountRef.current = 1;
     }
 
-    // se il salto grande si ripete per abbastanza frame, aggancia rapidamente
     if (largeJumpCountRef.current >= 2) {
       const alpha = 0.38;
       const smoothedCents = previousCents + alpha * delta;
       smoothedCentsRef.current = smoothedCents;
 
-      // una volta agganciato, resettiamo il candidato
       largeJumpCandidateRef.current = null;
       largeJumpCountRef.current = 0;
 
       return saHz * Math.pow(2, smoothedCents / 1200);
     }
 
-    // finché non siamo convinti, manteniamo il valore precedente
     return saHz * Math.pow(2, previousCents / 1200);
   }
-
 
   function normalizeCentsToOctave(cents: number): number {
     let wrapped = cents % 1200;
@@ -1027,7 +1113,7 @@ export default function TunerApp() {
   }
 
   function centsToCircleAngle(cents: number): number {
-    return normalizeCentsToOctave(cents) / 1200 * Math.PI * 2 - Math.PI / 2;
+    return (normalizeCentsToOctave(cents) / 1200) * Math.PI * 2 - Math.PI / 2;
   }
 
   function polarToCartesian(cx: number, cy: number, radius: number, angle: number) {
@@ -1104,6 +1190,7 @@ export default function TunerApp() {
   }
 
   function getCircleStatusText(): string {
+    if (micStatus !== "Microphone ready" && micStatus !== "Listening...") return "Microphone not enabled";
     if (isCalibrating) return `Calibrating ${getSwaraLabel("Sa", tradition)}`;
     if (result?.allowed === null || result?.allowed === undefined) return "No note detected";
     if (result.allowed === false) return "Not allowed";
@@ -1160,46 +1247,45 @@ export default function TunerApp() {
   interface CircleSlot {
     key: string;
     cents: number;
-    primary: SwaraId;
     aliases: SwaraId[];
   }
 
   const CIRCLE_SLOTS: CircleSlot[] = [
-    { key: "Sa",     cents: 0,    primary: "Sa",   aliases: ["Sa"] },
-    { key: "Ri1",    cents: 100,  primary: "Ri1",  aliases: ["Ri1"] },
-    { key: "Ri2Ga1", cents: 200,  primary: "Ri2",  aliases: ["Ri2", "Ga1"] },
-    { key: "Ri3Ga2", cents: 300,  primary: "Ri3",  aliases: ["Ri3", "Ga2"] },
-    { key: "Ga3",    cents: 400,  primary: "Ga3",  aliases: ["Ga3"] },
-    { key: "Ma1",    cents: 500,  primary: "Ma1",  aliases: ["Ma1"] },
-    { key: "Ma2",    cents: 600,  primary: "Ma2",  aliases: ["Ma2"] },
-    { key: "Pa",     cents: 700,  primary: "Pa",   aliases: ["Pa"] },
-    { key: "Dha1",   cents: 800,  primary: "Dha1", aliases: ["Dha1"] },
-    { key: "Dha2Ni1", cents: 900, primary: "Dha2", aliases: ["Dha2", "Ni1"] },
-    { key: "Dha3Ni2", cents: 1000, primary: "Dha3", aliases: ["Dha3", "Ni2"] },
-    { key: "Ni3",    cents: 1100, primary: "Ni3",  aliases: ["Ni3"] },
+    { key: "Sa", cents: 0, aliases: ["Sa"] },
+    { key: "Ri1", cents: 112, aliases: ["Ri1"] },
+    { key: "Ri2Ga1", cents: 204, aliases: ["Ri2", "Ga1"] },
+    { key: "Ri3Ga2", cents: 294, aliases: ["Ri3", "Ga2"] },
+    { key: "Ga3", cents: 386, aliases: ["Ga3"] },
+    { key: "Ma1", cents: 498, aliases: ["Ma1"] },
+    { key: "Ma2", cents: 590, aliases: ["Ma2"] },
+    { key: "Pa", cents: 702, aliases: ["Pa"] },
+    { key: "Dha1", cents: 792, aliases: ["Dha1"] },
+    { key: "Dha2Ni1", cents: 884, aliases: ["Dha2", "Ni1"] },
+    { key: "Dha3Ni2", cents: 996, aliases: ["Dha3", "Ni2"] },
+    { key: "Ni3", cents: 1110, aliases: ["Ni3"] },
   ];
 
-  function getFirstVisibleSlotSwara(slot: CircleSlot, tradition: Tradition): SwaraId | null {
+  function getFirstVisibleSlotSwara(slot: CircleSlot, currentTradition: Tradition): SwaraId | null {
     for (const swara of slot.aliases) {
-      if (getSwaraLabel(swara, tradition) !== "") {
+      if (getSwaraLabel(swara, currentTradition) !== "") {
         return swara;
       }
     }
     return null;
   }
 
-  function getSlotDisplaySwara(slot: CircleSlot, tradition: Tradition): SwaraId | null {
+  function getSlotDisplaySwara(slot: CircleSlot, currentTradition: Tradition): SwaraId | null {
     const allowed = slot.aliases.filter((swara) =>
       config.arohana.includes(swara) || config.avarohana.includes(swara)
     );
 
     for (const swara of allowed) {
-      if (getSwaraLabel(swara, tradition) !== "") {
+      if (getSwaraLabel(swara, currentTradition) !== "") {
         return swara;
       }
     }
 
-    return getFirstVisibleSlotSwara(slot, tradition);
+    return getFirstVisibleSlotSwara(slot, currentTradition);
   }
 
   const circleSwaraLabels = useMemo(() => {
@@ -1274,7 +1360,7 @@ export default function TunerApp() {
         y2: outer.y,
       };
     });
-  }, [circleSwaraLabels]);  
+  }, [circleSwaraLabels]);
 
   const circleNeedleAngle =
     isCalibrating || !result || result.centsFromSa === null
@@ -1289,343 +1375,58 @@ export default function TunerApp() {
   const circleCenterSwaraText = isCalibrating
     ? getSwaraLabel("Sa", tradition)
     : result?.displayedSwara
-    ? getSwaraLabel(result.displayedSwara, tradition)
-    : "--";
+      ? getSwaraLabel(result.displayedSwara, tradition)
+      : "--";
 
   const circleStatusText = getCircleStatusText();
+
+  const visibleRiOptions = useMemo(() => getVisibleOptions(RI_OPTIONS, tradition), [tradition]);
+  const visibleGaOptions = useMemo(() => getVisibleOptions(GA_OPTIONS, tradition), [tradition]);
+  const visibleMaOptions = useMemo(() => getVisibleOptions(MA_OPTIONS, tradition), [tradition]);
+  const visiblePaOptions = useMemo(() => getVisibleOptions(PA_OPTIONS, tradition), [tradition]);
+  const visibleDhaOptions = useMemo(() => getVisibleOptions(DHA_OPTIONS, tradition), [tradition]);
+  const visibleNiOptions = useMemo(() => getVisibleOptions(NI_OPTIONS, tradition), [tradition]);
+
+  const micButtonClass =
+    micStatus === "Microphone ready"
+      ? "is-ready"
+      : micStatus === "Microphone access denied or unavailable"
+        ? "is-error"
+        : "";
 
   return (
     <main id="tuner" className="app">
       <h2>Swara Tuner</h2>
 
-      <div className="grid">
-        <section className="panel">
-          <div style={{ marginTop: 12 }}>
-            <button
-              onClick={async () => {
-                setMicStatus("Requesting microphone...");
-                const ok = await ensureMicrophoneReady();
-                if (!ok) return;
-
-                smoothedCentsRef.current = null;
-                largeJumpCandidateRef.current = null;
-                largeJumpCountRef.current = 0;
-
-                startAudioMonitoring();
-                setMicStatus("Microphone ready");
-              }}
-            >
-              Enable microphone
-            </button>
-          </div>
-
-          <div className="hint" style={{ marginTop: 8 }}>
-            Mic status:{" "}
-            <span style={{ color: micStatus === "Microphone ready" ? "#32d74b" : "#ccc" }}>
-              {micStatus}
-            </span>
-          </div>
-
-          <div style={{ height: 16 }} />
-
-          <div className={`readout ${isSaCalibrated ? "calibrated" : ""}`}>
-            Sa = {saHz.toFixed(2)} Hz ({formatWesternNoteWithCents(saHz)})
-          </div>
-
-          <div>
-            <button
-              onMouseDown={startSaCalibration}
-              onMouseUp={stopSaCalibration}
-              onMouseLeave={() => {
-                if (isCalibrating) stopSaCalibration();
-              }}
-              onTouchStart={(e) => {
-                e.preventDefault();
-                void startSaCalibration();
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                stopSaCalibration();
-              }}
-            >
-              Hold and sing your Sa
-            </button>
-          </div>
-
-          <div className="hint" style={{ marginTop: 8 }}>
-            {isCalibrating
-              ? "Keep holding the button and sing steadily."
-              : "Press and hold to calibrate Sa from your voice."}
-          </div>
-
-          <div style={{ height: 20 }} />
-
-          <h2>Tolerance</h2>
-
-          <input
-            type="range"
-            min={1}
-            max={50}
-            step={1}
-            value={toleranceCents}
-            onChange={(e) => setToleranceCents(Number(e.target.value))}
-            style={{ width: "100%" }}
-          />
-
-          <div className="readout">±{toleranceCents} cents</div>
-
-          <div className="hint">
-            Current pitch: {smoothedDetectedPitch ? `${smoothedDetectedPitch.toFixed(2)} Hz` : "--"}
-          </div>
-        </section>
-
-        <section className="panel">
-          <h2>{tradition === "hindustani" ? "Arohana" : "Aroganam"}</h2>
-          <div className="ordered-scale">
-            <div className="fixed-swara">Sa</div>
-
-            <ChoiceSelect
-              value={arohanaChoices.ri}
-              options={getVisibleOptions(RI_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setArohanaChoices((prev) => ({ ...prev, ri: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={arohanaChoices.ga}
-              options={getVisibleOptions(GA_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setArohanaChoices((prev) => ({ ...prev, ga: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={arohanaChoices.ma}
-              options={getVisibleOptions(MA_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setArohanaChoices((prev) => ({ ...prev, ma: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={arohanaChoices.pa}
-              options={getVisibleOptions(PA_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setArohanaChoices((prev) => ({ ...prev, pa: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={arohanaChoices.dha}
-              options={getVisibleOptions(DHA_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setArohanaChoices((prev) => ({ ...prev, dha: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={arohanaChoices.ni}
-              options={getVisibleOptions(NI_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setArohanaChoices((prev) => ({ ...prev, ni: newValue }))
-              }
-            />
-          </div>
-
-          <h2 style={{ marginTop: 20 }}>
-            {tradition === "hindustani" ? "Avarohana" : "Avaroganam"}
-          </h2>
-          <div className="ordered-scale">
-            <ChoiceSelect
-              value={avarohanaChoices.ni}
-              options={getVisibleOptions(NI_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setAvarohanaChoices((prev) => ({ ...prev, ni: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={avarohanaChoices.dha}
-              options={getVisibleOptions(DHA_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setAvarohanaChoices((prev) => ({ ...prev, dha: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={avarohanaChoices.pa}
-              options={getVisibleOptions(PA_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setAvarohanaChoices((prev) => ({ ...prev, pa: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={avarohanaChoices.ma}
-              options={getVisibleOptions(MA_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setAvarohanaChoices((prev) => ({ ...prev, ma: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={avarohanaChoices.ga}
-              options={getVisibleOptions(GA_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setAvarohanaChoices((prev) => ({ ...prev, ga: newValue }))
-              }
-            />
-
-            <ChoiceSelect
-              value={avarohanaChoices.ri}
-              options={getVisibleOptions(RI_OPTIONS, tradition)}
-              tradition={tradition}
-              onChange={(newValue) =>
-                setAvarohanaChoices((prev) => ({ ...prev, ri: newValue }))
-              }
-            />
-
-            <div className="fixed-swara">{getSwaraLabel("Sa", tradition)}</div>
-          </div>
-        </section>
-
-        <section className="panel">
-          <div className="subsection-label">Tradition</div>
-
-          <div className="tradition-row">
-            <label>
-              <input
-                type="radio"
-                name="tradition"
-                checked={tradition === "hindustani"}
-                onChange={() => setTradition("hindustani")}
-              />
-              Hindustani
-            </label>
-
-            <label>
-              <input
-                type="radio"
-                name="tradition"
-                checked={tradition === "carnatic"}
-                onChange={() => setTradition("carnatic")}
-              />
-              Carnatic
-            </label>
-          </div>
-
-          <div style={{ height: 16 }} />
-
-          <div className="subsection-label">
-            {tradition === "hindustani" ? "Raag" : "Ragam"}
-          </div>
-
-          <input
-            type="text"
-            placeholder={tradition === "hindustani" ? "Search raag..." : "Search ragam..."}
-            value={ragaSearch}
-            onChange={(e) => setRagaSearch(e.target.value)}
-            style={{ width: "100%", marginBottom: 8 }}
-          />
-
-          <div className="hint" style={{ marginTop: 6, marginBottom: 8 }}>
-            {availableRagas.length}{" "}
-            {tradition === "hindustani"
-              ? availableRagas.length === 1
-                ? "raag found"
-                : "raags found"
-              : availableRagas.length === 1
-              ? "ragam found"
-              : "ragams found"}
-          </div>
-
-          {availableRagas.length > 0 ? (
-            <select
-              value={selectedRagaId}
-              onChange={(e) => setSelectedRagaId(e.target.value)}
-              style={{ width: "100%" }}
-            >
-              <option value="">— none —</option>
-              {availableRagas.map((raga) => (
-                <option key={raga.id} value={raga.id}>
-                  {raga.name}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <div className="hint" style={{ marginTop: 8 }}>
-              No matches found
-            </div>
-          )}
-        </section>
-      </div>
-
       <section className="panel tuner-panel">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 12,
-            marginBottom: 12,
-            flexWrap: "wrap",
-          }}
-        >
-          <div className="view-toggle" style={{ marginBottom: 0 }}>
+        <div className="tuner-toolbar">
+          <button
+            type="button"
+            onClick={handleMicButtonClick}
+            disabled={micStatus === "Requesting microphone..." || micStatus === "Listening..." || micStatus === "Microphone ready"}
+            className={`mic-toggle-button ${micButtonClass}`}
+          >
+            {getMicButtonLabel()}
+          </button>
+
+          <div className="view-toggle">
             <button
               type="button"
               onClick={() => setTunerViewMode("meter")}
-              style={{
-                opacity: tunerViewMode === "meter" ? 1 : 0.7,
-                fontWeight: tunerViewMode === "meter" ? 700 : 400,
-              }}
+              className={tunerViewMode === "meter" ? "active" : ""}
             >
               Meter
             </button>
             <button
               type="button"
               onClick={() => setTunerViewMode("circle")}
-              style={{
-                opacity: tunerViewMode === "circle" ? 1 : 0.7,
-                fontWeight: tunerViewMode === "circle" ? 700 : 400,
-              }}
+              className={tunerViewMode === "circle" ? "active" : ""}
             >
               Circle
             </button>
           </div>
 
-          <div
-            style={{
-              fontSize: 15,
-              fontWeight: 600,
-              color: "rgba(255,255,255,0.88)",
-              textAlign: "right",
-            }}
-          >
-            {currentRagaName}
-          </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 8,
-            marginBottom: 16,
-            flexWrap: "wrap",
-          }}
-        >
+          <div className="current-raga-name">{currentRagaName || " "}</div>
         </div>
 
         {tunerViewMode === "meter" ? (
@@ -1634,15 +1435,15 @@ export default function TunerApp() {
               {isCalibrating
                 ? `Calibrating ${getSwaraLabel("Sa", tradition)}...`
                 : result?.displayedSwara
-                ? getSwaraLabel(result.displayedSwara, tradition)
-                : "--"}
+                  ? getSwaraLabel(result.displayedSwara, tradition)
+                  : "--"}
             </div>
             <div className="current-cents">
               {isCalibrating
                 ? ""
                 : result?.deviationCents === null || result?.deviationCents === undefined
-                ? "--"
-                : `${result.deviationCents >= 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`}
+                  ? "--"
+                  : `${result.deviationCents >= 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`}
             </div>
 
             <div className="meter">
@@ -1678,17 +1479,19 @@ export default function TunerApp() {
 
             <div className="led-row">
               <div className="led-text">
-                {isCalibrating
-                  ? "Calibrating Sa"
-                  : result?.allowed === null || result?.allowed === undefined
-                  ? "No note detected"
-                  : result.allowed === false
-                  ? "Not allowed"
-                  : result.tuningZone === "perfect"
-                  ? "Perfectly in tune"
-                  : result.tuningZone === "tolerated"
-                  ? "Tolerated"
-                  : "Out of tune"}
+                {micStatus !== "Microphone ready" && micStatus !== "Listening..."
+                  ? "Enable the microphone to start tuning"
+                  : isCalibrating
+                    ? "Calibrating Sa"
+                    : result?.allowed === null || result?.allowed === undefined
+                      ? "No note detected"
+                      : result.allowed === false
+                        ? "Not allowed"
+                        : result.tuningZone === "perfect"
+                          ? "Perfectly in tune"
+                          : result.tuningZone === "tolerated"
+                            ? "Tolerated"
+                            : "Out of tune"}
               </div>
             </div>
 
@@ -1699,21 +1502,12 @@ export default function TunerApp() {
             </div>
           </>
         ) : (
-          <div
-            className="circle-container"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <div className="circle-container">
             <svg
-              width={circleSize}
-              height={circleSize}
               viewBox={`0 0 ${circleSize} ${circleSize}`}
               role="img"
               aria-label="Pitch circle"
-              style={{ overflow: "visible" }}
+              className="circle-svg"
             >
               <circle
                 cx={circleCenter}
@@ -1758,7 +1552,7 @@ export default function TunerApp() {
                   strokeWidth={1.5}
                   strokeLinecap="round"
                 />
-              ))}              
+              ))}
 
               {circleNeedleEnd && (
                 <>
@@ -1813,7 +1607,192 @@ export default function TunerApp() {
             </svg>
           </div>
         )}
+
+        <div className="tuner-controls">
+          <div className="tuner-control-card">
+            <div className={`readout ${isSaCalibrated ? "calibrated" : ""}`}>
+              Sa = {saHz.toFixed(2)} Hz ({formatWesternNoteWithCents(saHz)})
+            </div>
+
+            <button
+              type="button"
+              className="primary-action"
+              onMouseDown={startSaCalibration}
+              onMouseUp={stopSaCalibration}
+              onMouseLeave={() => {
+                if (isCalibrating) stopSaCalibration();
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                void startSaCalibration();
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                stopSaCalibration();
+              }}
+            >
+              Hold and sing your Sa
+            </button>
+
+            <div className="hint">
+              {isCalibrating
+                ? "Keep holding the button and sing steadily."
+                : "Press and hold to calibrate Sa from your voice."}
+            </div>
+          </div>
+
+          <div className="tuner-control-card">
+            <div className="subsection-label">Tolerance</div>
+
+            <input
+              type="range"
+              min={1}
+              max={50}
+              step={1}
+              value={toleranceCents}
+              onChange={(e) => setToleranceCents(Number(e.target.value))}
+            />
+
+            <div className="readout">±{toleranceCents} cents</div>
+            <div className="hint">
+              Current pitch: {smoothedDetectedPitch ? `${smoothedDetectedPitch.toFixed(2)} Hz` : "--"}
+            </div>
+          </div>
+        </div>
       </section>
+
+      <div className="top-controls-grid">
+        <section className="panel music-panel">
+          <div className="subsection-label">Tradition</div>
+
+          <div className="tradition-toggle" role="radiogroup" aria-label="Tradition">
+            <button
+              type="button"
+              className={tradition === "hindustani" ? "active" : ""}
+              onClick={() => setTradition("hindustani")}
+            >
+              Hindustani
+            </button>
+
+            <button
+              type="button"
+              className={tradition === "carnatic" ? "active" : ""}
+              onClick={() => setTradition("carnatic")}
+            >
+              Carnatic
+            </button>
+          </div>
+
+          <div className="panel-spacer" />
+
+          <div className="subsection-label">
+            {tradition === "hindustani" ? "Raag" : "Ragam"}
+          </div>
+
+          <input
+            type="text"
+            placeholder={tradition === "hindustani" ? "Search raag..." : "Search ragam..."}
+            value={ragaSearch}
+            onChange={(e) => setRagaSearch(e.target.value)}
+          />
+
+          <div className="hint">
+            {availableRagas.length}{" "}
+            {tradition === "hindustani"
+              ? availableRagas.length === 1
+                ? "raag found"
+                : "raags found"
+              : availableRagas.length === 1
+                ? "ragam found"
+                : "ragams found"}
+          </div>
+
+          {availableRagas.length > 0 ? (
+            <select
+              value={selectedRagaId}
+              onChange={(e) => setSelectedRagaId(e.target.value)}
+            >
+              <option value="">— none —</option>
+              {availableRagas.map((raga) => (
+                <option key={raga.id} value={raga.id}>
+                  {raga.name}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <div className="hint">No matches found</div>
+          )}
+
+          <div className="panel-spacer" />
+
+          <h2>{tradition === "hindustani" ? "Arohana" : "Aroganam"}</h2>
+          <div className="scale-grid">
+            <ChoiceCycleButton title="Sa" value={"Sa"} options={["Sa"]} tradition={tradition} isFixed />
+            <ChoiceCycleButton title="Ri" value={arohanaChoices.ri} options={visibleRiOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ri: newValue }))} />
+            <ChoiceCycleButton title="Ga" value={arohanaChoices.ga} options={visibleGaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ga: newValue }))} />
+            <ChoiceCycleButton title="Ma" value={arohanaChoices.ma} options={visibleMaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ma: newValue }))} />
+            <ChoiceCycleButton title="Pa" value={arohanaChoices.pa} options={visiblePaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, pa: newValue }))} />
+            <ChoiceCycleButton title="Dha" value={arohanaChoices.dha} options={visibleDhaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, dha: newValue }))} />
+            <ChoiceCycleButton title="Ni" value={arohanaChoices.ni} options={visibleNiOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ni: newValue }))} />
+          </div>
+
+          <h2 className="section-title-spaced">
+            {tradition === "hindustani" ? "Avarohana" : "Avaroganam"}
+          </h2>
+          <div className="scale-grid">
+            <ChoiceCycleButton title="Ni" value={avarohanaChoices.ni} options={visibleNiOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ni: newValue }))} />
+            <ChoiceCycleButton title="Dha" value={avarohanaChoices.dha} options={visibleDhaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, dha: newValue }))} />
+            <ChoiceCycleButton title="Pa" value={avarohanaChoices.pa} options={visiblePaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, pa: newValue }))} />
+            <ChoiceCycleButton title="Ma" value={avarohanaChoices.ma} options={visibleMaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ma: newValue }))} />
+            <ChoiceCycleButton title="Ga" value={avarohanaChoices.ga} options={visibleGaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ga: newValue }))} />
+            <ChoiceCycleButton title="Ri" value={avarohanaChoices.ri} options={visibleRiOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ri: newValue }))} />
+            <ChoiceCycleButton title="Sa" value={"Sa"} options={["Sa"]} tradition={tradition} isFixed />
+          </div>
+        </section>
+
+        <section className="panel mic-panel">
+          <h2>Microphone input</h2>
+
+          <div className="subsection-label">Gain</div>
+          <input
+            type="range"
+            min={1}
+            max={5}
+            step={0.1}
+            value={inputGain}
+            onChange={(e) => setInputGain(Number(e.target.value))}
+          />
+          <div className="readout">Gain ×{inputGain.toFixed(1)}</div>
+
+          <label className="checkbox-row">
+            <input
+              type="checkbox"
+              checked={useCompression}
+              onChange={(e) => setUseCompression(e.target.checked)}
+            />
+            Compression
+          </label>
+
+          <div className="panel-spacer" />
+
+          <div className="subsection-label">Input level</div>
+          <div className="level-meter">
+            <div
+              className="level-meter__fill"
+              style={{
+                width: `${levelNormalized * 100}%`,
+                background:
+                  levelNormalized < 0.3
+                    ? "#ff453a"
+                    : levelNormalized < 0.7
+                      ? "#ffd60a"
+                      : "#32d74b",
+              }}
+            />
+          </div>
+          <div className="hint">RMS: {inputLevel.toFixed(4)}</div>
+        </section>
+      </div>
     </main>
   );
 }
