@@ -1015,29 +1015,6 @@ export default function TunerApp() {
     return frequency;
   }
 
-  // function frequencyToMidiFloat(frequencyHz: number): number {
-  //   return 69 + 12 * Math.log2(frequencyHz / 440);
-  // }
-
-  // function formatWesternNoteWithCents(frequencyHz: number): string {
-  //   const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-
-  //   const midiFloat = frequencyToMidiFloat(frequencyHz);
-  //   const midiRounded = Math.round(midiFloat);
-
-  //   const pitchClass = ((midiRounded % 12) + 12) % 12;
-  //   const cents = Math.round((midiFloat - midiRounded) * 100);
-
-  //   const note = noteNames[pitchClass];
-
-  //   if (Math.abs(cents) <= 1) {
-  //     return note;
-  //   }
-
-  //   const sign = cents >= 0 ? "+" : "";
-  //   return `${note} ${sign}${cents} cents`;
-  // }
-
   function buildArohana(choices: OrderedScaleChoices): SwaraId[] {
     const result: SwaraId[] = ["Sa"];
 
@@ -1682,7 +1659,7 @@ export default function TunerApp() {
                     aria-label="Increase Sa by 10 cents"
                     title="Increase Sa by 10 cents"
                   >
-                    ↑
+                    ▲
                   </button>
 
                   <button
@@ -1692,7 +1669,7 @@ export default function TunerApp() {
                     aria-label="Decrease Sa by 10 cents"
                     title="Decrease Sa by 10 cents"
                   >
-                    ↓
+                    ▼
                   </button>
                 </div>
               </div>
