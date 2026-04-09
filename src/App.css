@@ -869,3 +869,37 @@ tr:nth-child(14) {
     min-width: 0;
   }
 }
+
+.sa-readout-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.sa-nudge-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sa-nudge-button {
+  width: 28px;
+  height: 22px;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #dcdcdc;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.sa-nudge-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.sa-nudge-button:active {
+  transform: translateY(1px);
+}

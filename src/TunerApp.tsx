@@ -360,6 +360,8 @@ export default function TunerApp() {
 
   const [inputLevel, setInputLevel] = useState(0);
 
+  const [saCents, setSaCents] = useState(100);
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null);
@@ -541,6 +543,26 @@ export default function TunerApp() {
     outerRightOffset !== null ? offsetToPercent(outerRightOffset) : 50;
   const outerWidthPercent = outerRightPercent - outerLeftPercent;
 
+  function formatWesternNoteWithCentsFromCents(cents: number): string {
+    const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+    const normalized = ((cents % 1200) + 1200) % 1200;
+    const nearestSemitone = Math.round(normalized / 100) % 12;
+    const noteCents = nearestSemitone * 100;
+
+    let offset = Math.round(normalized - noteCents);
+
+    if (offset === 0) {
+      return `${noteNames[nearestSemitone]}`;
+    }
+
+    if (offset > 50) offset -= 100;
+    if (offset < -50) offset += 100;
+
+    const sign = offset > 0 ? "+" : "";
+    return `${noteNames[nearestSemitone]} ${sign}${offset} cents`;
+  }
+
   async function startSaCalibration() {
     setMicStatus("Requesting microphone...");
     const ok = await ensureMicrophoneReady();
@@ -562,6 +584,30 @@ export default function TunerApp() {
     largeJumpCountRef.current = 0;
   }
 
+    function nudgeSaUp() {
+    setSaCents((prev) => {
+      const mod = ((prev % 10) + 10) % 10;
+      return mod === 0 ? prev + 10 : prev + (10 - mod);
+    });
+  }
+
+  function nudgeSaDown() {
+    setSaCents((prev) => {
+      const mod = ((prev % 10) + 10) % 10;
+      return mod === 0 ? prev - 10 : prev - mod;
+    });
+  }
+
+  function hzToCentsWithinOctave(freq: number): number {
+    const midi = 69 + 12 * Math.log2(freq / 440);
+    const cents = midi * 100;
+
+    // porta il valore tra 0 e 1200
+    const normalized = ((cents % 1200) + 1200) % 1200;
+
+    return normalized;
+  }
+
   function stopSaCalibration() {
     setIsCalibrating(false);
     isCalibratingRef.current = false;
@@ -570,6 +616,7 @@ export default function TunerApp() {
     const detectedSa = median(calibrationPitchesRef.current);
     if (detectedSa) {
       setSaHz(detectedSa);
+      setSaCents(hzToCentsWithinOctave(detectedSa));
       setIsSaCalibrated(true);
     }
 
@@ -968,28 +1015,28 @@ export default function TunerApp() {
     return frequency;
   }
 
-  function frequencyToMidiFloat(frequencyHz: number): number {
-    return 69 + 12 * Math.log2(frequencyHz / 440);
-  }
+  // function frequencyToMidiFloat(frequencyHz: number): number {
+  //   return 69 + 12 * Math.log2(frequencyHz / 440);
+  // }
 
-  function formatWesternNoteWithCents(frequencyHz: number): string {
-    const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  // function formatWesternNoteWithCents(frequencyHz: number): string {
+  //   const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
-    const midiFloat = frequencyToMidiFloat(frequencyHz);
-    const midiRounded = Math.round(midiFloat);
+  //   const midiFloat = frequencyToMidiFloat(frequencyHz);
+  //   const midiRounded = Math.round(midiFloat);
 
-    const pitchClass = ((midiRounded % 12) + 12) % 12;
-    const cents = Math.round((midiFloat - midiRounded) * 100);
+  //   const pitchClass = ((midiRounded % 12) + 12) % 12;
+  //   const cents = Math.round((midiFloat - midiRounded) * 100);
 
-    const note = noteNames[pitchClass];
+  //   const note = noteNames[pitchClass];
 
-    if (Math.abs(cents) <= 1) {
-      return note;
-    }
+  //   if (Math.abs(cents) <= 1) {
+  //     return note;
+  //   }
 
-    const sign = cents >= 0 ? "+" : "";
-    return `${note} ${sign}${cents} cents`;
-  }
+  //   const sign = cents >= 0 ? "+" : "";
+  //   return `${note} ${sign}${cents} cents`;
+  // }
 
   function buildArohana(choices: OrderedScaleChoices): SwaraId[] {
     const result: SwaraId[] = ["Sa"];
@@ -1621,38 +1668,61 @@ export default function TunerApp() {
         )}
 
         <div className="tuner-controls">
-          <div className="tuner-control-card">
-            <div className={`readout ${isSaCalibrated ? "calibrated" : ""}`}>
-              Sa = {saHz.toFixed(2)} Hz ({formatWesternNoteWithCents(saHz)})
+            <div className="tuner-control-card">
+              <div className="sa-readout-row">
+                <div className={`readout ${isSaCalibrated ? "calibrated" : ""}`}>
+                  Sa = {formatWesternNoteWithCentsFromCents(saCents)}
+                </div>
+
+                <div className="sa-nudge-controls">
+                  <button
+                    type="button"
+                    className="sa-nudge-button"
+                    onClick={nudgeSaUp}
+                    aria-label="Increase Sa by 10 cents"
+                    title="Increase Sa by 10 cents"
+                  >
+                    ↑
+                  </button>
+
+                  <button
+                    type="button"
+                    className="sa-nudge-button"
+                    onClick={nudgeSaDown}
+                    aria-label="Decrease Sa by 10 cents"
+                    title="Decrease Sa by 10 cents"
+                  >
+                    ↓
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="primary-action"
+                onMouseDown={startSaCalibration}
+                onMouseUp={stopSaCalibration}
+                onMouseLeave={() => {
+                  if (isCalibrating) stopSaCalibration();
+                }}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  void startSaCalibration();
+                }}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  stopSaCalibration();
+                }}
+              >
+                Hold and sing your Sa
+              </button>
+
+              <div className="hint">
+                {isCalibrating
+                  ? "Keep holding the button and sing steadily."
+                  : "Press and hold to calibrate Sa from your voice."}
+              </div>
             </div>
-
-            <button
-              type="button"
-              className="primary-action"
-              onMouseDown={startSaCalibration}
-              onMouseUp={stopSaCalibration}
-              onMouseLeave={() => {
-                if (isCalibrating) stopSaCalibration();
-              }}
-              onTouchStart={(e) => {
-                e.preventDefault();
-                void startSaCalibration();
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                stopSaCalibration();
-              }}
-            >
-              Hold and sing your Sa
-            </button>
-
-            <div className="hint">
-              {isCalibrating
-                ? "Keep holding the button and sing steadily."
-                : "Press and hold to calibrate Sa from your voice."}
-            </div>
-          </div>
-
           <div className="tuner-control-card">
             <div className="subsection-label">Tolerance</div>
 
