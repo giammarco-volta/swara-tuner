@@ -271,6 +271,13 @@ export default function SwaraLanding() {
           </details>
         </section>
       </div>
+      <p>
+        Suggestions, corrections, or ideas are very welcome.
+        <br />
+        <a href="mailto:feedback@naadalab.com?subject=Swara Tuner Feedback">
+          Send feedback
+        </a>
+      </p>
     </section>
   )
 }
