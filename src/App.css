@@ -44,9 +44,12 @@ h2 {
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.85fr);
   gap: 16px;
-  align-items: start;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
-
+/*.top-controls-grid {
+  display: flex;
+}*/
 select,
 input[type="range"],
 input[type="text"] {
@@ -97,24 +100,6 @@ select {
   padding-bottom: 22px;
   margin-bottom: 16px;
 }
-/*
-.tuner-toolbar {
-  display: grid;
-  grid-template-columns: auto auto 1fr;
-  justify-content: space-between;
-  gap: 12px;
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}*/
-/*
-.current-raga-name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.88);
-  text-align: right;
-  min-height: 20px;
-}*/
 
 .current-swara {
   text-align: center;
@@ -846,7 +831,6 @@ tr:nth-child(14) {
 .current-pitch {
   text-align: left;
   font-family: monospace;
-  opacity: 0.9;
 }
 
 @media (max-width: 700px) {
@@ -871,20 +855,28 @@ tr:nth-child(14) {
 }
 
 .sa-readout-row {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 130px 24px;
+  column-gap: 8px;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+}
+
+.sa-readout-text {
+  width: 130px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .sa-nudge-controls {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  align-items: stretch;
 }
 
 .sa-nudge-button {
-  width: 26px;
+  width: 24px;
   min-height: unset;
   height: 18px;
   padding: 0;
@@ -901,4 +893,5 @@ tr:nth-child(14) {
 
 .sa-nudge-button:active {
   transform: translateY(1px);
+  background: rgba(255, 255, 255, 0.18);
 }

@@ -11,6 +11,8 @@ import carnaticRagamsJson from "./data/carnatic_ragas.json";
 
 import { buildDirectionalHindustaniSwaras } from "./music/ragaParsing";
 
+import tanpuraLoop from "./music/drones/SaPaA.wav";
+
 type RiChoice = "" | "Ri1" | "Ri2" | "Ri3";
 type GaChoice = "" | "Ga1" | "Ga2" | "Ga3";
 type MaChoice = "" | "Ma1" | "Ma2";
@@ -339,7 +341,7 @@ type PitchDetectorMode = "autocorrelation" | "mpm";
 type TunerViewMode = "meter" | "circle";
 
 export default function TunerApp() {
-  const [saHz, setSaHz] = useState(midiToFrequency(61)); // C#4
+  const [saHz, setSaHz] = useState(midiToFrequency(57)); // A3
   const [toleranceCents, setToleranceCents] = useState(20);
 
   const [isCalibrating, setIsCalibrating] = useState(false);
@@ -362,6 +364,11 @@ export default function TunerApp() {
 
   const [saCents, setSaCents] = useState(100);
 
+  const [droneEnabled, setDroneEnabled] = useState(false);
+  const [dronePattern, setDronePattern] = useState<"sa_pa" | "sa_ma" | "sa_ni">("sa_pa");
+  const [droneVolume, setDroneVolume] = useState(0.2);
+  const [showDroneSettings, setShowDroneSettings] = useState(false);
+
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null);
@@ -380,6 +387,8 @@ export default function TunerApp() {
   const compressorRef = useRef<DynamicsCompressorNode | null>(null);
 
   const inputLevelRef = useRef(0);
+
+  const droneAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const [arohanaChoices, setArohanaChoices] = useState<OrderedScaleChoices>({
     ri: "Ri2",
@@ -462,6 +471,26 @@ export default function TunerApp() {
       rebuildAudioGraph();
     }
   }, [useCompression]);
+
+  useEffect(() => {
+    if (droneEnabled) {
+      startDrone(dronePattern, droneVolume, saHz);
+    } else {
+      stopDrone();
+    }
+  }, [droneEnabled]);
+
+  useEffect(() => {
+    if (droneEnabled) {
+      updateDrone(dronePattern, droneVolume, saHz);
+    }
+  }, [dronePattern, droneVolume, saHz]);
+
+  useEffect(() => {
+    return () => {
+      stopDrone();
+    };
+  }, []);
 
   const config: RagaConfig = useMemo(
     () => ({
@@ -547,20 +576,19 @@ export default function TunerApp() {
     const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
     const normalized = ((cents % 1200) + 1200) % 1200;
-    const nearestSemitone = Math.round(normalized / 100) % 12;
-    const noteCents = nearestSemitone * 100;
 
-    let offset = Math.round(normalized - noteCents);
+    const semitoneFloat = normalized / 100;
+    const nearestSemitone = Math.round(semitoneFloat);
 
-    if (offset === 0) {
-      return `${noteNames[nearestSemitone]}`;
+    const noteIndex = ((nearestSemitone % 12) + 12) % 12;
+    const offsetRounded = Math.round(normalized - nearestSemitone * 100);
+
+    if (offsetRounded === 0) {
+      return noteNames[noteIndex];
     }
 
-    if (offset > 50) offset -= 100;
-    if (offset < -50) offset += 100;
-
-    const sign = offset > 0 ? "+" : "";
-    return `${noteNames[nearestSemitone]} ${sign}${offset} cents`;
+    const sign = offsetRounded > 0 ? "+" : "";
+    return `${noteNames[noteIndex]} ${sign}${offsetRounded}`;
   }
 
   async function startSaCalibration() {
@@ -584,17 +612,23 @@ export default function TunerApp() {
     largeJumpCountRef.current = 0;
   }
 
-    function nudgeSaUp() {
+  function nudgeSaUp() {
     setSaCents((prev) => {
       const mod = ((prev % 10) + 10) % 10;
-      return mod === 0 ? prev + 10 : prev + (10 - mod);
+      const delta = mod === 0 ? 10 : (10 - mod);
+
+      setSaHz((prevHz) => prevHz * Math.pow(2, delta / 1200));
+      return prev + delta;
     });
   }
 
   function nudgeSaDown() {
     setSaCents((prev) => {
       const mod = ((prev % 10) + 10) % 10;
-      return mod === 0 ? prev - 10 : prev - mod;
+      const delta = mod === 0 ? -10 : -mod;
+
+      setSaHz((prevHz) => prevHz * Math.pow(2, delta / 1200));
+      return prev + delta;
     });
   }
 
@@ -773,6 +807,86 @@ export default function TunerApp() {
     compressorRef.current = compressor;
     analyserRef.current = analyser;
     timeDomainDataRef.current = new Float32Array(analyser.fftSize);
+  }
+
+  function getDroneBaseHz(pattern: "sa_pa" | "sa_ma" | "sa_ni"): number {
+    // Per ora hai un solo sample, quindi stesso baseHz per tutti i pattern.
+    // Cambieremo questa funzione quando avrai più file.
+    if (pattern === "sa_pa")
+      return 220;
+    return 220; // A3
+  }
+
+  type DroneAudioElement = HTMLAudioElement & {
+    preservesPitch?: boolean;
+    mozPreservesPitch?: boolean;
+    webkitPreservesPitch?: boolean;
+  };
+
+  function ensureDroneAudio(): HTMLAudioElement {
+    if (!droneAudioRef.current) {
+      const audio = new Audio(tanpuraLoop) as DroneAudioElement;
+      audio.loop = true;
+      audio.preload = "auto";
+
+      audio.preservesPitch = false;
+      audio.mozPreservesPitch = false;
+      audio.webkitPreservesPitch = false;
+
+      droneAudioRef.current = audio;
+    }
+
+    return droneAudioRef.current;
+  }
+
+  function startDrone(
+    pattern: "sa_pa" | "sa_ma" | "sa_ni",
+    volume: number,
+    currentSaHz: number
+  ) {
+    const audio = ensureDroneAudio() as DroneAudioElement;
+    const baseHz = getDroneBaseHz(pattern);
+
+    audio.preservesPitch = false;
+    audio.mozPreservesPitch = false;
+    audio.webkitPreservesPitch = false;
+
+    audio.volume = volume;
+    audio.playbackRate = currentSaHz / baseHz;
+
+    console.log("START rate =", audio.playbackRate, "Sa =", currentSaHz, "base =", baseHz);
+
+    void audio.play().catch((err) => {
+      console.error("Drone play failed:", err);
+    });
+  }
+
+  function stopDrone() {
+    const audio = droneAudioRef.current;
+    if (!audio) return;
+
+    audio.pause();
+    audio.currentTime = 0;
+  }
+
+  function updateDrone(
+    pattern: "sa_pa" | "sa_ma" | "sa_ni",
+    volume: number,
+    currentSaHz: number
+  ) {
+    const audio = droneAudioRef.current as DroneAudioElement | null;
+    if (!audio) return;
+
+    const baseHz = getDroneBaseHz(pattern);
+
+    audio.preservesPitch = false;
+    audio.mozPreservesPitch = false;
+    audio.webkitPreservesPitch = false;
+
+    audio.volume = volume;
+    audio.playbackRate = currentSaHz / baseHz;
+
+    console.log("UPDATE rate =", audio.playbackRate, "Sa =", currentSaHz, "base =", baseHz);
   }
 
   function computeRms(buffer: Float32Array): number {
@@ -1307,6 +1421,17 @@ export default function TunerApp() {
     return getFirstVisibleSlotSwara(slot, currentTradition);
   }
 
+  function openDroneSettings() {
+    setShowDroneSettings(true);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = document.getElementById("drone-panel");
+        el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    });
+  }
+
   const circleSwaraLabels = useMemo(() => {
     return CIRCLE_SLOTS
       .filter((slot) => getFirstVisibleSlotSwara(slot, tradition) !== null)
@@ -1443,14 +1568,14 @@ export default function TunerApp() {
               onClick={() => setTunerViewMode("meter")}
               className={tunerViewMode === "meter" ? "active" : ""}
             >
-              Meter
+              Meter view
             </button>
             <button
               type="button"
               onClick={() => setTunerViewMode("circle")}
               className={tunerViewMode === "circle" ? "active" : ""}
             >
-              Circle
+              Circle view
             </button>
           </div>
 
@@ -1643,6 +1768,35 @@ export default function TunerApp() {
             </svg>
           </div>
         )}
+
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+          
+          {/* Drone Settings link */}
+          <button
+            type="button"
+            className="panel-link"
+            onClick={openDroneSettings}
+            style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
+          >
+            Drone settings
+          </button>
+
+          {/* Drone button */}
+          <button
+            onClick={() => setDroneEnabled(prev => !prev)}
+            style={{
+              fontSize: "1.2rem",
+              padding: "6px 10px",
+              borderRadius: "6px",
+              background: droneEnabled ? "#444" : "#222",
+              color: "white",
+              border: "1px solid #666"
+            }}
+          >
+            {droneEnabled ? "Drone ⏹" : "Drone ▶"}
+          </button>
+
+        </div>
 
         <div className="tuner-controls">
             <div className="tuner-control-card">
@@ -1862,6 +2016,41 @@ export default function TunerApp() {
           </div>
           <div className="hint">RMS: {inputLevel.toFixed(4)}</div>
         </section>
+
+        {showDroneSettings && (
+        <section
+          id="drone-panel"
+          className="panel drone-panel"
+          style={{
+            padding: "10px",
+            width: "180px",
+            alignSelf: "end",
+            marginTop: "12px",
+          }}
+        >
+          <div className="subsection-label">Pattern</div>
+          <select
+            value={dronePattern}
+            onChange={(e) => setDronePattern(e.target.value as "sa_pa" | "sa_ma" | "sa_ni")}
+            style={{ width: "100%", marginBottom: "14px" }}
+          >
+            <option value="sa_pa">Sa + Pa</option>
+            <option value="sa_ma">Sa + Ma</option>
+            <option value="sa_ni">Sa + Ni</option>
+          </select>
+
+          <div className="subsection-label">Volume</div>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.01}
+            value={droneVolume}
+            onChange={(e) => setDroneVolume(parseFloat(e.target.value))}
+            style={{ width: "100%" }}
+          />
+        </section>
+      )}
       </div>
     </main>
   );
