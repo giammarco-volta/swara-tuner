@@ -383,7 +383,7 @@ export default function TunerApp() {
 
   const [inputLevel, setInputLevel] = useState(0);
 
-  const [saCents, setSaCents] = useState(100);
+  const [saCents, setSaCents] = useState(900);
 
   const [droneEnabled, setDroneEnabled] = useState(false);
   const [dronePattern, setDronePattern] = useState<"sa_pa" | "sa_ma" | "sa_ni">("sa_pa");
@@ -413,6 +413,8 @@ export default function TunerApp() {
   const droneSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const droneGainNodeRef = useRef<GainNode | null>(null);
   const currentDroneFileRef = useRef<string | null>(null);
+  const droneGenerationRef = useRef(0);
+  const droneRunningRef = useRef(false);
 
   const [arohanaChoices, setArohanaChoices] = useState<OrderedScaleChoices>({
     ri: "Ri2",
@@ -893,23 +895,21 @@ export default function TunerApp() {
     const cached = droneBufferCacheRef.current.get(file);
     if (cached) return cached;
 
-    const audioContext = await ensureDroneAudioContext();
-    const response = await fetch(file);
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = await audioContext.decodeAudioData(arrayBuffer);
+    const ctx = await ensureDroneAudioContext();
+    const res = await fetch(file);
+    const arr = await res.arrayBuffer();
+    const buffer = await ctx.decodeAudioData(arr);
 
     droneBufferCacheRef.current.set(file, buffer);
     return buffer;
   }
 
-  function ensureDroneGainNode(audioContext: AudioContext): GainNode {
+  function ensureDroneGainNode(ctx: AudioContext): GainNode {
     if (!droneGainNodeRef.current) {
-      const gainNode = audioContext.createGain();
-      gainNode.gain.value = droneVolume;
-      gainNode.connect(audioContext.destination);
-      droneGainNodeRef.current = gainNode;
+      const gain = ctx.createGain();
+      gain.connect(ctx.destination);
+      droneGainNodeRef.current = gain;
     }
-
     return droneGainNodeRef.current;
   }
 
@@ -930,31 +930,26 @@ export default function TunerApp() {
     volume: number,
     currentSaHz: number
   ) {
-    const selectedSample = getBestDroneSample(pattern, currentSaHz);
-    const audioContext = await ensureDroneAudioContext();
-    const buffer = await loadDroneBuffer(selectedSample.file);
-    const gainNode = ensureDroneGainNode(audioContext);
+    const sample = getBestDroneSample(pattern, currentSaHz);
+
+    const ctx = await ensureDroneAudioContext();
+    const buffer = await loadDroneBuffer(sample.file);
+    const gain = ensureDroneGainNode(ctx);
 
     stopDrone();
 
-    const source = audioContext.createBufferSource();
+    const source = ctx.createBufferSource();
     source.buffer = buffer;
     source.loop = true;
-    source.playbackRate.value = currentSaHz / selectedSample.baseHz;
+    source.playbackRate.value = currentSaHz / sample.baseHz;
 
-    source.connect(gainNode);
-    gainNode.gain.value = volume;
+    source.connect(gain);
+    gain.gain.value = volume;
 
     source.start();
 
     droneSourceRef.current = source;
-    currentDroneFileRef.current = selectedSample.file;
-
-    source.onended = () => {
-      if (droneSourceRef.current === source) {
-        droneSourceRef.current = null;
-      }
-    };
+    currentDroneFileRef.current = sample.file;
   }
 
   async function updateDrone(
@@ -962,23 +957,26 @@ export default function TunerApp() {
     volume: number,
     currentSaHz: number
   ) {
-    const selectedSample = getBestDroneSample(pattern, currentSaHz);
-    const audioContext = await ensureDroneAudioContext();
-    const gainNode = ensureDroneGainNode(audioContext);
+    const source = droneSourceRef.current;
+    if (!source) return;
 
-    gainNode.gain.value = volume;
+    const sample = getBestDroneSample(pattern, currentSaHz);
+    const ctx = await ensureDroneAudioContext();
 
-    const currentSource = droneSourceRef.current;
-    const fileChanged = currentDroneFileRef.current !== selectedSample.file;
+    if (droneGainNodeRef.current) {
+      droneGainNodeRef.current.gain.value = volume;
+    }
 
-    if (!currentSource || fileChanged) {
+    const fileChanged = currentDroneFileRef.current !== sample.file;
+
+    if (fileChanged) {
       await startDrone(pattern, volume, currentSaHz);
       return;
     }
 
-    currentSource.playbackRate.setValueAtTime(
-      currentSaHz / selectedSample.baseHz,
-      audioContext.currentTime
+    source.playbackRate.setValueAtTime(
+      currentSaHz / sample.baseHz,
+      ctx.currentTime
     );
   }
 
