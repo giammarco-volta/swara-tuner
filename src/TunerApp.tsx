@@ -11,7 +11,9 @@ import carnaticRagamsJson from "./data/carnatic_ragas.json";
 
 import { buildDirectionalHindustaniSwaras } from "./music/ragaParsing";
 
-import SaPaA from "./music/drones/SaPaA.wav";
+import SaPaB from "./music/drones/SaPaB.wav";
+import SaPaCsharp from "./music/drones/SaPaCsharp.wav";
+import SaPaD from "./music/drones/SaPaD.wav";
 import SaPaE from "./music/drones/SaPaE.wav";
 
 type RiChoice = "" | "Ri1" | "Ri2" | "Ri3";
@@ -39,14 +41,16 @@ interface DroneSampleInfo {
 
 const DRONE_SAMPLE_LIBRARY: Record<DronePattern, DroneSampleInfo[]> = {
   sa_pa: [
-    { file: SaPaA, baseHz: 220.0  },
-    { file: SaPaE, baseHz: 329.62 },
+    { file: SaPaB, baseHz: 123.471 },
+    { file: SaPaCsharp, baseHz: 138.591 },
+    { file: SaPaD, baseHz: 146.832 },
+    { file: SaPaE, baseHz: 164.814 },
   ],
   sa_ma: [
-    { file: SaPaA, baseHz: 220.0 },
+    { file: SaPaB, baseHz: 123.471 },
   ],
   sa_ni: [
-    { file: SaPaA, baseHz: 220.0 },
+    { file: SaPaB, baseHz: 123.471 },
   ],
 };
 
@@ -69,9 +73,9 @@ interface RagaPreset {
   samvadi?: SwaraId | null;
 }
 
-function midiToFrequency(midi: number): number {
-  return 440 * Math.pow(2, (midi - 69) / 12);
-}
+// function midiToFrequency(midi: number): number {
+//   return 440 * Math.pow(2, (midi - 69) / 12);
+// }
 
 function getVisibleOptions<T extends string>(options: T[], tradition: Tradition): T[] {
   return options.filter((option) => {
@@ -353,6 +357,15 @@ function getRagaSearchScore(name: string, search: string): number {
   return Number.POSITIVE_INFINITY;
 }
 
+function wrapFrequencyToRange(freq: number, minHz: number, maxHz: number): number {
+  let wrapped = freq;
+
+  while (wrapped < minHz) wrapped *= 2;
+  while (wrapped >= maxHz) wrapped /= 2;
+
+  return wrapped;
+}
+
 const ALL_RAGAS: RagaPreset[] = [
   ...loadRagasFromJson(hindustaniRagas, "hindustani"),
   ...loadRagasFromJson(carnaticRagamsJson, "carnatic"),
@@ -362,7 +375,12 @@ type PitchDetectorMode = "autocorrelation" | "mpm";
 type TunerViewMode = "meter" | "circle";
 
 export default function TunerApp() {
-  const [saHz, setSaHz] = useState(midiToFrequency(57)); // A3
+  const INITIAL_SA_HZ = 220; // A3
+
+  const DRONE_REFERENCE_MIN_HZ = 110; // A2
+  const DRONE_REFERENCE_MAX_HZ = 220; // A3
+
+  const [saHz, setSaHz] = useState(INITIAL_SA_HZ);
   const [toleranceCents, setToleranceCents] = useState(20);
 
   const [isCalibrating, setIsCalibrating] = useState(false);
@@ -382,8 +400,6 @@ export default function TunerApp() {
   const [useCompression, setUseCompression] = useState(true);
 
   const [inputLevel, setInputLevel] = useState(0);
-
-  const [saCents, setSaCents] = useState(900);
 
   const [droneEnabled, setDroneEnabled] = useState(false);
   const [dronePattern, setDronePattern] = useState<"sa_pa" | "sa_ma" | "sa_ni">("sa_pa");
@@ -413,8 +429,8 @@ export default function TunerApp() {
   const droneSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const droneGainNodeRef = useRef<GainNode | null>(null);
   const currentDroneFileRef = useRef<string | null>(null);
-  const droneGenerationRef = useRef(0);
-  const droneRunningRef = useRef(false);
+
+  const [currentDroneSampleName, setCurrentDroneSampleName] = useState<string>("-");
 
   const [arohanaChoices, setArohanaChoices] = useState<OrderedScaleChoices>({
     ri: "Ri2",
@@ -462,6 +478,12 @@ export default function TunerApp() {
     }
   }, [availableRagas, selectedRagaId]);
 
+  
+  const droneSaHz = useMemo(
+    () => wrapFrequencyToRange(saHz, DRONE_REFERENCE_MIN_HZ, DRONE_REFERENCE_MAX_HZ),
+    [saHz]
+  );
+
   const selectedRaga = useMemo(
     () => ALL_RAGAS.find((raga) => raga.id === selectedRagaId) ?? null,
     [selectedRagaId]
@@ -500,17 +522,17 @@ export default function TunerApp() {
 
   useEffect(() => {
     if (droneEnabled) {
-      void startDrone(dronePattern, droneVolume, saHz);
+      void startDrone(dronePattern, droneVolume, droneSaHz);
     } else {
       stopDrone();
     }
-  }, [droneEnabled]);
+  }, [droneEnabled, dronePattern, droneVolume, droneSaHz]);
 
   useEffect(() => {
     if (droneEnabled) {
-      void updateDrone(dronePattern, droneVolume, saHz);
+      void updateDrone(dronePattern, droneVolume, droneSaHz);
     }
-  }, [dronePattern, droneVolume, saHz]);
+  }, [dronePattern, droneVolume, droneSaHz]);
 
   useEffect(() => {
     return () => {
@@ -542,6 +564,8 @@ export default function TunerApp() {
         : analyzeDetectedPitch(tunerFrequencyHz, saHz, config, toleranceCents),
     [isCalibrating, tunerFrequencyHz, saHz, config, toleranceCents]
   );
+
+  const saCents = useMemo(() => hzToCentsWithinOctave(saHz), [saHz]);
 
   const swaraColorClass =
     isCalibrating || !result
@@ -623,6 +647,10 @@ export default function TunerApp() {
     return `${noteNames[noteIndex]} ${sign}${offsetRounded}`;
   }
 
+  function getFileName(file: string): string {
+    return file.split("/").pop() ?? file;
+  }
+
   async function startSaCalibration() {
     setMicStatus("Requesting microphone...");
     const ok = await ensureMicrophoneReady();
@@ -645,22 +673,20 @@ export default function TunerApp() {
   }
 
   function nudgeSaUp() {
-    setSaCents((prev) => {
-      const mod = ((prev % 10) + 10) % 10;
+    setSaHz((prevHz) => {
+      const currentCents = hzToCentsWithinOctave(prevHz);
+      const mod = ((currentCents % 10) + 10) % 10;
       const delta = mod === 0 ? 10 : (10 - mod);
-
-      setSaHz((prevHz) => prevHz * Math.pow(2, delta / 1200));
-      return prev + delta;
+      return prevHz * Math.pow(2, delta / 1200);
     });
   }
 
   function nudgeSaDown() {
-    setSaCents((prev) => {
-      const mod = ((prev % 10) + 10) % 10;
+    setSaHz((prevHz) => {
+      const currentCents = hzToCentsWithinOctave(prevHz);
+      const mod = ((currentCents % 10) + 10) % 10;
       const delta = mod === 0 ? -10 : -mod;
-
-      setSaHz((prevHz) => prevHz * Math.pow(2, delta / 1200));
-      return prev + delta;
+      return prevHz * Math.pow(2, delta / 1200);
     });
   }
 
@@ -682,7 +708,6 @@ export default function TunerApp() {
     const detectedSa = median(calibrationPitchesRef.current);
     if (detectedSa) {
       setSaHz(detectedSa);
-      setSaCents(hzToCentsWithinOctave(detectedSa));
       setIsSaCalibrated(true);
     }
 
@@ -841,14 +866,6 @@ export default function TunerApp() {
     timeDomainDataRef.current = new Float32Array(analyser.fftSize);
   }
 
-  // function getDroneBaseHz(pattern: "sa_pa" | "sa_ma" | "sa_ni"): number {
-  //   // Per ora hai un solo sample, quindi stesso baseHz per tutti i pattern.
-  //   // Cambieremo questa funzione quando avrai più file.
-  //   if (pattern === "sa_pa")
-  //     return 220;
-  //   return 220; // A3
-  // }
-
   function getDroneSampleList(pattern: DronePattern): DroneSampleInfo[] {
     return DRONE_SAMPLE_LIBRARY[pattern];
   }
@@ -931,6 +948,8 @@ export default function TunerApp() {
     currentSaHz: number
   ) {
     const sample = getBestDroneSample(pattern, currentSaHz);
+    // DEBUG
+    setCurrentDroneSampleName(getFileName(sample.file));
 
     const ctx = await ensureDroneAudioContext();
     const buffer = await loadDroneBuffer(sample.file);
@@ -970,6 +989,7 @@ export default function TunerApp() {
     const fileChanged = currentDroneFileRef.current !== sample.file;
 
     if (fileChanged) {
+      setCurrentDroneSampleName(getFileName(sample.file));
       await startDrone(pattern, volume, currentSaHz);
       return;
     }
@@ -1886,7 +1906,10 @@ export default function TunerApp() {
           >
             {droneEnabled ? "Drone ⏹" : "Drone ▶"}
           </button>
+        </div>
 
+        <div style={{ fontSize: "0.7rem", color: "#888" }}>
+          {currentDroneSampleName} | {droneSaHz.toFixed(1)} Hz
         </div>
 
         <div className="tuner-controls">
