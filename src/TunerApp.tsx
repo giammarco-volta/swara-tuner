@@ -11,7 +11,8 @@ import carnaticRagamsJson from "./data/carnatic_ragas.json";
 
 import { buildDirectionalHindustaniSwaras } from "./music/ragaParsing";
 
-import tanpuraLoop from "./music/drones/SaPaA.wav";
+import SaPaA from "./music/drones/SaPaA.wav";
+import SaPaE from "./music/drones/SaPaE.wav";
 
 type RiChoice = "" | "Ri1" | "Ri2" | "Ri3";
 type GaChoice = "" | "Ga1" | "Ga2" | "Ga3";
@@ -28,6 +29,26 @@ interface OrderedScaleChoices {
   dha: DhaChoice;
   ni: NiChoice;
 }
+
+type DronePattern = "sa_pa" | "sa_ma" | "sa_ni";
+
+interface DroneSampleInfo {
+  file: string;
+  baseHz: number;
+}
+
+const DRONE_SAMPLE_LIBRARY: Record<DronePattern, DroneSampleInfo[]> = {
+  sa_pa: [
+    { file: SaPaA, baseHz: 220.0  },
+    { file: SaPaE, baseHz: 329.62 },
+  ],
+  sa_ma: [
+    { file: SaPaA, baseHz: 220.0 },
+  ],
+  sa_ni: [
+    { file: SaPaA, baseHz: 220.0 },
+  ],
+};
 
 const RI_OPTIONS: RiChoice[] = ["", "Ri1", "Ri2", "Ri3"];
 const GA_OPTIONS: GaChoice[] = ["", "Ga1", "Ga2", "Ga3"];
@@ -388,10 +409,10 @@ export default function TunerApp() {
 
   const inputLevelRef = useRef(0);
 
-  const droneAudioRef = useRef<HTMLAudioElement | null>(null);
-
-  const droneSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const droneBufferCacheRef = useRef<Map<string, AudioBuffer>>(new Map());
+  const droneSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const droneGainNodeRef = useRef<GainNode | null>(null);
+  const currentDroneFileRef = useRef<string | null>(null);
 
   const [arohanaChoices, setArohanaChoices] = useState<OrderedScaleChoices>({
     ri: "Ri2",
@@ -485,13 +506,19 @@ export default function TunerApp() {
 
   useEffect(() => {
     if (droneEnabled) {
-      updateDrone(dronePattern, droneVolume, saHz);
+      void updateDrone(dronePattern, droneVolume, saHz);
     }
   }, [dronePattern, droneVolume, saHz]);
 
   useEffect(() => {
     return () => {
       stopDrone();
+      if (droneGainNodeRef.current) {
+        try {
+          droneGainNodeRef.current.disconnect();
+        } catch {}
+        droneGainNodeRef.current = null;
+      }
     };
   }, []);
 
@@ -812,21 +839,45 @@ export default function TunerApp() {
     timeDomainDataRef.current = new Float32Array(analyser.fftSize);
   }
 
-  function getDroneBaseHz(pattern: "sa_pa" | "sa_ma" | "sa_ni"): number {
-    // Per ora hai un solo sample, quindi stesso baseHz per tutti i pattern.
-    // Cambieremo questa funzione quando avrai più file.
-    if (pattern === "sa_pa")
-      return 220;
-    return 220; // A3
+  // function getDroneBaseHz(pattern: "sa_pa" | "sa_ma" | "sa_ni"): number {
+  //   // Per ora hai un solo sample, quindi stesso baseHz per tutti i pattern.
+  //   // Cambieremo questa funzione quando avrai più file.
+  //   if (pattern === "sa_pa")
+  //     return 220;
+  //   return 220; // A3
+  // }
+
+  function getDroneSampleList(pattern: DronePattern): DroneSampleInfo[] {
+    return DRONE_SAMPLE_LIBRARY[pattern];
   }
 
-  type DroneAudioElement = HTMLAudioElement & {
-    preservesPitch?: boolean;
-    mozPreservesPitch?: boolean;
-    webkitPreservesPitch?: boolean;
-  };
+  function getCentsDistance(aHz: number, bHz: number): number {
+    return Math.abs(1200 * Math.log2(aHz / bHz));
+  }
 
-  async function ensureDroneAudio(): Promise<HTMLAudioElement | null> {
+  function getBestDroneSample(
+    pattern: DronePattern,
+    currentSaHz: number
+  ): DroneSampleInfo {
+    const samples = getDroneSampleList(pattern);
+
+    let best = samples[0];
+    let bestDistance = getCentsDistance(currentSaHz, best.baseHz);
+
+    for (let i = 1; i < samples.length; i++) {
+      const candidate = samples[i];
+      const distance = getCentsDistance(currentSaHz, candidate.baseHz);
+
+      if (distance < bestDistance) {
+        best = candidate;
+        bestDistance = distance;
+      }
+    }
+
+    return best;
+  }
+
+  async function ensureDroneAudioContext(): Promise<AudioContext> {
     if (!audioContextRef.current) {
       audioContextRef.current = new AudioContext();
     }
@@ -835,82 +886,100 @@ export default function TunerApp() {
       await audioContextRef.current.resume();
     }
 
-    if (!droneAudioRef.current) {
-      const audio = new Audio(tanpuraLoop) as DroneAudioElement;
-      audio.loop = true;
-      audio.preload = "auto";
-      audio.preservesPitch = false;
-      audio.mozPreservesPitch = false;
-      audio.webkitPreservesPitch = false;
-      droneAudioRef.current = audio;
-    }
-
-    if (!droneSourceNodeRef.current && droneAudioRef.current) {
-      droneSourceNodeRef.current =
-        audioContextRef.current.createMediaElementSource(droneAudioRef.current);
-
-      droneGainNodeRef.current = audioContextRef.current.createGain();
-      droneGainNodeRef.current.gain.value = droneVolume;
-
-      droneSourceNodeRef.current.connect(droneGainNodeRef.current);
-      droneGainNodeRef.current.connect(audioContextRef.current.destination);
-    }
-
-    return droneAudioRef.current;
+    return audioContextRef.current;
   }
 
-  async  function startDrone(
-    pattern: "sa_pa" | "sa_ma" | "sa_ni",
-    volume: number,
-    currentSaHz: number
-  ) {
-    const audio = (await ensureDroneAudio()) as DroneAudioElement | null;
-    if (!audio) return;
+  async function loadDroneBuffer(file: string): Promise<AudioBuffer> {
+    const cached = droneBufferCacheRef.current.get(file);
+    if (cached) return cached;
 
-    const baseHz = getDroneBaseHz(pattern);
+    const audioContext = await ensureDroneAudioContext();
+    const response = await fetch(file);
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = await audioContext.decodeAudioData(arrayBuffer);
 
-    audio.preservesPitch = false;
-    audio.mozPreservesPitch = false;
-    audio.webkitPreservesPitch = false;
+    droneBufferCacheRef.current.set(file, buffer);
+    return buffer;
+  }
 
-    audio.volume = volume;
-    audio.playbackRate = currentSaHz / baseHz;
-
-    if (droneGainNodeRef.current) {
-      droneGainNodeRef.current.gain.value = volume;
+  function ensureDroneGainNode(audioContext: AudioContext): GainNode {
+    if (!droneGainNodeRef.current) {
+      const gainNode = audioContext.createGain();
+      gainNode.gain.value = droneVolume;
+      gainNode.connect(audioContext.destination);
+      droneGainNodeRef.current = gainNode;
     }
 
-    void audio.play().catch((err) => {
-      console.error("Drone play failed:", err);
-    });
+    return droneGainNodeRef.current;
   }
 
   function stopDrone() {
-    const audio = droneAudioRef.current;
-    if (!audio) return;
-
-    audio.pause();
-    audio.currentTime = 0;
+    if (droneSourceRef.current) {
+      try {
+        droneSourceRef.current.stop();
+      } catch {}
+      try {
+        droneSourceRef.current.disconnect();
+      } catch {}
+      droneSourceRef.current = null;
+    }
   }
 
-  function updateDrone(
-    pattern: "sa_pa" | "sa_ma" | "sa_ni",
+  async function startDrone(
+    pattern: DronePattern,
     volume: number,
     currentSaHz: number
   ) {
-    const audio = droneAudioRef.current as DroneAudioElement | null;
-    if (!audio) return;
+    const selectedSample = getBestDroneSample(pattern, currentSaHz);
+    const audioContext = await ensureDroneAudioContext();
+    const buffer = await loadDroneBuffer(selectedSample.file);
+    const gainNode = ensureDroneGainNode(audioContext);
 
-    const baseHz = getDroneBaseHz(pattern);
+    stopDrone();
 
-    audio.preservesPitch = false;
-    audio.mozPreservesPitch = false;
-    audio.webkitPreservesPitch = false;
-    audio.playbackRate = currentSaHz / baseHz;
+    const source = audioContext.createBufferSource();
+    source.buffer = buffer;
+    source.loop = true;
+    source.playbackRate.value = currentSaHz / selectedSample.baseHz;
 
-    if (droneGainNodeRef.current) {
-      droneGainNodeRef.current.gain.value = volume;
+    source.connect(gainNode);
+    gainNode.gain.value = volume;
+
+    source.start();
+
+    droneSourceRef.current = source;
+    currentDroneFileRef.current = selectedSample.file;
+
+    source.onended = () => {
+      if (droneSourceRef.current === source) {
+        droneSourceRef.current = null;
+      }
+    };
+  }
+
+  async function updateDrone(
+    pattern: DronePattern,
+    volume: number,
+    currentSaHz: number
+  ) {
+    const selectedSample = getBestDroneSample(pattern, currentSaHz);
+    const audioContext = await ensureDroneAudioContext();
+    const gainNode = ensureDroneGainNode(audioContext);
+
+    gainNode.gain.value = volume;
+
+    const currentSource = droneSourceRef.current;
+    const fileChanged = currentDroneFileRef.current !== selectedSample.file;
+
+    if (!currentSource || fileChanged) {
+      await startDrone(pattern, volume, currentSaHz);
+      return;
     }
+
+    currentSource.playbackRate.setValueAtTime(
+      currentSaHz / selectedSample.baseHz,
+      audioContext.currentTime
+    );
   }
 
   function computeRms(buffer: Float32Array): number {
