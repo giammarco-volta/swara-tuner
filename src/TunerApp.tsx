@@ -372,7 +372,7 @@ const ALL_RAGAS: RagaPreset[] = [
 ];
 
 type PitchDetectorMode = "autocorrelation" | "mpm";
-type TunerViewMode = "meter" | "circle";
+type TunerViewMode = "meter" | "swara" | "sruti";
 
 export default function TunerApp() {
   const INITIAL_SA_HZ = 220; // A3
@@ -394,7 +394,7 @@ export default function TunerApp() {
   const [ragaSearch, setRagaSearch] = useState("");
 
   const [pitchDetectorMode] = useState<PitchDetectorMode>("mpm");
-  const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>("circle");
+  const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>("swara");
 
   const [inputGain, setInputGain] = useState(2.5);
   const [useCompression, setUseCompression] = useState(true);
@@ -429,6 +429,9 @@ export default function TunerApp() {
   const droneSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const droneGainNodeRef = useRef<GainNode | null>(null);
   const currentDroneFileRef = useRef<string | null>(null);
+
+  const srutiPreviewOscRef = useRef<OscillatorNode | null>(null);
+  const srutiPreviewGainRef = useRef<GainNode | null>(null);
 
   const [currentDroneSampleName, setCurrentDroneSampleName] = useState<string>("-");
 
@@ -478,7 +481,6 @@ export default function TunerApp() {
     }
   }, [availableRagas, selectedRagaId]);
 
-  
   const droneSaHz = useMemo(
     () => wrapFrequencyToRange(saHz, DRONE_REFERENCE_MIN_HZ, DRONE_REFERENCE_MAX_HZ),
     [saHz]
@@ -488,6 +490,20 @@ export default function TunerApp() {
     () => ALL_RAGAS.find((raga) => raga.id === selectedRagaId) ?? null,
     [selectedRagaId]
   );
+
+  interface CircleSlot {
+    key: string;
+    cents: number;
+    aliases: SwaraId[];
+  }
+  
+  interface SrutiMarker {
+    key: string;
+    swara: SwaraId;
+    cents: number;
+    isDefault: boolean;
+    label: string;
+  }
 
   const currentRagaName = selectedRaga?.name ?? "";
 
@@ -545,6 +561,15 @@ export default function TunerApp() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (tunerViewMode !== "swara") {
+      setSelectedSwaraId(null);
+    }
+    if (tunerViewMode !== "sruti") {
+      setSelectedSrutiKey(null);
+    }
+  },[tunerViewMode]);
 
   const config: RagaConfig = useMemo(
     () => ({
@@ -679,6 +704,49 @@ export default function TunerApp() {
       const delta = mod === 0 ? 10 : (10 - mod);
       return prevHz * Math.pow(2, delta / 1200);
     });
+  }
+
+  async function playSrutiPreview(cents: number) {
+    const ctx = await ensureDroneAudioContext();
+
+    if (srutiPreviewOscRef.current) {
+      try {
+        srutiPreviewOscRef.current.stop();
+      } catch {}
+      try {
+        srutiPreviewOscRef.current.disconnect();
+      } catch {}
+      srutiPreviewOscRef.current = null;
+    }
+
+    if (srutiPreviewGainRef.current) {
+      try {
+        srutiPreviewGainRef.current.disconnect();
+      } catch {}
+      srutiPreviewGainRef.current = null;
+    }
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    const freq = saHz * Math.pow(2, cents / 1200);
+
+    osc.type = "triangle";
+    osc.frequency.value = freq;
+
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.14, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.14, ctx.currentTime + 0.75);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 1.22);
+
+    srutiPreviewOscRef.current = osc;
+    srutiPreviewGainRef.current = gain;
   }
 
   function nudgeSaDown() {
@@ -1448,8 +1516,162 @@ export default function TunerApp() {
   const circleRadius = 102;
   const circleStrokeWidth = 18;
 
+  const ALL_SWARASTHANA: SwaraId[] = [
+    "Sa",
+    "Ri1",
+    "Ri2",
+    "Ga2",
+    "Ga3",
+    "Ma1",
+    "Ma2",
+    "Pa",
+    "Dha1",
+    "Dha2",
+    "Ni2",
+    "Ni3",
+  ];
+
+  const SRUTI_EXTENDED_NAMES: Record<Tradition, Record<string, string>> = {
+    hindustani: {
+      "Sa-only": "Kshobhini",
+      "Ri1-min": "Tivra",
+      "Ri1-max": "Kumdavati",
+      "Ri2-min": "Manda",
+      "Ri2-max": "Chandovati",
+      "Ga2-min": "Dayavanti",
+      "Ga2-max": "Ranjani",
+      "Ga3-min": "Raktika",
+      "Ga3-max": "Rudri",
+      "Ma1-min": "Krodhi",
+      "Ma1-max": "Vajrika",
+      "Ma2-min": "Prasarini",
+      "Ma2-max": "Priti",
+      "Pa-only": "Marjani",
+      "Dha1-min": "Kshiti",
+      "Dha1-max": "Rakta",
+      "Dha2-min": "Sandipini",
+      "Dha2-max": "Alapini",
+      "Ni2-min": "Madni",
+      "Ni2-max": "Rohini",
+      "Ni3-min": "Ramya",
+      "Ni3-max": "Ugra",
+    },
+    carnatic: {
+      "Sa-only": "Shadja",
+      "Ri1-min": "Ekaśruti Rishabha",
+      "Ri1-max": "Dviśruti Rishabha",
+      "Ri2-min": "Triśruti Rishabha",
+      "Ri2-max": "Chatuśśruti Rishabha",
+      "Ga2-min": "Komal Sādhārana Gāndhāra",
+      "Ga2-max": "Sādhārana Gāndhāra",
+      "Ga3-min": "Antara Gāndhāra",
+      "Ga3-max": "Chyuta Madhyama Gāndhāra",
+      "Ma1-min": "Suddha Madhyama",
+      "Ma1-max": "Tivra Suddha Madhyama",
+      "Ma2-min": "Prati Madhyama",
+      "Ma2-max": "Chyuta Panchama Madhyama",
+      "Pa-only": "Panchama",
+      "Dha1-min": "Ekaśruti Dhaivata",
+      "Dha1-max": "Dviśruti Dhaivata",
+      "Dha2-min": "Triśruti Dhaivata",
+      "Dha2-max": "Chatuśśruti Dhaivata",
+      "Ni2-min": "Komala Kaisiki Nishāda",
+      "Ni2-max": "Kaisiki Nishāda",
+      "Ni3-min": "Kākali Nishāda",
+      "Ni3-max": "Tivra Kākali Nishāda",
+    },
+  };
+
+  const SWARASTHANA_EXTENDED_NAMES: Record<Tradition, Record<SwaraId, string>> = {
+    hindustani: {
+      Sa: "Shadja",
+      Ri1: "Komal Rishabh",
+      Ri2: "Shuddha Rishabh",
+      Ri3: "Tivra Rishabh",
+      Ga1: "Komal Gandhar",
+      Ga2: "Komal Gandhar",
+      Ga3: "Shuddha Gandhar",
+      Ma1: "Shuddha Madhyam",
+      Ma2: "Tivra Madhyam",
+      Pa: "Pancham",
+      Dha1: "Komal Dhaivat",
+      Dha2: "Shuddha Dhaivat",
+      Dha3: "Tivra Dhaivat",
+      Ni1: "Komal Nishad",
+      Ni2: "Komal Nishad",
+      Ni3: "Shuddha Nishad",
+    },
+    carnatic: {
+      Sa: "Shadjam",
+      Ri1: "Shuddha Rishabham",
+      Ri2: "Chatuśruti Rishabham",
+      Ri3: "Shatśruti Rishabham",
+      Ga1: "Shuddha Gāndharam",
+      Ga2: "Sādhārana Gāndharam",
+      Ga3: "Antara Gāndharam",
+      Ma1: "Shuddha Madhyamam",
+      Ma2: "Prati Madhyamam",
+      Pa: "Panchamam",
+      Dha1: "Shuddha Dhaivatam",
+      Dha2: "Chatuśruti Dhaivatam",
+      Dha3: "Shatśruti Dhaivatam",
+      Ni1: "Shuddha Nishadam",
+      Ni2: "Kaisiki Nishādam",
+      Ni3: "Kākali Nishādam",
+    },
+  };
+
+  const [selectedSrutiKey, setSelectedSrutiKey] = useState<string | null>(null);
+  const [selectedSwaraId, setSelectedSwaraId] = useState<SwaraId | null>(null);
+
   const allowedSwaraIds = useMemo(() => getAllowedSwaraIds(), [config]);
 
+  const srutiMarkers = useMemo((): SrutiMarker[] => {
+    const markers: SrutiMarker[] = [];
+
+    for (const swara of ALL_SWARASTHANA) {
+      const range = SWARA_CENTRAL_RANGES[swara];
+      const center = getSwaraCentralCenter(swara);
+
+      const distToMin = Math.abs(center - range.min);
+      const distToMax = Math.abs(center - range.max);
+      const defaultAtMin = distToMin <= distToMax;
+
+      if (swara === "Sa" || swara === "Pa") {
+        markers.push({
+          key: `${swara}-only`,
+          swara,
+          cents: center,
+          isDefault: true,
+          label: SRUTI_EXTENDED_NAMES[tradition][`${swara}-only`],
+        });
+      } else {
+        markers.push({
+          key: `${swara}-min`,
+          swara,
+          cents: range.min,
+          isDefault: defaultAtMin,
+          label: SRUTI_EXTENDED_NAMES[tradition][`${swara}-min`],
+        });
+
+        markers.push({
+          key: `${swara}-max`,
+          swara,
+          cents: range.max,
+          isDefault: !defaultAtMin,
+          label: SRUTI_EXTENDED_NAMES[tradition][`${swara}-max`],
+        });
+      }
+    }
+
+    return markers;
+  }, [tradition]);
+
+  const selectedSrutiMarker = useMemo(() => {
+    if (!selectedSrutiKey) return null;
+    return srutiMarkers.find((m) => m.key === selectedSrutiKey) ?? null;
+  }, [selectedSrutiKey, srutiMarkers]);
+  
   const circleSegments = useMemo(() => {
     const outerSegments: Array<{ key: string; start: number; end: number; color: string; swara: SwaraId }> = [];
     const centralSegments: Array<{ key: string; start: number; end: number; color: string; swara: SwaraId }> = [];
@@ -1487,12 +1709,6 @@ export default function TunerApp() {
 
     return { outerSegments, centralSegments };
   }, [allowedSwaraIds, toleranceCents]);
-
-  interface CircleSlot {
-    key: string;
-    cents: number;
-    aliases: SwaraId[];
-  }
 
   const CIRCLE_SLOTS: CircleSlot[] = [
     { key: "Sa", cents: 0, aliases: ["Sa"] },
@@ -1588,6 +1804,7 @@ export default function TunerApp() {
 
         return {
           key: `label-${slot.key}`,
+          swara: displaySwara,
           x: labelPos.x,
           y: labelPos.y,
           text,
@@ -1617,6 +1834,154 @@ export default function TunerApp() {
     });
   }, [circleSwaraLabels]);
 
+  const circleSecondaryTicks = useMemo(() => {
+    return circleSwaraLabels.map((label) => {
+      const range = SWARA_CENTRAL_RANGES[label.swara];
+
+      const distToMin = Math.abs(label.centerCents - range.min);
+      const distToMax = Math.abs(label.centerCents - range.max);
+
+      const otherCents = distToMin <= distToMax ? range.max : range.min;
+      const angle = centsToCircleAngle(otherCents);
+
+      const inner = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius - circleStrokeWidth / 2,
+        angle
+      );
+      const outer = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius + circleStrokeWidth / 2,
+        angle
+      );
+
+      return {
+        key: `secondary-tick-${label.key}`,
+        x1: inner.x,
+        y1: inner.y,
+        x2: outer.x,
+        y2: outer.y,
+      };
+    });
+  }, [circleSwaraLabels]);
+
+  const srutiViewTicks = useMemo(() => {
+    return srutiMarkers.map((marker) => {
+      const angle = centsToCircleAngle(marker.cents);
+
+      const inner = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius - circleStrokeWidth / 2,
+        angle
+      );
+
+      const outer = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius + circleStrokeWidth / 2,
+        angle
+      );
+
+      return {
+        key: `sruti-tick-${marker.key}`,
+        swara: marker.swara,
+        cents: marker.cents,
+        isDefault: marker.isDefault,
+        x1: inner.x,
+        y1: inner.y,
+        x2: outer.x,
+        y2: outer.y,
+      };
+    });
+  }, [srutiMarkers]);
+
+  const srutiViewLabels = useMemo(() => {
+    return srutiMarkers.map((marker, index) => {
+      const angle = centsToCircleAngle(marker.cents);
+
+      const pos = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius + 34,
+        angle
+      );
+
+      return {
+        key: `sruti-label-${marker.key}`,
+        index: index + 1,
+        swara: marker.swara,
+        cents: marker.cents,
+        isDefault: marker.isDefault,
+        x: pos.x,
+        y: pos.y,
+      };
+    });
+  }, [srutiMarkers]);
+
+  const nearestSrutiMarker = useMemo(() => {
+    if (
+      isCalibrating ||
+      !result ||
+      result.centsFromSa === null ||
+      result.centsFromSa === undefined ||
+      srutiMarkers.length === 0
+    ) {
+      return null;
+    }
+
+    const target = normalizeCentsToOctave(result.centsFromSa);
+
+    let best: SrutiMarker | null = null;
+    let bestDistance = Number.POSITIVE_INFINITY;
+
+    for (const marker of srutiMarkers) {
+      let delta = Math.abs(target - normalizeCentsToOctave(marker.cents));
+      if (delta > 600) delta = 1200 - delta;
+
+      if (delta < bestDistance) {
+        bestDistance = delta;
+        best = marker;
+      }
+    }
+
+    return best;
+  }, [isCalibrating, result, srutiMarkers]);
+
+  
+  const displayedSrutiMarker = selectedSrutiMarker ?? nearestSrutiMarker;
+
+  const displayedSrutiLabel = isCalibrating
+    ? ""
+    : displayedSrutiMarker?.label ?? "";
+
+  const displayedSwaraLabel =
+    tunerViewMode === "swara" && selectedSwaraId
+      ? SWARASTHANA_EXTENDED_NAMES[tradition][selectedSwaraId] ?? ""
+      : "";
+
+  const displayedSrutiNumber = useMemo(() => {
+    if (!displayedSrutiMarker) return null;
+
+    const match = srutiViewLabels.find(
+      (label) => label.key === `sruti-label-${displayedSrutiMarker.key}`
+    );
+
+    return match ? match.index : null;
+  }, [displayedSrutiMarker, srutiViewLabels]);
+
+  const nearestSrutiNumber = useMemo(() => {
+    if (!nearestSrutiMarker) return null;
+
+    const match = srutiViewLabels.find(
+      (label) => label.key === `sruti-label-${nearestSrutiMarker.key}`
+    );
+
+    return match ? match.index : null;
+  }, [nearestSrutiMarker, srutiViewLabels]);
+
   const circleNeedleAngle =
     isCalibrating || !result || result.centsFromSa === null
       ? null
@@ -1631,6 +1996,12 @@ export default function TunerApp() {
     ? getSwaraLabel("Sa", tradition)
     : result?.displayedSwara
       ? getSwaraLabel(result.displayedSwara, tradition)
+      : "--";
+
+  const circleCenterSrutiText = isCalibrating
+    ? "--"
+    : nearestSrutiNumber !== null
+      ? String(nearestSrutiNumber)
       : "--";
 
   const circleStatusText = getCircleStatusText();
@@ -1648,6 +2019,314 @@ export default function TunerApp() {
       : micStatus === "Microphone access denied or unavailable"
         ? "is-error"
         : "";
+
+  function angleDistance(a: number, b: number): number {
+    let d = Math.abs(a - b);
+    while (d > Math.PI * 2) d -= Math.PI * 2;
+    if (d > Math.PI) d = Math.PI * 2 - d;
+    return d;
+  }
+
+  function handleSrutiRingPointer(
+    event: React.MouseEvent<SVGCircleElement, MouseEvent>
+  ) {
+    const svg = event.currentTarget.ownerSVGElement;
+    if (!svg) return;
+
+    const rect = svg.getBoundingClientRect();
+
+    const scaleX = circleSize / rect.width;
+    const scaleY = circleSize / rect.height;
+
+    const x = (event.clientX - rect.left) * scaleX;
+    const y = (event.clientY - rect.top) * scaleY;
+
+    const dx = x - circleCenter;
+    const dy = y - circleCenter;
+    const angle = Math.atan2(dy, dx);
+
+    let best = srutiViewLabels[0];
+    let bestDist = Number.POSITIVE_INFINITY;
+
+    for (const label of srutiViewLabels) {
+      const labelAngle = centsToCircleAngle(label.cents);
+      const dist = angleDistance(angle, labelAngle);
+
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = label;
+      }
+    }
+
+    setSelectedSrutiKey(best.key.replace("sruti-label-", ""));
+    void playSrutiPreview(best.cents);
+  }
+
+  const swaraCircleSvg = (
+    <div className="circle-container">
+      <svg
+        viewBox={`0 0 ${circleSize} ${circleSize}`}
+        role="img"
+        aria-label="Pitch circle"
+        className="circle-svg"
+      >
+        <circle
+          cx={circleCenter}
+          cy={circleCenter}
+          r={circleRadius}
+          fill="none"
+          stroke="rgba(255,255,255,0.16)"
+          strokeWidth={circleStrokeWidth}
+        />
+
+        {circleSegments.outerSegments.map((segment) => (
+          <path
+            key={segment.key}
+            d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
+            fill="none"
+            stroke={segment.color}
+            strokeWidth={circleStrokeWidth}
+            strokeLinecap="butt"
+            opacity={0.95}
+          />
+        ))}
+
+        {circleSegments.centralSegments.map((segment) => (
+          <path
+            key={segment.key}
+            d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
+            fill="none"
+            stroke={segment.color}
+            strokeWidth={circleStrokeWidth}
+            strokeLinecap="butt"
+          />
+        ))}
+
+        {circlePitchTicks.map((tick) => (
+          <line
+            key={tick.key}
+            x1={tick.x1}
+            y1={tick.y1}
+            x2={tick.x2}
+            y2={tick.y2}
+            stroke="#000"
+            strokeWidth={1.5}
+            strokeLinecap="round"
+          />
+        ))}
+
+        {circleSecondaryTicks.map((tick) => (
+          <line
+            key={tick.key}
+            x1={tick.x1}
+            y1={tick.y1}
+            x2={tick.x2}
+            y2={tick.y2}
+            stroke="rgba(0,0,0,0.35)"
+            strokeWidth={1.2}
+            strokeLinecap="round"
+          />
+        ))}
+
+        {circleNeedleEnd && (
+          <>
+            <line
+              x1={circleCenter}
+              y1={circleCenter}
+              x2={circleNeedleEnd.x}
+              y2={circleNeedleEnd.y}
+              stroke="white"
+              strokeWidth={3}
+              strokeLinecap="round"
+            />
+            <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
+          </>
+        )}
+
+        {circleSwaraLabels.map((label) => (
+          <g
+            key={label.key}
+            onClick={() => {
+              setSelectedSwaraId(label.swara);
+              void playSrutiPreview(label.centerCents);
+            }}
+            style={{ cursor: "pointer" }}
+          >
+            <circle
+              cx={label.x}
+              cy={label.y}
+              r={16}
+              fill="transparent"
+            />
+            <text
+              x={label.x}
+              y={label.y}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill={label.fill}
+              fontSize={label.fontSize}
+              fontWeight={label.fontWeight}
+            >
+              {label.text}
+            </text>
+          </g>
+        ))}
+        
+        <text
+          x={circleCenter}
+          y={circleCenter - 8}
+          textAnchor="middle"
+          fill={circleSwaraColor}
+          fontSize="36"
+          fontWeight="700"
+        >
+          {circleCenterSwaraText}
+        </text>
+
+        <text
+          x={circleCenter}
+          y={circleCenter + 24}
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.88)"
+          fontSize="15"
+        >
+          {circleStatusText}
+        </text>
+      </svg>
+    </div>
+  );
+
+  const srutiCircleSvg = (
+    <div className="circle-container">
+      <svg
+        viewBox={`0 0 ${circleSize} ${circleSize}`}
+        role="img"
+        aria-label="Sruti circle"
+        className="circle-svg"
+      >
+        <circle
+          cx={circleCenter}
+          cy={circleCenter}
+          r={circleRadius}
+          fill="none"
+          stroke="rgba(255,255,255,0.16)"
+          strokeWidth={circleStrokeWidth}
+        />
+
+        {circleSegments.outerSegments.map((segment) => (
+          <path
+            key={`sruti-${segment.key}`}
+            d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
+            fill="none"
+            stroke={segment.color}
+            strokeWidth={circleStrokeWidth}
+            strokeLinecap="butt"
+            opacity={0.95}
+          />
+        ))}
+
+        {circleSegments.centralSegments.map((segment) => (
+          <path
+            key={`sruti-${segment.key}`}
+            d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
+            fill="none"
+            stroke={segment.color}
+            strokeWidth={circleStrokeWidth}
+            strokeLinecap="butt"
+          />
+        ))}
+
+        {srutiViewTicks.map((tick) => (
+          <line
+            key={tick.key}
+            x1={tick.x1}
+            y1={tick.y1}
+            x2={tick.x2}
+            y2={tick.y2}
+            stroke={tick.isDefault ? "#000" : "rgba(0,0,0,0.35)"}
+            strokeWidth={tick.isDefault ? 1.6 : 1.2}
+            strokeLinecap="round"
+          />
+        ))}
+
+        {circleNeedleEnd && (
+          <>
+            <line
+              x1={circleCenter}
+              y1={circleCenter}
+              x2={circleNeedleEnd.x}
+              y2={circleNeedleEnd.y}
+              stroke="white"
+              strokeWidth={3}
+              strokeLinecap="round"
+            />
+            <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
+          </>
+        )}
+
+        {srutiViewLabels.map((label) => {
+          const isInRaga =
+            config.arohana.includes(label.swara) ||
+            config.avarohana.includes(label.swara);
+
+          return (
+            <g key={label.key}>
+              <circle
+                cx={label.x}
+                cy={label.y}
+                r={12}
+                fill="transparent"
+              />
+
+              <text
+                x={label.x}
+                y={label.y}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill={isInRaga ? "#4A7FD1" : "#666"}
+                fontSize={label.isDefault ? 13 : 11}
+                fontWeight={label.isDefault ? 700 : 500}
+              >
+                {label.index}
+              </text>
+            </g>
+          );
+        })}
+
+        <text
+          x={circleCenter}
+          y={circleCenter - 8}
+          textAnchor="middle"
+          fill={circleSwaraColor}
+          fontSize="36"
+          fontWeight="700"
+        >
+          {circleCenterSrutiText}
+        </text>
+
+        <text
+          x={circleCenter}
+          y={circleCenter + 24}
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.88)"
+          fontSize="15"
+        >
+          {circleStatusText}
+        </text>
+
+        <circle
+          cx={circleCenter}
+          cy={circleCenter}
+          r={circleRadius + 34}
+          fill="none"
+          stroke="transparent"
+          strokeWidth={28}
+          pointerEvents="stroke"
+          onClick={handleSrutiRingPointer}
+        />
+      </svg>
+    </div>
+  );
 
   return (
     <main id="tuner" className="app">
@@ -1683,10 +2362,17 @@ export default function TunerApp() {
             </button>
             <button
               type="button"
-              onClick={() => setTunerViewMode("circle")}
-              className={tunerViewMode === "circle" ? "active" : ""}
+              onClick={() => setTunerViewMode("swara")}
+              className={tunerViewMode === "swara" ? "active" : ""}
             >
-              Circle view
+              Swara view
+            </button>
+            <button
+              type="button"
+              onClick={() => setTunerViewMode("sruti")}
+              className={tunerViewMode === "sruti" ? "active" : ""}
+            >
+              Sruti view
             </button>
           </div>
 
@@ -1773,139 +2459,102 @@ export default function TunerApp() {
               </div>
             </div>
           </>
+        ) : tunerViewMode === "swara" ? (
+          swaraCircleSvg
         ) : (
-          <div className="circle-container">
-            <svg
-              viewBox={`0 0 ${circleSize} ${circleSize}`}
-              role="img"
-              aria-label="Pitch circle"
-              className="circle-svg"
-            >
-              <circle
-                cx={circleCenter}
-                cy={circleCenter}
-                r={circleRadius}
-                fill="none"
-                stroke="rgba(255,255,255,0.16)"
-                strokeWidth={circleStrokeWidth}
-              />
+          srutiCircleSvg
+        )}
 
-              {circleSegments.outerSegments.map((segment) => (
-                <path
-                  key={segment.key}
-                  d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
-                  fill="none"
-                  stroke={segment.color}
-                  strokeWidth={circleStrokeWidth}
-                  strokeLinecap="butt"
-                  opacity={0.95}
-                />
-              ))}
-
-              {circleSegments.centralSegments.map((segment) => (
-                <path
-                  key={segment.key}
-                  d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
-                  fill="none"
-                  stroke={segment.color}
-                  strokeWidth={circleStrokeWidth}
-                  strokeLinecap="butt"
-                />
-              ))}
-
-              {circlePitchTicks.map((tick) => (
-                <line
-                  key={tick.key}
-                  x1={tick.x1}
-                  y1={tick.y1}
-                  x2={tick.x2}
-                  y2={tick.y2}
-                  stroke="#000"
-                  strokeWidth={1.5}
-                  strokeLinecap="round"
-                />
-              ))}
-
-              {circleNeedleEnd && (
-                <>
-                  <line
-                    x1={circleCenter}
-                    y1={circleCenter}
-                    x2={circleNeedleEnd.x}
-                    y2={circleNeedleEnd.y}
-                    stroke="white"
-                    strokeWidth={3}
-                    strokeLinecap="round"
-                  />
-                  <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
-                </>
-              )}
-
-              {circleSwaraLabels.map((label) => (
-                <text
-                  key={label.key}
-                  x={label.x}
-                  y={label.y}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fill={label.fill}
-                  fontSize={label.fontSize}
-                  fontWeight={label.fontWeight}
-                >
-                  {label.text}
-                </text>
-              ))}
-
-              <text
-                x={circleCenter}
-                y={circleCenter - 8}
-                textAnchor="middle"
-                fill={circleSwaraColor}
-                fontSize="36"
-                fontWeight="700"
-              >
-                {circleCenterSwaraText}
-              </text>
-
-              <text
-                x={circleCenter}
-                y={circleCenter + 24}
-                textAnchor="middle"
-                fill="rgba(255,255,255,0.88)"
-                fontSize="15"
-              >
-                {circleStatusText}
-              </text>
-            </svg>
+        {tunerViewMode === "sruti" && (
+          <div
+            className="hint"
+            style={{
+              marginTop: "6px",
+              textAlign: "center",
+              color: "rgba(255,255,255,0.75)",
+            }}
+          >
+            Tap a sruti to hear it
           </div>
         )}
 
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-          
-          {/* Drone Settings link */}
-          <button
-            type="button"
-            className="panel-link"
-            onClick={openDroneSettings}
-            style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
-          >
-            Drone settings
-          </button>
-
-          {/* Drone button */}
-          <button
-            onClick={() => setDroneEnabled(prev => !prev)}
+        {tunerViewMode === "swara" && (
+          <div
+            className="hint"
             style={{
-              fontSize: "1.2rem",
-              padding: "6px 10px",
-              borderRadius: "6px",
-              background: droneEnabled ? "#444" : "#222",
-              color: "white",
-              border: "1px solid #666"
+              marginTop: "6px",
+              textAlign: "center",
+              color: "rgba(255,255,255,0.75)",
             }}
           >
-            {droneEnabled ? "Drone ⏹" : "Drone ▶"}
-          </button>
+            Tap a swara to hear it
+          </div>
+        )}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            width: "100%",
+            gap: "16px",
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+            <button
+              type="button"
+              className="panel-link"
+              onClick={openDroneSettings}
+              style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
+            >
+              Drone settings
+            </button>
+
+            <button
+              onClick={() => setDroneEnabled(prev => !prev)}
+              style={{
+                fontSize: "1.2rem",
+                padding: "6px 10px",
+                borderRadius: "6px",
+                background: droneEnabled ? "#444" : "#222",
+                color: "white",
+                border: "1px solid #666"
+              }}
+            >
+              {droneEnabled ? "Drone ⏹" : "Drone ▶"}
+            </button>
+          </div>
+
+          <div
+            style={{
+              textAlign: "right",
+              minHeight: "2.6em",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              color: "rgba(255,255,255,0.88)",
+              fontSize: "0.95rem",
+            }}
+          >
+          {tunerViewMode === "sruti" && displayedSrutiLabel && (
+            <>
+              <div style={{ fontWeight: 600 }}>
+                {displayedSrutiLabel}
+              </div>
+              {displayedSrutiNumber !== null && (
+                <div style={{ fontSize: "0.8rem", color: "#aaa" }}>
+                  Sruti {displayedSrutiNumber}
+                </div>
+              )}
+            </>
+          )}
+
+{tunerViewMode === "swara" && displayedSwaraLabel && (
+  <div style={{ fontWeight: 600 }}>
+    {displayedSwaraLabel}
+  </div>
+)}
+          </div>
         </div>
 
         <div style={{ fontSize: "0.7rem", color: "#888" }}>

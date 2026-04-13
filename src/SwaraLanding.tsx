@@ -233,6 +233,7 @@ export default function SwaraLanding() {
                 <tr>
                 <th>Śruti</th>
                 <th>Name</th>
+                <th>Carnatic Name</th>
                 <th>Hindustani</th>
                 <th>Carnatic</th>
                 <th>Ratio</th>
@@ -240,29 +241,29 @@ export default function SwaraLanding() {
                 </tr>
               </thead>
               <tbody>
-                <tr><td>1</td><td>Shadja</td><td>S</td><td>s</td><td>1/1</td><td>0</td></tr>
-                <tr><td>2</td><td>Ekaśruti Rishabha</td><td>r</td><td>r1</td><td>256/243</td><td>90</td></tr>
-                <tr><td>3</td><td>Dviśruti Rishabha</td><td>r</td><td>r1</td><td>16/15</td><td>112</td></tr>
-                <tr><td>4</td><td>Triśruti Rishabha</td><td>R</td><td>r2 (g1)</td><td>10/9</td><td>182</td></tr>
-                <tr><td>5</td><td>Chatuśśruti Rishabha</td><td>R</td><td>r2 (g1)</td><td>9/8</td><td>204</td></tr>
-                <tr><td>6</td><td>Komal Sādhārana Gāndhāra</td><td>g</td><td>g2 (d3)</td><td>32/27</td><td>294</td></tr>
-                <tr><td>7</td><td>Sādhārana Gāndhāra</td><td>g</td><td>g2 (d3)</td><td>6/5</td><td>316</td></tr>
-                <tr><td>8</td><td>Antara Gāndhāra</td><td>G</td><td>g3</td><td>5/4</td><td>386</td></tr>
-                <tr><td>9</td><td>Chyuta Madhyama Gāndhāra</td><td>G</td><td>g3</td><td>81/64</td><td>408</td></tr>
-                <tr><td>10</td><td>Suddha Madhyama</td><td>M</td><td>m1</td><td>4/3</td><td>498</td></tr>
-                <tr><td>11</td><td>Tivra Suddha Madhyama</td><td>M</td><td>m1</td><td>27/20</td><td>520</td></tr>
-                <tr><td>12</td><td>Prati Madhyama</td><td>m</td><td>m2</td><td>45/32</td><td>590</td></tr>
-                <tr><td>13</td><td>Chyuta Panchama Madhyama</td><td>m</td><td>m2</td><td>64/45</td><td>610</td></tr>
-                <tr><td>14</td><td>Panchama</td><td>P</td><td>p</td><td>3/2</td><td>702</td></tr>
-                <tr><td>15</td><td>Ekaśruti Dhaivata</td><td>d</td><td>d1</td><td>128/81</td><td>792</td></tr>
-                <tr><td>16</td><td>Dviśruti Dhaivata</td><td>d</td><td>d1</td><td>8/5</td><td>814</td></tr>
-                <tr><td>17</td><td>Triśruti Dhaivata</td><td>D</td><td>d2 (n1)</td><td>5/3</td><td>884</td></tr>
-                <tr><td>18</td><td>Chatuśśruti Dhaivata</td><td>D</td><td>d2 (n1)</td><td>27/16</td><td>906</td></tr>
-                <tr><td>19</td><td>Komala Kaisiki Nishāda</td><td>n</td><td>n2 (d3)</td><td>16/9</td><td>996</td></tr>
-                <tr><td>20</td><td>Kaisiki Nishāda</td><td>n</td><td>n2 (d3)</td><td>9/5</td><td>1018</td></tr>
-                <tr><td>21</td><td>Kākali Nishāda</td><td>N</td><td>n3</td><td>15/8</td><td>1088</td></tr>
-                <tr><td>22</td><td>Tivra Kākali Nishāda</td><td>N</td><td>n3</td><td>243/128</td><td>1110</td></tr>
-                <tr><td>--</td><td>Tāra Shadja</td><td>S</td><td>s</td><td>2/1</td><td>1200</td></tr>
+                <tr><td>1</td><td>Kshobhini</td><td>Shadja</td><td>S</td><td>s</td><td>1/1</td><td>0</td></tr>
+                <tr><td>2</td><td>Tivra</td><td>Ekaśruti Rishabha</td><td>r</td><td>r1</td><td>256/243</td><td>90</td></tr>
+                <tr><td>3</td><td>Kumdavati</td><td>Dviśruti Rishabha</td><td>r</td><td>r1</td><td>16/15</td><td>112</td></tr>
+                <tr><td>4</td><td>Manda</td><td>Triśruti Rishabha</td><td>R</td><td>r2 (g1)</td><td>10/9</td><td>182</td></tr>
+                <tr><td>5</td><td>Chandovati</td><td>Chatuśśruti Rishabha</td><td>R</td><td>r2 (g1)</td><td>9/8</td><td>204</td></tr>
+                <tr><td>6</td><td>Dayavanti</td><td>Komal Sādhārana Gāndhāra</td><td>g</td><td>g2 (d3)</td><td>32/27</td><td>294</td></tr>
+                <tr><td>7</td><td>Ranjani</td><td>Sādhārana Gāndhāra</td><td>g</td><td>g2 (d3)</td><td>6/5</td><td>316</td></tr>
+                <tr><td>8</td><td>Raktika</td><td>Antara Gāndhāra</td><td>G</td><td>g3</td><td>5/4</td><td>386</td></tr>
+                <tr><td>9</td><td>Rudri</td><td>Chyuta Madhyama Gāndhāra</td><td>G</td><td>g3</td><td>81/64</td><td>408</td></tr>
+                <tr><td>10</td><td>Krodhi</td><td>Suddha Madhyama</td><td>M</td><td>m1</td><td>4/3</td><td>498</td></tr>
+                <tr><td>11</td><td>Vajrika</td><td>Tivra Suddha Madhyama</td><td>M</td><td>m1</td><td>27/20</td><td>520</td></tr>
+                <tr><td>12</td><td>Prasarini</td><td>Prati Madhyama</td><td>m</td><td>m2</td><td>45/32</td><td>590</td></tr>
+                <tr><td>13</td><td>Priti</td><td>Chyuta Panchama Madhyama</td><td>m</td><td>m2</td><td>64/45</td><td>610</td></tr>
+                <tr><td>14</td><td>Marjani</td><td>Panchama</td><td>P</td><td>p</td><td>3/2</td><td>702</td></tr>
+                <tr><td>15</td><td>Kshiti</td><td>Ekaśruti Dhaivata</td><td>d</td><td>d1</td><td>128/81</td><td>792</td></tr>
+                <tr><td>16</td><td>Rakta</td><td>Dviśruti Dhaivata</td><td>d</td><td>d1</td><td>8/5</td><td>814</td></tr>
+                <tr><td>17</td><td>Sandipini</td><td>Triśruti Dhaivata</td><td>D</td><td>d2 (n1)</td><td>5/3</td><td>884</td></tr>
+                <tr><td>18</td><td>Alapini</td><td>Chatuśśruti Dhaivata</td><td>D</td><td>d2 (n1)</td><td>27/16</td><td>906</td></tr>
+                <tr><td>19</td><td>Madni</td><td>Komala Kaisiki Nishāda</td><td>n</td><td>n2 (d3)</td><td>16/9</td><td>996</td></tr>
+                <tr><td>20</td><td>Rohini</td><td>Kaisiki Nishāda</td><td>n</td><td>n2 (d3)</td><td>9/5</td><td>1018</td></tr>
+                <tr><td>21</td><td>Ramya</td><td>Kākali Nishāda</td><td>N</td><td>n3</td><td>15/8</td><td>1088</td></tr>
+                <tr><td>22</td><td>Ugra</td><td>Tivra Kākali Nishāda</td><td>N</td><td>n3</td><td>243/128</td><td>1110</td></tr>
+                <tr><td>--</td><td>Kshobhini</td><td>Tāra Shadja</td><td>S</td><td>s</td><td>2/1</td><td>1200</td></tr>
               </tbody>
             </table>
             <p>

@@ -297,8 +297,15 @@ button:disabled {
 }
 
 .view-toggle {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
+}
+
+.view-toggle button {
+  flex: 1;              /* tutti uguali */
+  min-width: 0;         /* 🔴 importantissimo per evitare overflow */
+  white-space: nowrap;  /* evita spezzatura del testo */
 }
 
 .view-toggle button.active,
