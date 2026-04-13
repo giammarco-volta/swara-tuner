@@ -477,12 +477,6 @@ export default function TunerApp() {
       .map(({ raga }) => raga);
   }, [tradition, ragaSearch]);
 
-  useEffect(() => {
-    if (availableRagas.length > 0 && !selectedRagaId) {
-      setSelectedRagaId(availableRagas[0].id);
-    }
-  }, [availableRagas, selectedRagaId]);
-
   const droneSaHz = useMemo(
     () => wrapFrequencyToRange(saHz, DRONE_REFERENCE_MIN_HZ, DRONE_REFERENCE_MAX_HZ),
     [saHz]
@@ -522,7 +516,14 @@ export default function TunerApp() {
   useEffect(() => {
     if (ragaSearch.trim() !== "") return;
     if (availableRagas.length > 0 && !selectedRagaId) {
-      setSelectedRagaId(availableRagas[0].id);
+      const defaultIndex = 16;
+
+      const raga =
+        availableRagas.length > defaultIndex
+          ? availableRagas[defaultIndex]
+          : availableRagas[0];
+
+      setSelectedRagaId(raga.id);
     }
   }, [availableRagas, selectedRagaId, ragaSearch]);
 
@@ -1951,7 +1952,6 @@ export default function TunerApp() {
 
     return best;
   }, [isCalibrating, result, srutiMarkers]);
-
   
   const displayedSrutiMarker = selectedSrutiMarker ?? nearestSrutiMarker;
 
@@ -2336,6 +2336,16 @@ export default function TunerApp() {
 
       <section className="panel tuner-panel">
         <div className="tuner-toolbar">
+          {/* {!smoothedDetectedPitch && (
+            <div style={{
+              textAlign: "center",
+              fontSize: "1rem",
+              color: "#aaa",
+              marginBottom: "10px"
+            }}>
+              🎤 Sing a note to begin
+            </div>
+          )} */}
           <div className="mic-toolbar-group">
             <button
               type="button"
@@ -2353,7 +2363,7 @@ export default function TunerApp() {
             <a href="#mic-panel" className="panel-link">
               Mic settings
             </a>
-          </div>          
+          </div>
           <div className="view-toggle">
             <button
               type="button"

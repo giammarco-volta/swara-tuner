@@ -16,16 +16,29 @@ export default function SwaraLanding() {
     <section className="landing">
       <div className="landing__inner">
         <header className="landing__hero">
-          <h1>Real-time Swara Tuner for Indian Classical Music</h1>
+          <h1>Train your pitch in Indian Classical Music</h1>
+          <h2 style={{ fontWeight: "normal", fontSize: "1.2rem", marginTop: "10px" }}>
+            Train your pitch with real-time swara detection
+          </h2>
           <p className="landing__subtitle">
-            A precision tool for tuning swaras in Carnatic and Hindustani practice,
-            designed for musicians who care about intonation, not just pitch.
+            Real-time swara detection, Sa calibration, and raga reference — for Hindustani and Carnatic musicians
           </p>
+
+          <div style={{ marginTop: "15px", marginBottom: "15px", fontSize: "0.95rem" }}>
+            <div>✔ Detect your pitch in real time</div>
+            <div>✔ Tune your Sa precisely</div>
+            <div>✔ Visualize swaras and ragas</div>
+            <div>✔ Works on desktop and mobile</div>
+          </div>
+
+          <p style={{ fontSize: "0.9rem", color: "#aaa", marginBottom: "15px" }}>
+            SwaraTuner helps singers and students of Indian classical music improve intonation by showing the exact swara you are singing relative to your chosen Sa.
+          </p>
+
           <a href="#tuner" className="landing__button">
-            Go to Swara Tuner
+            Start singing and see your swara
           </a>
         </header>
-
         <section className="landing__block">
           <details>
             <summary>Go beyond generic pitch detection</summary>
