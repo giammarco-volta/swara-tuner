@@ -61,6 +61,8 @@ const PA_OPTIONS: PaChoice[] = ["", "Pa"];
 const DHA_OPTIONS: DhaChoice[] = ["", "Dha1", "Dha2", "Dha3"];
 const NI_OPTIONS: NiChoice[] = ["", "Ni1", "Ni2", "Ni3"];
 
+const showDroneDebug = import.meta.env.VITE_SHOW_DRONE_DEBUG === "true";
+
 type Tradition = "hindustani" | "carnatic";
 
 interface RagaPreset {
@@ -2549,17 +2551,19 @@ export default function TunerApp() {
             </>
           )}
 
-{tunerViewMode === "swara" && displayedSwaraLabel && (
-  <div style={{ fontWeight: 600 }}>
-    {displayedSwaraLabel}
-  </div>
-)}
+          {tunerViewMode === "swara" && displayedSwaraLabel && (
+            <div style={{ fontWeight: 600 }}>
+              {displayedSwaraLabel}
+            </div>
+          )}
           </div>
         </div>
 
-        <div style={{ fontSize: "0.7rem", color: "#888" }}>
-          {currentDroneSampleName} | {droneSaHz.toFixed(1)} Hz
-        </div>
+        {showDroneDebug && (
+          <div style={{ fontSize: "0.7rem", color: "#888" }}>
+            {currentDroneSampleName} | {droneSaHz.toFixed(1)} Hz
+          </div>
+        )}
 
         <div className="tuner-controls">
             <div className="tuner-control-card">

@@ -296,18 +296,6 @@ button:disabled {
   color: #ffd0cc;
 }
 
-.view-toggle {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.view-toggle button {
-  flex: 1;              /* tutti uguali */
-  min-width: 0;         /* 🔴 importantissimo per evitare overflow */
-  white-space: nowrap;  /* evita spezzatura del testo */
-}
-
 .view-toggle button.active,
 .tradition-toggle button.active {
   background: #5a5a5a;
@@ -609,6 +597,20 @@ tr:nth-child(14) {
   content: attr(data-label);
 }
 
+.view-toggle {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.view-toggle button {
+  white-space: nowrap;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
 @media (max-width: 980px) {
   .top-controls-grid {
     grid-template-columns: 1fr;
@@ -628,18 +630,25 @@ tr:nth-child(14) {
   text-align: left;
 }
 
-.view-toggle {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+.tuner-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-  .view-toggle button,
-  .tradition-toggle button,
-  .mic-toggle-button {
-    flex: 1 1 auto;
-    width: 100%;
+@media (max-width: 420px) {
+  .view-toggle {
+    gap: 4px;
+    order: 2;
   }
+
+  .view-toggle button {
+    font-size: 0.78rem;
+    padding: 6px 4px;
+  }
+}
 
   .scale-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -665,11 +674,6 @@ tr:nth-child(14) {
 .panel-link:hover {
   text-decoration: underline;
 }
-/*
-.panel-link-container {
-  text-align: center;
-  margin-bottom: 12px;
-}*/
 
 @media (max-width: 480px) {
   .scale-grid {
@@ -704,57 +708,6 @@ tr:nth-child(14) {
   text-align: right;
   margin-left: auto;
 }
-/*
-@media (max-width: 700px) {
-  .tuner-toolbar {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "mic mic"
-      "toggle toggle"
-      "miclink raga";
-    row-gap: 8px;
-    column-gap: 12px;
-    align-items: start;
-  }
-
-  .mic-toolbar-group {
-    grid-area: mic;
-    display: contents;
-  }
-
-  .mic-toggle-button {
-    grid-area: mic;
-    width: 100%;
-  }
-
-  .mic-toolbar-group .panel-link {
-    grid-area: miclink;
-    justify-self: start;
-    align-self: start;
-    margin-top: 0;
-  }
-
-  .view-toggle {
-    grid-area: toggle;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    width: 100%;
-  }
-
-  .view-toggle button {
-    width: 100%;
-  }
-
-  .raga-toolbar {
-    grid-area: raga;
-    margin-left: 0;
-    text-align: right;
-    justify-self: end;
-    align-self: start;
-  }
-}*/
 
 @media (max-width: 700px) {
   .tuner-toolbar {
@@ -789,13 +742,15 @@ tr:nth-child(14) {
   .view-toggle {
     grid-area: toggle;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
     width: 100%;
   }
 
   .view-toggle button {
     width: 100%;
+    min-width: 0;
+    white-space: nowrap;
   }
 
   .raga-toolbar {
