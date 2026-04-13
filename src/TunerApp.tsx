@@ -489,7 +489,6 @@ export default function TunerApp() {
 
   interface CircleSlot {
     key: string;
-    cents: number;
     aliases: SwaraId[];
   }
   
@@ -1636,9 +1635,7 @@ export default function TunerApp() {
       const range = SWARA_CENTRAL_RANGES[swara];
       const center = getSwaraCentralCenter(swara);
 
-      const distToMin = Math.abs(center - range.min);
-      const distToMax = Math.abs(center - range.max);
-      const defaultAtMin = distToMin <= distToMax;
+      const defaultAtMin = range.default === range.min;
 
       if (swara === "Sa" || swara === "Pa") {
         markers.push({
@@ -1714,18 +1711,18 @@ export default function TunerApp() {
   }, [allowedSwaraIds, toleranceCents]);
 
   const CIRCLE_SLOTS: CircleSlot[] = [
-    { key: "Sa", cents: 0, aliases: ["Sa"] },
-    { key: "Ri1", cents: 112, aliases: ["Ri1"] },
-    { key: "Ri2Ga1", cents: 204, aliases: ["Ri2", "Ga1"] },
-    { key: "Ri3Ga2", cents: 294, aliases: ["Ri3", "Ga2"] },
-    { key: "Ga3", cents: 386, aliases: ["Ga3"] },
-    { key: "Ma1", cents: 498, aliases: ["Ma1"] },
-    { key: "Ma2", cents: 590, aliases: ["Ma2"] },
-    { key: "Pa", cents: 702, aliases: ["Pa"] },
-    { key: "Dha1", cents: 792, aliases: ["Dha1"] },
-    { key: "Dha2Ni1", cents: 884, aliases: ["Dha2", "Ni1"] },
-    { key: "Dha3Ni2", cents: 996, aliases: ["Dha3", "Ni2"] },
-    { key: "Ni3", cents: 1110, aliases: ["Ni3"] },
+    { key: "Sa", aliases: ["Sa"] },
+    { key: "Ri1", aliases: ["Ri1"] },
+    { key: "Ri2Ga1", aliases: ["Ri2", "Ga1"] },
+    { key: "Ri3Ga2", aliases: ["Ri3", "Ga2"] },
+    { key: "Ga3", aliases: ["Ga3"] },
+    { key: "Ma1", aliases: ["Ma1"] },
+    { key: "Ma2", aliases: ["Ma2"] },
+    { key: "Pa", aliases: ["Pa"] },
+    { key: "Dha1", aliases: ["Dha1"] },
+    { key: "Dha2Ni1", aliases: ["Dha2", "Ni1"] },
+    { key: "Dha3Ni2", aliases: ["Dha3", "Ni2"] },
+    { key: "Ni3", aliases: ["Ni3"] },
   ];
 
   function getFirstVisibleSlotSwara(slot: CircleSlot, currentTradition: Tradition): SwaraId | null {
@@ -1751,6 +1748,10 @@ export default function TunerApp() {
     return getFirstVisibleSlotSwara(slot, currentTradition);
   }
 
+  function getSlotDefaultCents(slot: CircleSlot): number {
+    return SWARA_CENTRAL_RANGES[slot.aliases[0]].default;
+  }
+
   function openDroneSettings() {
     setShowDroneSettings(true);
 
@@ -1769,9 +1770,13 @@ export default function TunerApp() {
         const displaySwara = getSlotDisplaySwara(slot, tradition);
         if (!displaySwara) return null;
 
-        const membership = getSwaraMembership(displaySwara);
+        const range = SWARA_CENTRAL_RANGES[displaySwara];
+        const defaultCents = range.default;
 
-        const angle = centsToCircleAngle(slot.cents);
+        const membership = getSwaraMembership(displaySwara);
+        const slotCents = getSlotDefaultCents(slot);
+
+        const angle = centsToCircleAngle(slotCents);
         const labelPos = polarToCartesian(
           circleCenter,
           circleCenter,
@@ -1814,7 +1819,8 @@ export default function TunerApp() {
           fill,
           fontWeight,
           fontSize,
-          centerCents: slot.cents,
+          centerCents: slotCents,
+          defaultCents,
         };
       })
       .filter((label): label is NonNullable<typeof label> => label !== null);
@@ -1822,10 +1828,20 @@ export default function TunerApp() {
 
   const circlePitchTicks = useMemo(() => {
     return circleSwaraLabels.map((label) => {
-      const angle = centsToCircleAngle(label.centerCents);
+      const angle = centsToCircleAngle(label.defaultCents);
 
-      const inner = polarToCartesian(circleCenter, circleCenter, circleRadius - circleStrokeWidth / 2, angle);
-      const outer = polarToCartesian(circleCenter, circleCenter, circleRadius + circleStrokeWidth / 2, angle);
+      const inner = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius - circleStrokeWidth / 2,
+        angle
+      );
+      const outer = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius + circleStrokeWidth / 2,
+        angle
+      );
 
       return {
         key: `tick-${label.key}`,
@@ -1840,11 +1856,7 @@ export default function TunerApp() {
   const circleSecondaryTicks = useMemo(() => {
     return circleSwaraLabels.map((label) => {
       const range = SWARA_CENTRAL_RANGES[label.swara];
-
-      const distToMin = Math.abs(label.centerCents - range.min);
-      const distToMax = Math.abs(label.centerCents - range.max);
-
-      const otherCents = distToMin <= distToMax ? range.max : range.min;
+      const otherCents = label.defaultCents === range.min ? range.max : range.min;
       const angle = centsToCircleAngle(otherCents);
 
       const inner = polarToCartesian(
@@ -2150,7 +2162,7 @@ export default function TunerApp() {
             key={label.key}
             onClick={() => {
               setSelectedSwaraId(label.swara);
-              void playSrutiPreview(label.centerCents);
+              void playSrutiPreview(label.defaultCents);
             }}
             style={{ cursor: "pointer" }}
           >
