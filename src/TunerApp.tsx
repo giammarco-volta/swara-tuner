@@ -16,6 +16,20 @@ import SaPaCsharp from "./music/drones/SaPaCsharp.wav";
 import SaPaD from "./music/drones/SaPaD.wav";
 import SaPaE from "./music/drones/SaPaE.wav";
 
+import SaMaA from "./music/drones/SaMaA.wav";
+import SaMaAsharp from "./music/drones/SaMaAsharp.wav";
+import SaMaB from "./music/drones/SaMaB.wav";
+import SaMaC from "./music/drones/SaMaC.wav";
+import SaMaCsharp from "./music/drones/SaMaCsharp.wav";
+import SaMaD from "./music/drones/SaMaD.wav";
+import SaMaDsharp from "./music/drones/SaMaDsharp.wav";
+import SaMaE from "./music/drones/SaMaE.wav";
+
+import SaNiA from "./music/drones/SaNiA.wav";
+import SaNiAsharp from "./music/drones/SaNiAsharp.wav";
+import SaNiCsharp from "./music/drones/SaNiCsharp.wav";
+import SaNiD from "./music/drones/SaNiD.wav";
+
 type RiChoice = "" | "Ri1" | "Ri2" | "Ri3";
 type GaChoice = "" | "Ga1" | "Ga2" | "Ga3";
 type MaChoice = "" | "Ma1" | "Ma2";
@@ -47,10 +61,20 @@ const DRONE_SAMPLE_LIBRARY: Record<DronePattern, DroneSampleInfo[]> = {
     { file: SaPaE, baseHz: 164.814 },
   ],
   sa_ma: [
-    { file: SaPaB, baseHz: 123.471 },
+    { file: SaMaA, baseHz: 110 },
+    { file: SaMaAsharp, baseHz: 116.54 },
+    { file: SaMaB, baseHz: 123.471 },
+    { file: SaMaC, baseHz: 130.81 },
+    { file: SaMaCsharp, baseHz: 138.591 },
+    { file: SaMaD, baseHz: 146.832 },
+    { file: SaMaDsharp, baseHz: 155.56 },
+    { file: SaMaE, baseHz: 164.814 },
   ],
   sa_ni: [
-    { file: SaPaB, baseHz: 123.471 },
+    { file: SaNiA, baseHz: 110 },
+    { file: SaNiAsharp, baseHz: 116.54 },
+    { file: SaNiCsharp, baseHz: 138.591 },
+    { file: SaNiD, baseHz: 164.814 },
   ],
 };
 
@@ -60,6 +84,46 @@ const MA_OPTIONS: MaChoice[] = ["", "Ma1", "Ma2"];
 const PA_OPTIONS: PaChoice[] = ["", "Pa"];
 const DHA_OPTIONS: DhaChoice[] = ["", "Dha1", "Dha2", "Dha3"];
 const NI_OPTIONS: NiChoice[] = ["", "Ni1", "Ni2", "Ni3"];
+
+function chooseDronePatternForRaga(
+  currentPattern: DronePattern,
+  arohana: OrderedScaleChoices,
+  avarohana: OrderedScaleChoices
+): DronePattern {
+  const hasPa = arohana.pa === "Pa" || avarohana.pa === "Pa";
+  const hasMa1 = arohana.ma === "Ma1" || avarohana.ma === "Ma1";
+  const hasMa2 = arohana.ma === "Ma2" || avarohana.ma === "Ma2";
+
+  const hasNi1 = arohana.ni === "Ni1" || avarohana.ni === "Ni1";
+  const hasNi2 = arohana.ni === "Ni2" || avarohana.ni === "Ni2";
+  const hasNi3 = arohana.ni === "Ni3" || avarohana.ni === "Ni3";
+
+  const shouldUseSaMa = !hasPa && !hasMa2 && hasMa1;
+  const niIsValidForDrone = hasNi3 && !hasNi2 && !hasNi1;
+
+  // 1) se siamo in Sa-Pa o Sa-Ni e manca Pa, manca Ma2 e c'è Ma1 -> Sa-Ma
+  if ((currentPattern === "sa_pa" || currentPattern === "sa_ni") && shouldUseSaMa) {
+    return "sa_ma";
+  }
+
+  // 2) se siamo in Sa-Ma e c'è Pa -> Sa-Pa
+  if (currentPattern === "sa_ma" && !shouldUseSaMa) {
+    return "sa_pa";
+  }
+
+  // 3) se siamo in Sa-Ni e Ni non è adatto
+  if (currentPattern === "sa_ni" && !niIsValidForDrone) {
+    // 3a) se manca Pa, manca Ma2 e c'è Ma1 -> Sa-Ma
+    if (shouldUseSaMa) {
+      return "sa_ma";
+    }
+
+    // 3b) altrimenti -> Sa-Pa
+    return "sa_pa";
+  }
+
+  return currentPattern;
+}
 
 const showDroneDebug = import.meta.env.VITE_SHOW_DRONE_DEBUG === "true";
 
@@ -510,6 +574,10 @@ export default function TunerApp() {
 
     setArohanaChoices(selected.arohana);
     setAvarohanaChoices(selected.avarohana);
+
+    setDronePattern((prev) =>
+      chooseDronePatternForRaga(prev, selected.arohana, selected.avarohana)
+    );
   }, [selectedRagaId]);
 
   useEffect(() => {
