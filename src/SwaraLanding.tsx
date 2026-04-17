@@ -145,7 +145,10 @@ export default function SwaraLanding() {
             <li>This results in <strong>4 śruti per swara</strong></li>
             </ul>
             <p>
-            Since each swara appears in multiple variants (e.g. komal/shuddha in Hindustani, or R1/R2/R3 in Carnatic), these are further divided into <strong>2 śruti per swarasthana (pitch position)</strong>
+              Since each swara appears in multiple variants (e.g. komal/shuddha in Hindustani, or R1/R2/R3 in Carnatic), these are further divided into <strong>2 śruti per swarasthana (pitch position)</strong>.
+            </p>
+            <p>
+              <strong>So, in this app, each swarasthana other than Sa and Pa is represented not as a single pitch, but as a small intonation range bounded by two śruti.</strong>
             </p>
           </details>
         </section>
@@ -153,6 +156,9 @@ export default function SwaraLanding() {
         <section className="landing__block">
           <details>
             <summary>How to interpret these values</summary>
+            <p>
+              In practical terms, this means that <strong>Sa and Pa are treated as single reference points, while every other swarasthana is shown here as a span between two śruti</strong>, not as one exact frequency.
+            </p>
             <p>
             This means that, except for Sa and Pa, a note is not a fixed point but a <strong>range of possible intonation</strong>.
             </p>
@@ -170,7 +176,9 @@ export default function SwaraLanding() {
             <p>
             This is why intonation in Indian classical music is best understood as a <strong>continuous space shaped by musical context</strong>.
             </p>
-
+            <p>
+              <strong>Reading the diagram:</strong> Sa and Pa are fixed reference points. All the other swarasthanas are shown as short bands, each delimited by two śruti.
+            </p>
             <div className="intonation-map">
               <div className="intonation-map">
                 <div className="intonation-bar precise">
