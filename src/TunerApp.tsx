@@ -81,6 +81,7 @@ type Tradition = "hindustani" | "carnatic";
 interface RagaPreset {
   id: string;
   name: string;
+  iastName?: string;
   tradition: Tradition;
   arohana: OrderedScaleChoices;
   avarohana: OrderedScaleChoices;
@@ -210,6 +211,7 @@ function parseSwaraToken(token: string, tradition: Tradition): SwaraId | null {
   const lower = t.toLowerCase();
 
   const map: Record<string, SwaraId | null> = {
+    s: "Sa",
     sa: "Sa",
     r1: "Ri1",
     r2: "Ri2",
@@ -219,6 +221,7 @@ function parseSwaraToken(token: string, tradition: Tradition): SwaraId | null {
     g3: "Ga3",
     m1: "Ma1",
     m2: "Ma2",
+    p: "Pa",
     pa: "Pa",
     d1: "Dha1",
     d2: "Dha2",
@@ -323,6 +326,7 @@ function normalizeRagaRecord(
     samvadi,
     id: String(item.id ?? name).toLowerCase().replace(/\s+/g, "-"),
     name,
+    iastName: typeof item.iastName === "string" ? item.iastName : undefined,
     tradition,
     arohana: swaraListToChoices(arohanaParsed),
     avarohana: swaraListToChoices(avarohanaParsed),
@@ -393,7 +397,7 @@ export default function TunerApp() {
   const DRONE_REFERENCE_MIN_HZ = 110; // A2
   const DRONE_REFERENCE_MAX_HZ = 220; // A3
 
-  const [saHz, setSaHz] = useState(midiToFrequency(61));
+  const [saHz, setSaHz] = useState(midiToFrequency(62));
   const [toleranceCents, setToleranceCents] = useState(20);
 
   const [isCalibrating, setIsCalibrating] = useState(false);
@@ -548,7 +552,7 @@ export default function TunerApp() {
     label: string;
   }
 
-  const currentRagaName = selectedRaga?.name ?? "";
+  const currentRagaName = selectedRaga?.iastName ?? selectedRaga?.name ?? "";
 
   useEffect(() => {
     if (!selectedRagaId) return;

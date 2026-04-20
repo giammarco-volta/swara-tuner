@@ -1,6 +1,7 @@
 [
   {
     "name": "Aabhogi",
+    "iastName": "Ābhogi",
     "thaat": "Kafi",
     "arohana": "S R g M D S.",
     "avarohana": "S. D M g R S",
@@ -11,6 +12,7 @@
   },
   {
     "name": "Abhogi Kanhra",
+    "iastName": "Abhogi Kanhra",
     "thaat": "Kafi",
     "arohana": "S R g M D S.",
     "avarohana": "S. D M g R S",
@@ -21,6 +23,7 @@
   },
   {
     "name": "Adana",
+    "iastName": "Adana",
     "thaat": "Asavari",
     "arohana": "S R M P d N S.",
     "avarohana": "S. d n P M P, g M R S",
@@ -31,6 +34,7 @@
   },
   {
     "name": "Ahir Bhairav",
+    "iastName": "Ahir Bhairav",
     "thaat": "Bhairav",
     "arohana": "S r G M, P D n S.",
     "avarohana": "S. n D P, M G r S",
@@ -41,6 +45,7 @@
   },
   {
     "name": "Alahiya Bilaval",
+    "iastName": "Alahiya Bilaval",
     "thaat": "Bilaval",
     "arohana": "S R GMGR, GP, D N S.",
     "avarohana": "S. NDP, DnDP, MG MRS",
@@ -51,6 +56,7 @@
   },
   {
     "name": "Asavari",
+    "iastName": "Asavari",
     "thaat": "Asavari",
     "arohana": "S R M P d S.",
     "avarohana": "S. n d P M g R S",
@@ -61,6 +67,7 @@
   },
   {
     "name": "Bageshri",
+    "iastName": "Bageshri",
     "thaat": "Kafi",
     "arohana": "S g M D n S.",
     "avarohana": "S. n D M g R S",
@@ -71,6 +78,7 @@
   },
   {
     "name": "Bahar",
+    "iastName": "Bahar",
     "thaat": "Kafi",
     "arohana": ".n S, g M P, g M, n D N S.",
     "avarohana": "S. n D n P, M P g M R S",
@@ -81,6 +89,7 @@
   },
   {
     "name": "Basant",
+    "iastName": "Basant",
     "thaat": "Poorvi",
     "arohana": "S G M’ d r. S",
     "avarohana": "r. N d P, M’ G, M’ d M’ G, r S",
@@ -91,6 +100,7 @@
   },
   {
     "name": "Bhairav",
+    "iastName": "Bhairav",
     "thaat": "Bhairav",
     "arohana": "S r G M P d N S.",
     "avarohana": "S. N d P M G r S",
@@ -101,6 +111,7 @@
   },
   {
     "name": "Bhairavi",
+    "iastName": "Bhairavi",
     "thaat": "Bhairavi",
     "arohana": "S r g M P d n S.",
     "avarohana": "S. n d P M g r S",
@@ -111,6 +122,7 @@
   },
   {
     "name": "Bhimpalasi",
+    "iastName": "Bhimpalasi",
     "thaat": "Kafi",
     "arohana": ".n S g M P n S.",
     "avarohana": "S. n D P M g R S",
@@ -121,6 +133,7 @@
   },
   {
     "name": "Bhupali",
+    "iastName": "Bhupali",
     "thaat": "Kalyan",
     "arohana": "S R G P D S.",
     "avarohana": "S. D P G R S",
@@ -131,6 +144,7 @@
   },
   {
     "name": "Bihag",
+    "iastName": "Bihag",
     "thaat": "Bilaval",
     "arohana": ".N S G M P N S.",
     "avarohana": "S. N D P M G R S",
@@ -141,6 +155,7 @@
   },
   {
     "name": "Bihagra",
+    "iastName": "Bihagra",
     "thaat": "Bilaval",
     "arohana": ".N S G, G M P D n D P, N S.",
     "avarohana": "S. N D, n D P, G M G R S",
@@ -152,6 +167,7 @@
   },
   {
     "name": "Bilaskhani Todi",
+    "iastName": "Bilaskhani Todi",
     "thaat": "Bhairavi",
     "arohana": "S r g, M g, P d, n d, S.",
     "avarohana": "S. r. n d P, M g r g r S",
@@ -162,6 +178,7 @@
   },
   {
     "name": "Bilaval",
+    "iastName": "Bilaval",
     "thaat": "Bilaval",
     "arohana": "S R G M P D S.",
     "avarohana": "S. N D P M G R S",
@@ -172,6 +189,7 @@
   },
   {
     "name": "Chandrakauns",
+    "iastName": "Chandrakauns",
     "thaat": null,
     "arohana": ".N S g M d N S.",
     "avarohana": "S. N d M g M g S",
@@ -182,6 +200,7 @@
   },
   {
     "name": "Chayanat",
+    "iastName": "Chayanat",
     "thaat": "Kalyan",
     "arohana": "S, RGMP, DP, ND, S.",
     "avarohana": "S. NDP, M’ PDP, RGMP, GMRS",
@@ -192,6 +211,7 @@
   },
   {
     "name": "Darbari Kanhdra",
+    "iastName": "Darbari Kanhdra",
     "thaat": "Asavari",
     "arohana": ".n S R g R S, M P d n R. S.",
     "avarohana": "S. d n P, M P, g M R S",
@@ -202,6 +222,7 @@
   },
   {
     "name": "Des",
+    "iastName": "Des",
     "thaat": "Kamaj",
     "arohana": "S R M P N S.",
     "avarohana": "S. n D P M G R G S",
@@ -213,6 +234,7 @@
   },
   {
     "name": "Deshkar",
+    "iastName": "Deshkar",
     "thaat": "Bilaval",
     "arohana": "S R G P D S.",
     "avarohana": "S. D P, G R S",
@@ -223,6 +245,7 @@
   },
   {
     "name": "Desi",
+    "iastName": "Desi",
     "thaat": "Asavari",
     "arohana": "R g R S R .n S, R M P n S.",
     "avarohana": "S. P -, D M P R g S",
@@ -233,6 +256,7 @@
   },
   {
     "name": "Dhanashri",
+    "iastName": "Dhanashri",
     "thaat": "Kafi",
     "arohana": ".n S, g M P, n S.",
     "avarohana": "S. n D P, M P g, M g R S",
@@ -243,6 +267,7 @@
   },
   {
     "name": "Durga",
+    "iastName": "Durga",
     "thaat": "Bilaval",
     "arohana": "S R M P D S.",
     "avarohana": "S. D P M R S",
@@ -253,6 +278,7 @@
   },
   {
     "name": "Gaur Malhar",
+    "iastName": "Gaur Malhar",
     "thaat": "Kafi",
     "arohana": "R G R M, G R S, M R P M P, D S.",
     "avarohana": "S. n D n P, D G P M, R G R M G R S",
@@ -264,6 +290,7 @@
   },
   {
     "name": "Gaur Sarang",
+    "iastName": "Gaur Sarang",
     "thaat": "Kalyan",
     "arohana": "S, GR, M’ G, PM’, DP, ND, S.",
     "avarohana": "S. DNP, DM’ PG, MR, PR, S",
@@ -274,6 +301,7 @@
   },
   {
     "name": "Gurjari Todi",
+    "iastName": "Gurjari Todi",
     "thaat": "Todi",
     "arohana": "S r g M’ d N S.",
     "avarohana": "S. n d M’ g r, g r S",
@@ -284,6 +312,7 @@
   },
   {
     "name": "Hamir",
+    "iastName": "Hamir",
     "thaat": "Kalyan",
     "arohana": "S R S, G M D, N D S.",
     "avarohana": "S. N D P, M’ P D P, G M R S",
@@ -294,6 +323,7 @@
   },
   {
     "name": "Hansadhvani",
+    "iastName": "Hansadhvani",
     "thaat": "Bilaval",
     "arohana": "S G R, G P, N S.",
     "avarohana": "S. N P, G P G R, S",
@@ -305,6 +335,7 @@
   },
   {
     "name": "Hindol",
+    "iastName": "Hindol",
     "thaat": "Kalyan",
     "arohana": "S G, M’ D N D, S.",
     "avarohana": "S. N D, M’ G, S",
@@ -316,6 +347,7 @@
   },
   {
     "name": "Jai Jai Vanti",
+    "iastName": "Jai Jai Vanti",
     "thaat": "Kamaj",
     "arohana": "S, R g R S, .n .D.P, R, GMP, NS.",
     "avarohana": "S. n D P, G M, R g R S",
@@ -326,6 +358,7 @@
   },
   {
     "name": "Jaunpuri",
+    "iastName": "Jaunpuri",
     "thaat": "Asavari",
     "arohana": "S R M P d n S.",
     "avarohana": "S. n d P, M g R S",
@@ -336,6 +369,7 @@
   },
   {
     "name": "Jhinjhoti",
+    "iastName": "Jhinjhoti",
     "thaat": "Khamaj",
     "arohana": "S R G M P D n S.",
     "avarohana": "S. n D P M G R S",
@@ -346,6 +380,7 @@
   },
   {
     "name": "Jogiya",
+    "iastName": "Jogiya",
     "thaat": "Bhairav",
     "arohana": "S r M P d S.",
     "avarohana": "S. N d P M r S",
@@ -356,6 +391,7 @@
   },
   {
     "name": "Kafi",
+    "iastName": "Kafi",
     "thaat": "Kafi",
     "arohana": "S R g M P D n S.",
     "avarohana": "S. n D P M g R S",
@@ -366,6 +402,7 @@
   },
   {
     "name": "Kalavati",
+    "iastName": "Kalavati",
     "thaat": "Khamaj",
     "arohana": "S G P D n S.",
     "avarohana": "S. n D P G S",
@@ -376,6 +413,7 @@
   },
   {
     "name": "Kamod",
+    "iastName": "Kamod",
     "thaat": "Kalyan",
     "arohana": "S, RP, M’ PDP, NDS.",
     "avarohana": "S.NDP, M’ PDP, GMP, GM, RS",
@@ -386,6 +424,7 @@
   },
   {
     "name": "Kausi Kanhda",
+    "iastName": "Kausi Kanhda",
     "thaat": "Asavari",
     "arohana": "S R g M P D n S.",
     "avarohana": "S. n D P M g R S",
@@ -397,6 +436,7 @@
   },
   {
     "name": "Kedar",
+    "iastName": "Kedar",
     "thaat": "Kalyan",
     "arohana": "S M, M P, D P, N D S.",
     "avarohana": "S. NDP, M’ PDPM, PMRS",
@@ -407,6 +447,7 @@
   },
   {
     "name": "Khamaj",
+    "iastName": "Khamaj",
     "thaat": "Khamaj",
     "arohana": "S G M P D N S.",
     "avarohana": "S. n D P M G R S",
@@ -417,6 +458,7 @@
   },
   {
     "name": "Lalit",
+    "iastName": "Lalit",
     "thaat": "Marva",
     "arohana": ".N r G M, M’ M G, M’ D S.",
     "avarohana": "R. N D, M’ D M’ M G, R S",
@@ -427,6 +469,7 @@
   },
   {
     "name": "Madhuvanti",
+    "iastName": "Madhuvanti",
     "thaat": "Todi",
     "arohana": ".N S g M’ P N S.",
     "avarohana": "S. N D P M’ g R S",
@@ -437,6 +480,7 @@
   },
   {
     "name": "Madhyamad Sarang",
+    "iastName": "Madhyamad Sarang",
     "thaat": "Kafi",
     "arohana": ".n S R M P n S.",
     "avarohana": "S. n P, M R S",
@@ -447,6 +491,7 @@
   },
   {
     "name": "Malgunji",
+    "iastName": "Malgunji",
     "thaat": "Kafi",
     "arohana": ".D .N S R G M, G M, D N S.",
     "avarohana": "S. N D P M G, M g R S",
@@ -457,6 +502,7 @@
   },
   {
     "name": "Malkauns",
+    "iastName": "Malkauns",
     "thaat": "Bharavi",
     "arohana": ".n S g M d n S.",
     "avarohana": "S. n d M g M g S",
@@ -467,6 +513,7 @@
   },
   {
     "name": "Maluha Kedar",
+    "iastName": "Maluha Kedar",
     "thaat": "Bilaval",
     "arohana": ".N R S, G M P, D P M, M P N S.",
     "avarohana": "S. N D P, G M P G M R S",
@@ -477,6 +524,7 @@
   },
   {
     "name": "Mand",
+    "iastName": "Mand",
     "thaat": "Bilaval",
     "arohana": "S G R M G, P M D P, N D S.",
     "avarohana": "S. D N P, D M P G M S",
@@ -487,6 +535,7 @@
   },
   {
     "name": "Maru Bihag",
+    "iastName": "Maru Bihag",
     "thaat": "Kalyan",
     "arohana": ".N S G M P N S.",
     "avarohana": "S. N D P, M’ G M’ G R S",
@@ -497,6 +546,7 @@
   },
   {
     "name": "Marva",
+    "iastName": "Marva",
     "thaat": "Marva",
     "arohana": ".N r G M’ D N S.",
     "avarohana": "S. N D M’ G r S",
@@ -508,6 +558,7 @@
   },
   {
     "name": "Miya Ki Sarang",
+    "iastName": "Miya Ki Sarang",
     "thaat": "Kafi",
     "arohana": "S R M R, M P n D N S.",
     "avarohana": "S. n D n P, M P, M R M R, S",
@@ -518,6 +569,7 @@
   },
   {
     "name": "Miya Malhar",
+    "iastName": "Miya Malhar",
     "thaat": "Kafi",
     "arohana": "R M R S, M R P, M P n D, N S.",
     "avarohana": "S. n D, n M P, g M R S",
@@ -528,6 +580,7 @@
   },
   {
     "name": "Multani",
+    "iastName": "Multani",
     "thaat": "Todi",
     "arohana": ".N S g M’ P N S.",
     "avarohana": "S. N d P M’ g r S",
@@ -538,6 +591,7 @@
   },
   {
     "name": "Nand – Anandi",
+    "iastName": "Nand – Anandi",
     "thaat": "Kalyan",
     "arohana": "S G M, P D, N P S.",
     "avarohana": "S. D, N P, D M’ P, G M D P R S",
@@ -548,6 +602,7 @@
   },
   {
     "name": "Pahadi",
+    "iastName": "Pahadi",
     "thaat": "Bilaval",
     "arohana": "S R G P D S.",
     "avarohana": "S. D P, G P, G R S",
@@ -558,6 +613,7 @@
   },
   {
     "name": "Paraj",
+    "iastName": "Paraj",
     "thaat": "Poorvi",
     "arohana": ".N S G, M’ d N S.",
     "avarohana": "S. N d P, M’ P d P, G M G, M’ G r S",
@@ -568,6 +624,7 @@
   },
   {
     "name": "Patdeep",
+    "iastName": "Patdīp",
     "thaat": "Kafi",
     "arohana": "S g M P N S.",
     "avarohana": "S. N D P M g R S",
@@ -579,6 +636,7 @@
   },
   {
     "name": "Piloo or Pilu",
+    "iastName": "Pilū or Pilu",
     "thaat": "Kafi",
     "arohana": ".N S G M P N S.",
     "avarohana": "S. n D P n d P d P M g S",
@@ -590,6 +648,7 @@
   },
   {
     "name": "Pooriya",
+    "iastName": "Pūriya",
     "thaat": "Marva",
     "arohana": ".N r S, G, M’ D, N r. S.",
     "avarohana": "S. N D M’ G r S",
@@ -601,6 +660,7 @@
   },
   {
     "name": "Pooriya Dhanashri",
+    "iastName": "Pūriya Dhanashri",
     "thaat": "Poorvi",
     "arohana": ".N r G M’ P, d P, N S.",
     "avarohana": "S. N d P, M’ G M’ r G, r S",
@@ -612,6 +672,7 @@
   },
   {
     "name": "Poorvi",
+    "iastName": "Pūrvi",
     "thaat": "Poorvi",
     "arohana": ".N r G, M’ P, d N S.",
     "avarohana": "S. N d P M’, GMG, r S",
@@ -623,6 +684,7 @@
   },
   {
     "name": "Rageshwari",
+    "iastName": "Rageshwari",
     "thaat": "Khamaj",
     "arohana": "S G M D N S.",
     "avarohana": "S. n D M G R S",
@@ -633,6 +695,7 @@
   },
   {
     "name": "Ramdasi Malhar",
+    "iastName": "Ramdasi Malhar",
     "thaat": "Kafi",
     "arohana": ".N S, R G M, n D n P N S.",
     "avarohana": "S. n D n P, D P M, P g, M P g, M R S",
@@ -643,6 +706,7 @@
   },
   {
     "name": "Ramkali",
+    "iastName": "Ramkali",
     "thaat": "Bhairav",
     "arohana": "S r G M P d N S.",
     "avarohana": "S. N d P, M’ P d n d P, G M r S",
@@ -653,6 +717,7 @@
   },
   {
     "name": "Rasranjani",
+    "iastName": "Rasranjani",
     "thaat": "Bilaval",
     "arohana": "S R M D N S.",
     "avarohana": "S. N D M, D M R S",
@@ -663,6 +728,7 @@
   },
   {
     "name": "Saraswati",
+    "iastName": "Saraswati",
     "thaat": "Khamaj",
     "arohana": "S R M’ P, n D P, n D S.",
     "avarohana": "R. n D P M’ R M P, M’ R S",
@@ -673,6 +739,7 @@
   },
   {
     "name": "Shankara",
+    "iastName": "Śankara",
     "thaat": "Bilaval",
     "arohana": "S G P N S.",
     "avarohana": "S. NP, ND S. NP, GPGS",
@@ -683,6 +750,7 @@
   },
   {
     "name": "Shivranjani",
+    "iastName": "Śivranjani",
     "thaat": "Kafi",
     "arohana": "S R g P D S.",
     "avarohana": "S. D P g R S",
@@ -693,6 +761,7 @@
   },
   {
     "name": "Shri",
+    "iastName": "Śri",
     "thaat": "Poorvi",
     "arohana": "S r r S, r M’ P N S.",
     "avarohana": "S. N d P, M’ P d M’ G r, P r G r S",
@@ -704,6 +773,7 @@
   },
   {
     "name": "Shuddh Kalyan",
+    "iastName": "Śuddh Kalyan",
     "thaat": "Kalyan",
     "arohana": "S R G P D S.",
     "avarohana": "S. N D, N D P, M’ G R, G R P R G R S",
@@ -714,6 +784,7 @@
   },
   {
     "name": "Shuddh Sarang",
+    "iastName": "Śuddh Sarang",
     "thaat": "Kafi",
     "arohana": "S R M P, M’ P N S.",
     "avarohana": "S. N D P M’ G R S",
@@ -724,6 +795,7 @@
   },
   {
     "name": "Shyam Kalyan",
+    "iastName": "Śyam Kalyan",
     "thaat": "Kalyan",
     "arohana": ".N S R M’ P N S.",
     "avarohana": "S. N D P M’ P G M R .N S",
@@ -734,6 +806,7 @@
   },
   {
     "name": "Sindhu Bhairavi",
+    "iastName": "Sindhu Bhairavi",
     "thaat": "Asavari",
     "arohana": "S R g M P d n S.",
     "avarohana": "S. n d P M g R S",
@@ -744,6 +817,7 @@
   },
   {
     "name": "Sohni",
+    "iastName": "Sohni",
     "thaat": "Marva",
     "arohana": "S G M’ D N S.",
     "avarohana": "S. r. S. N D, G M’ D, G M’ G, M’ G r S",
@@ -754,6 +828,7 @@
   },
   {
     "name": "Sughrai",
+    "iastName": "Sughrai",
     "thaat": "Kafi",
     "arohana": ".n S R g, M P, N S.",
     "avarohana": "S. D, N P, M P, g, M R S",
@@ -764,6 +839,7 @@
   },
   {
     "name": "Tilak Kamod",
+    "iastName": "Tilak Kamod",
     "thaat": "Khamaj",
     "arohana": "S R G S, R M P D, M P, S.",
     "avarohana": "S. P D M G, S R G, S .N .P.NSRG",
@@ -774,6 +850,7 @@
   },
   {
     "name": "Tilang",
+    "iastName": "Tilang",
     "thaat": "Khamaj",
     "arohana": "S G M P N S.",
     "avarohana": "S. n P M G S",
@@ -784,6 +861,7 @@
   },
   {
     "name": "Todi",
+    "iastName": "Todi",
     "thaat": "Todi",
     "arohana": "S r g M’ P d N S.",
     "avarohana": "S. N d P M’ g r S",
@@ -794,6 +872,7 @@
   },
   {
     "name": "Vibhas",
+    "iastName": "Vibhas",
     "thaat": "Bhairav",
     "arohana": "S r G P d P S.",
     "avarohana": "S. d P G P d P, G r S",
@@ -804,6 +883,7 @@
   },
   {
     "name": "Vridavani Sarang",
+    "iastName": "Vridavani Sarang",
     "thaat": "Kafi",
     "arohana": "S R M P N S.",
     "avarohana": "S. n P M R S",
@@ -814,6 +894,7 @@
   },
   {
     "name": "Yaman",
+    "iastName": "Yaman",
     "thaat": "Kalyan",
     "arohana": "S R G M’ P D N S.",
     "avarohana": "S. N D P M’ G R S",
@@ -824,6 +905,7 @@
   },
   {
     "name": "Yaman Kalyan",
+    "iastName": "Yaman Kalyan",
     "thaat": "Kalyan",
     "arohana": "S R G M’ P D N S.",
     "avarohana": "S. N D P M G R S",
@@ -834,6 +916,7 @@
   },
   {
     "name": "Yamani Bilaval",
+    "iastName": "Yamani Bilaval",
     "thaat": "Bilaval",
     "arohana": ".N R G, M R G P, M’ P, D N S.",
     "avarohana": "S. N D P, M’ P M G, R G R S",
@@ -844,6 +927,7 @@
   },
   {
     "name": "Hemant",
+    "iastName": "Hemant",
     "thaat": "Bilaval",
     "arohana": "S G M D N S.",
     "avarohana": "S. N D P M G R S",
@@ -854,6 +938,7 @@
   },
   {
     "name": "Kirwani",
+    "iastName": "Kirwani",
     "thaat": null,
     "arohana": "S R g M P d N S.",
     "avarohana": "S. N d P M g R S",
@@ -864,6 +949,7 @@
   },
   {
     "name": "Jog",
+    "iastName": "Jog",
     "thaat": "Kafi",
     "arohana": "S G M P n S.",
     "avarohana": "S n P M G M g S",
@@ -874,6 +960,7 @@
   },
   {
     "name": "Abheri Todi",
+    "iastName": "Abheri Todi",
     "thaat": null,
     "arohana": "S R G M P d n S",
     "avarohana": "S n d P M g r S",
@@ -889,6 +976,7 @@
   },
   {
     "name": "Bairagi",
+    "iastName": "Bairagi",
     "thaat": null,
     "arohana": "SrMPnS",
     "avarohana": "SnPMrS",
@@ -903,6 +991,7 @@
   },
   {
     "name": "Charukeshi",
+    "iastName": "Charukeshi",
     "thaat": null,
     "arohana": "SRGMPdnS",
     "avarohana": "SndPMGRS",
@@ -917,6 +1006,7 @@
   },
   {
     "name": "Chandranandan",
+    "iastName": "Chandranandan",
     "thaat": "Asavari",
     "arohana": "nSgMdnS",
     "avarohana": "SRNSR, ndPM, GMgS, ndngS",
@@ -931,6 +1021,7 @@
   },
   {
     "name": "Devgiri Bilawal",
+    "iastName": "Devgiri Bilawal",
     "thaat": "Bilawal",
     "arohana": "NSRGMG, DPG, DNDS",
     "avarohana": "SNDP, DnDP, MGRS, NS, DPGRS",
@@ -945,6 +1036,7 @@
   },
   {
     "name": "Dhani",
+    "iastName": "Dhani",
     "thaat": null,
     "arohana": "nSgMPnS",
     "avarohana": "SnPMgS",
@@ -959,6 +1051,7 @@
   },
   {
     "name": "Gorakh Kalyan",
+    "iastName": "Gorakh Kalyan",
     "thaat": null,
     "arohana": "nSRM, DnDS",
     "avarohana": "SnDPMRS, nDS",
@@ -973,6 +1066,7 @@
   },
   {
     "name": "Jait",
+    "iastName": "Jait",
     "thaat": null,
     "arohana": "SrGPDS / SRGPDS",
     "avarohana": "SDPGrS / SDPGRS",
@@ -987,6 +1081,7 @@
   },
   {
     "name": "Jait Kalyan",
+    "iastName": "Jait Kalyan",
     "thaat": "Kalyan",
     "arohana": "SRGP, DS",
     "avarohana": "SDP, GPRS",
@@ -1001,6 +1096,7 @@
   },
   {
     "name": "Kaunsi Kanada",
+    "iastName": "Kaunsi Kanada",
     "thaat": null,
     "arohana": "nSgMdnS",
     "avarohana": "SndP, MgR, gMRS",
@@ -1015,6 +1111,7 @@
   },
   {
     "name": "Kaushiki",
+    "iastName": "Kaushiki",
     "thaat": null,
     "arohana": "SgMdnS",
     "avarohana": "dnSnd, PdPM, gRgS",
@@ -1029,6 +1126,7 @@
   },
   {
     "name": "Nat Bhairav",
+    "iastName": "Nat Bhairav",
     "thaat": "Bhairav",
     "arohana": "SRGMPdNS",
     "avarohana": "SNdPMGRS",
@@ -1043,6 +1141,7 @@
   },
   {
     "name": "Nat Bihag",
+    "iastName": "Nat Bihag",
     "thaat": null,
     "arohana": "SGMPNS",
     "avarohana": "SNDP, MnD, PMGRS",
@@ -1057,6 +1156,7 @@
   },
   {
     "name": "Puriya Kalyan",
+    "iastName": "Puriya Kalyan",
     "thaat": "Kalyan",
     "arohana": "NrGM’DNrS",
     "avarohana": "rNDPM’G, rM’G; M’GrS",
@@ -1071,6 +1171,7 @@
   },
   {
     "name": "Amritvarshini",
+    "iastName": "Amritvarshini",
     "thaat": "Kalyan",
     "arohana": "SGM’PNS",
     "avarohana": "SNPM’GS",
@@ -1085,6 +1186,7 @@
   },
   {
     "name": "Asa",
+    "iastName": "Asa",
     "thaat": null,
     "arohana": "SRM, PDS",
     "avarohana": "SNDP, MGRS, RGS",
@@ -1099,6 +1201,7 @@
   },
   {
     "name": "Deepavali",
+    "iastName": "Dīpavali",
     "thaat": null,
     "arohana": "NRGMM’M, GM’DNS",
     "avarohana": "SNDM’M, GRGM’GRS",
@@ -1113,6 +1216,7 @@
   },
   {
     "name": "DoGa Kalyan",
+    "iastName": "DoGa Kalyan",
     "thaat": "Kalyan",
     "arohana": "SGM’PDNS",
     "avarohana": "SNDPM'gS",
@@ -1127,6 +1231,7 @@
   },
   {
     "name": "Gaud",
+    "iastName": "Gaud",
     "thaat": "Bilaval",
     "arohana": "NSGRMGP, MPDNS",
     "avarohana": "SNDPMGRS",
@@ -1141,6 +1246,7 @@
   },
   {
     "name": "Latangi",
+    "iastName": "Latangi",
     "thaat": null,
     "arohana": "SRGM’PdNS",
     "avarohana": "SNdPM’GRS",
@@ -1155,6 +1261,7 @@
   },
   {
     "name": "Loom",
+    "iastName": "Lūm",
     "thaat": "Bilaval",
     "arohana": "RNSRG, MGRP, DNS",
     "avarohana": "SNDPMG, SRG, NSRS",
@@ -1169,6 +1276,7 @@
   },
   {
     "name": "Maru",
+    "iastName": "Maru",
     "thaat": "Kalyan",
     "arohana": "GM’DN; SRGM’DNS",
     "avarohana": "SNDM’GRS",
@@ -1183,6 +1291,7 @@
   },
   {
     "name": "Palas",
+    "iastName": "Palas",
     "thaat": "Kafi",
     "arohana": "nSgMPnS",
     "avarohana": "SnPMgRS",
@@ -1197,6 +1306,7 @@
   },
   {
     "name": "Sarangkauns",
+    "iastName": "Sarangkauns",
     "thaat": null,
     "arohana": "SRM, dnS",
     "avarohana": "Snd, MRS",
@@ -1211,6 +1321,7 @@
   },
   {
     "name": "Shankh Dhwani",
+    "iastName": "Śankh Dhwani",
     "thaat": null,
     "arohana": "SRGPnS",
     "avarohana": "SnPGRS",
@@ -1225,6 +1336,7 @@
   },
   {
     "name": "Basant Mukhari",
+    "iastName": "Basant Mukhari",
     "thaat": null,
     "arohana": "S r G M P d N S.",
     "avarohana": "S. N d P M G r S",
@@ -1235,6 +1347,7 @@
   },
   {
     "name": "Bhoop Kalyan",
+    "iastName": "Bhūp Kalyan",
     "thaat": "Kalyan",
     "arohana": "S R G P D S.",
     "avarohana": "S. D P G R S",
@@ -1245,6 +1358,7 @@
   },
   {
     "name": "Chandrakant",
+    "iastName": "Chandrakant",
     "thaat": null,
     "arohana": "S G M P N S.",
     "avarohana": "S. N P M G S",
@@ -1255,6 +1369,7 @@
   },
   {
     "name": "Gopika Basant",
+    "iastName": "Gopika Basant",
     "thaat": "Kalyan",
     "arohana": "S R G M’ P D N S.",
     "avarohana": "S. N D P M’ G R S",
@@ -1265,6 +1380,7 @@
   },
   {
     "name": "Hem Kalyan",
+    "iastName": "Hem Kalyan",
     "thaat": "Kalyan",
     "arohana": "S R G M’ P D N S.",
     "avarohana": "S. N D P M’ G R S",
@@ -1275,6 +1391,7 @@
   },
   {
     "name": "Jhinjhoti Kalyan",
+    "iastName": "Jhinjhoti Kalyan",
     "thaat": "Kalyan",
     "arohana": "S R G M’ P D N S.",
     "avarohana": "S. N D P M’ G R S",
@@ -1285,6 +1402,7 @@
   },
   {
     "name": "Kafi Kanada",
+    "iastName": "Kafi Kanada",
     "thaat": "Kafi",
     "arohana": "S R g M P D n S.",
     "avarohana": "S. n D P M g R S",
@@ -1295,6 +1413,7 @@
   },
   {
     "name": "Lalita Gauri",
+    "iastName": "Lalita Gauri",
     "thaat": null,
     "arohana": "S r G M’ P d N S.",
     "avarohana": "S. N d P M’ G r S",
@@ -1305,6 +1424,7 @@
   },
   {
     "name": "Madhukauns",
+    "iastName": "Madhukauns",
     "thaat": null,
     "arohana": "S g M d n S.",
     "avarohana": "S. n d M g S",
@@ -1315,6 +1435,7 @@
   },
   {
     "name": "Sarang Nat",
+    "iastName": "Sarang Nat",
     "thaat": null,
     "arohana": "S R M P N S.",
     "avarohana": "S. N P M R S",

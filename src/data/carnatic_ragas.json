@@ -1,6 +1,7 @@
 [
   {
     "name": "KanakAngi",
+    "iastName": "Kanakāngi",
     "melakarta_number": 1,
     "arohana": "S R1 G1 M1 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M1 G1 R1 S",
@@ -13,6 +14,7 @@
   },
   {
     "name": "Kanakathodi",
+    "iastName": "Kanakathodi",
     "melakarta_number": 1,
     "arohana": "S R1 G1 M1 P D1 S^",
     "avarohana": "S^ N1 D1 P M1 R1 S",
@@ -25,6 +27,7 @@
   },
   {
     "name": "KarnAtaka Suddha Saveri",
+    "iastName": "Karnātaka Suddha Saveri",
     "melakarta_number": 1,
     "arohana": "S R1 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 R1 S",
@@ -37,6 +40,7 @@
   },
   {
     "name": "Tatillatika",
+    "iastName": "Tatillatika",
     "melakarta_number": 1,
     "arohana": "S R1 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 R1 S",
@@ -49,6 +53,7 @@
   },
   {
     "name": "VAgeeshwari",
+    "iastName": "Vāgīshwari",
     "melakarta_number": 1,
     "arohana": "S R1 G1 M1 P D1 S^",
     "avarohana": "S^ D1 M1 P G1 R1 S",
@@ -61,6 +66,7 @@
   },
   {
     "name": "RathnAngi",
+    "iastName": "Rathnāngi",
     "melakarta_number": 2,
     "arohana": "S R1 G1 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G1 R1 S",
@@ -73,6 +79,7 @@
   },
   {
     "name": "Phenadhyuti",
+    "iastName": "Phenadhyuti",
     "melakarta_number": 2,
     "arohana": "S R1 M1 P D1 P N2 S^",
     "avarohana": "S^ N2 D1 P M1 G1 R1 S",
@@ -85,6 +92,7 @@
   },
   {
     "name": "Revathi",
+    "iastName": "Revathi",
     "melakarta_number": 2,
     "arohana": "S R1 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 R1 S",
@@ -97,6 +105,7 @@
   },
   {
     "name": "GAnamoorti",
+    "iastName": "Gānamūrti",
     "melakarta_number": 3,
     "arohana": "S R1 G1 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 G1 R1 S",
@@ -109,6 +118,7 @@
   },
   {
     "name": "Bhinnapanchamam",
+    "iastName": "Bhinnapanchamam",
     "melakarta_number": 3,
     "arohana": "S R1 G1 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 G1 R1 S",
@@ -121,6 +131,7 @@
   },
   {
     "name": "Vanaspati",
+    "iastName": "Vanaspati",
     "melakarta_number": 4,
     "arohana": "S R1 G1 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G1 R1 S",
@@ -133,6 +144,7 @@
   },
   {
     "name": "VittalapriyA",
+    "iastName": "Vittalapriyā",
     "melakarta_number": 4,
     "arohana": "S R1 M1 P D2 S^",
     "avarohana": "S^ D2 P M1 R1 S",
@@ -145,6 +157,7 @@
   },
   {
     "name": "MAnavathi",
+    "iastName": "Mānavathi",
     "melakarta_number": 5,
     "arohana": "S R1 G1 M1 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 G1 R1 S",
@@ -157,6 +170,7 @@
   },
   {
     "name": "TAnaroopi",
+    "iastName": "Tānarūpi",
     "melakarta_number": 6,
     "arohana": "S R1 G1 M1 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M1 G1 R1 S",
@@ -169,6 +183,7 @@
   },
   {
     "name": "SenAvathi",
+    "iastName": "Senāvathi",
     "melakarta_number": 7,
     "arohana": "S R1 G2 M1 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M1 G2 R1 S",
@@ -181,6 +196,7 @@
   },
   {
     "name": "Chitthakarshani",
+    "iastName": "Chitthakarshani",
     "melakarta_number": 7,
     "arohana": "S R1 G2 M1 D1 S^",
     "avarohana": "S^ D1 M1 G2 R1 S",
@@ -193,6 +209,7 @@
   },
   {
     "name": "Navarasa MAlA",
+    "iastName": "Navarasa Mālā",
     "melakarta_number": 7,
     "arohana": "S R1 G2 M1 P D1 S^",
     "avarohana": "S^ N1 D1 P M1 R1 S",
@@ -205,6 +222,7 @@
   },
   {
     "name": "Sindhu Gowri",
+    "iastName": "Sindhu Gowri",
     "melakarta_number": 7,
     "arohana": "S R1 G2 M1 P D1 N1 S^",
     "avarohana": "S^ N1 D1 M1 G2 M1 R1 S",
@@ -217,6 +235,7 @@
   },
   {
     "name": "Hanumathodi",
+    "iastName": "Hanumathodi",
     "melakarta_number": 8,
     "arohana": "S R1 G2 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G2 R1 S",
@@ -229,6 +248,7 @@
   },
   {
     "name": "Janathodi",
+    "iastName": "Janathodi",
     "melakarta_number": 8,
     "arohana": "S R1 G2 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G2 R1 S",
@@ -241,6 +261,7 @@
   },
   {
     "name": "Amritha DhanyAsi",
+    "iastName": "Amritha Dhanyāsi",
     "melakarta_number": 8,
     "arohana": "S R1 G2 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 G2 R1 S",
@@ -253,6 +274,7 @@
   },
   {
     "name": "Bhadrathodi",
+    "iastName": "Bhadrathodi",
     "melakarta_number": 8,
     "arohana": "S R1 G2 M1 D1 S^",
     "avarohana": "S^ N2 D1 P G2 S",
@@ -265,6 +287,7 @@
   },
   {
     "name": "BhoopAlam",
+    "iastName": "Bhūpālam",
     "melakarta_number": 8,
     "arohana": "S R1 G2 P D1 S^",
     "avarohana": "S^ D1 P G2 R1 S",
@@ -277,6 +300,7 @@
   },
   {
     "name": "Chandrikathodi",
+    "iastName": "Chandrikathodi",
     "melakarta_number": 8,
     "arohana": "S G2 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 G2 S",
@@ -289,6 +313,7 @@
   },
   {
     "name": "DivyamAlathi",
+    "iastName": "Divyamālathi",
     "melakarta_number": 8,
     "arohana": "S G2 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G2 S",
@@ -301,6 +326,7 @@
   },
   {
     "name": "KalAsAveri",
+    "iastName": "Kalāsāveri",
     "melakarta_number": 8,
     "arohana": "S R1 G2 P N2 S^",
     "avarohana": "S^ N2 P G2 R1 S",
@@ -313,6 +339,7 @@
   },
   {
     "name": "PrabhupriyA",
+    "iastName": "Prabhupriyā",
     "melakarta_number": 8,
     "arohana": "S G2 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 G2 S",
@@ -325,6 +352,7 @@
   },
   {
     "name": "Suddha Seemantini",
+    "iastName": "Suddha Sīmantini",
     "melakarta_number": 8,
     "arohana": "S R1 G2 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 G2 R1 S",
@@ -337,6 +365,7 @@
   },
   {
     "name": "Suddha Thodi",
+    "iastName": "Suddha Thodi",
     "melakarta_number": 8,
     "arohana": "S R1 G2 M1 D1 N2 S^",
     "avarohana": "S^ N2 D1 M1 G2 R1 S",
@@ -349,6 +378,7 @@
   },
   {
     "name": "Dhenuka",
+    "iastName": "Dhenuka",
     "melakarta_number": 9,
     "arohana": "S R1 G2 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 G2 R1 S",
@@ -361,6 +391,7 @@
   },
   {
     "name": "Udhaya Ravi CandrikA",
+    "iastName": "Udhaya Ravi Candrikā",
     "melakarta_number": 9,
     "arohana": "S G2 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 G2 S",
@@ -373,6 +404,7 @@
   },
   {
     "name": "NAtakapriyA",
+    "iastName": "Nātakapriyā",
     "melakarta_number": 10,
     "arohana": "S R1 G2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 R1 S",
@@ -385,6 +417,7 @@
   },
   {
     "name": "NatAbharanam",
+    "iastName": "Natābharanam",
     "melakarta_number": 10,
     "arohana": "S R1 G2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 R1 S",
@@ -397,6 +430,7 @@
   },
   {
     "name": "AlankArapriyA",
+    "iastName": "Alankārapriyā",
     "melakarta_number": 10,
     "arohana": "S R1 G2 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G2 R1 S",
@@ -409,6 +443,7 @@
   },
   {
     "name": "BhAgyashabari",
+    "iastName": "Bhāgyashabari",
     "melakarta_number": 10,
     "arohana": "S R1 G2 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G2 R1 S",
@@ -421,6 +456,7 @@
   },
   {
     "name": "GunAvathi",
+    "iastName": "Gunāvathi",
     "melakarta_number": 10,
     "arohana": "S R1 M1 P D2 S^",
     "avarohana": "S^ D2 P M1 R1 S",
@@ -433,6 +469,7 @@
   },
   {
     "name": "MAthangakAmini",
+    "iastName": "Māthangakāmini",
     "melakarta_number": 10,
     "arohana": "S G2 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G2 S",
@@ -445,6 +482,7 @@
   },
   {
     "name": "Kokilapriyaa",
+    "iastName": "Kokilapriyā",
     "melakarta_number": 11,
     "arohana": "S R1 G2 M1 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 G2 R1 S",
@@ -457,6 +495,7 @@
   },
   {
     "name": "Vasanthamalli",
+    "iastName": "Vasanthamalli",
     "melakarta_number": 11,
     "arohana": "S G2 M1 P N3 S^",
     "avarohana": "S^ D2 P M1 G2 S",
@@ -469,6 +508,7 @@
   },
   {
     "name": "Roopavati",
+    "iastName": "Rūpavati",
     "melakarta_number": 12,
     "arohana": "S R1 G2 M1 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M1 G2 R1 S",
@@ -481,6 +521,7 @@
   },
   {
     "name": "GAyakapriyA",
+    "iastName": "Gāyakapriyā",
     "melakarta_number": 13,
     "arohana": "S R1 G3 M1 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M1 G3 R1 S",
@@ -493,6 +534,7 @@
   },
   {
     "name": "Geya Hejjajji",
+    "iastName": "Geya Hejjajji",
     "melakarta_number": 13,
     "arohana": "S R1 M1 G3 M1 P D1 S^",
     "avarohana": "S^ N3 D1 P M1 G3 R1 S",
@@ -505,6 +547,7 @@
   },
   {
     "name": "KalAkAnti",
+    "iastName": "Kalākānti",
     "melakarta_number": 13,
     "arohana": "S R1 G3 M1 D1 N1 S^",
     "avarohana": "S^ N1 D1 P G3 R1 S",
@@ -517,6 +560,7 @@
   },
   {
     "name": "VakulAbharanam",
+    "iastName": "Vakulābharanam",
     "melakarta_number": 14,
     "arohana": "S R1 G3 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G3 R1 S",
@@ -529,6 +573,7 @@
   },
   {
     "name": "VAtee Vasantabhairavi",
+    "iastName": "Vātī Vasantabhairavi",
     "melakarta_number": 14,
     "arohana": "S R1 G3 M1 D1 N2 S^",
     "avarohana": "S^ N2 D1 M1 G3 R1 S",
@@ -541,6 +586,7 @@
   },
   {
     "name": "Amudhasurabhi",
+    "iastName": "Amudhasurabhi",
     "melakarta_number": 14,
     "arohana": "S M1 G3 M1 P D1 S^",
     "avarohana": "S^ N2 D1 P M1 R1 S",
@@ -553,6 +599,7 @@
   },
   {
     "name": "Kalindaja",
+    "iastName": "Kalindaja",
     "melakarta_number": 14,
     "arohana": "S R1 G3 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 G3 R1 S",
@@ -565,6 +612,7 @@
   },
   {
     "name": "Kuvalayabharanam",
+    "iastName": "Kuvalayabharanam",
     "melakarta_number": 14,
     "arohana": "S R1 G3 M1 D1 N1 S^",
     "avarohana": "S^ N1 D1 M1 G3 R1 S",
@@ -577,6 +625,7 @@
   },
   {
     "name": "Sallapa",
+    "iastName": "Sallapa",
     "melakarta_number": 14,
     "arohana": "S G3 M1 D1 N2 S^",
     "avarohana": "S^ N2 D1 M1 G3 S",
@@ -589,6 +638,7 @@
   },
   {
     "name": "Suddha KAmbhoji",
+    "iastName": "Suddha Kāmbhoji",
     "melakarta_number": 14,
     "arohana": "S G3 R1 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 G3 R1 S",
@@ -601,6 +651,7 @@
   },
   {
     "name": "Vasanthabhairavi",
+    "iastName": "Vasanthabhairavi",
     "melakarta_number": 14,
     "arohana": "S R1 G3 M1 D1 N2 S^",
     "avarohana": "S^ N2 D1 M1 G3 R1 S",
@@ -613,6 +664,7 @@
   },
   {
     "name": "Vasantha MukhAri",
+    "iastName": "Vasantha Mukhāri",
     "melakarta_number": 14,
     "arohana": "S M1 G3 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G3 R1 S",
@@ -625,6 +677,7 @@
   },
   {
     "name": "MAyamAlava Gowla",
+    "iastName": "Māyamālava Gowla",
     "melakarta_number": 15,
     "arohana": "S R1 G3 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 G3 R1 S",
@@ -637,6 +690,7 @@
   },
   {
     "name": "BhAvini",
+    "iastName": "Bhāvini",
     "melakarta_number": 15,
     "arohana": "S G3 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 G3 S",
@@ -649,6 +703,7 @@
   },
   {
     "name": "BibhAs",
+    "iastName": "Bibhās",
     "melakarta_number": 15,
     "arohana": "S R1 G3 P D1 S^",
     "avarohana": "S^ D1 P M1 R1 S",
@@ -661,6 +716,7 @@
   },
   {
     "name": "ChAruvardhani",
+    "iastName": "Chāruvardhani",
     "melakarta_number": 15,
     "arohana": "S R1 M1 P D1 N3 S^",
     "avarohana": "S^ D1 P M1 G3 R1 S",
@@ -673,6 +729,7 @@
   },
   {
     "name": "ChAyagowla",
+    "iastName": "Chāyagowla",
     "melakarta_number": 15,
     "arohana": "S R1 M1 G3 M1 P N3 S^",
     "avarohana": "S^ N3 D1 P M1 G3 R1 S",
@@ -685,6 +742,7 @@
   },
   {
     "name": "Chandrachooda",
+    "iastName": "Chandrachūda",
     "melakarta_number": 15,
     "arohana": "S M1 G3 M1 P D1 S^",
     "avarohana": "S^ N3 D1 P M1 G3 S",
@@ -697,6 +755,7 @@
   },
   {
     "name": "Deshyagowla",
+    "iastName": "Deshyagowla",
     "melakarta_number": 15,
     "arohana": "S R1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P R1 S",
@@ -709,6 +768,7 @@
   },
   {
     "name": "Gurjari",
+    "iastName": "Gurjari",
     "melakarta_number": 15,
     "arohana": "S R1 G3 M1 P D1 N3 S^",
     "avarohana": "S^ D1 N3 P M1 G3 R1 S",
@@ -721,6 +781,7 @@
   },
   {
     "name": "KalyAnakesari",
+    "iastName": "Kalyānakesari",
     "melakarta_number": 15,
     "arohana": "S R1 G3 P D1 S^",
     "avarohana": "S^ D1 P G3 R1 S",
@@ -733,6 +794,7 @@
   },
   {
     "name": "LalitA",
+    "iastName": "Lalitā",
     "melakarta_number": 15,
     "arohana": "S R1 G3 M1 D1 N3 S^",
     "avarohana": "S^ N3 D1 M1 G3 R1 S",
@@ -745,6 +807,7 @@
   },
   {
     "name": "MAlavakurinji",
+    "iastName": "Mālavakurinji",
     "melakarta_number": 15,
     "arohana": "S G3 P D1 N3 S^",
     "avarohana": "S^ N3 D1 M1 R1 S",
@@ -757,6 +820,7 @@
   },
   {
     "name": "Megharanjani",
+    "iastName": "Megharanjani",
     "melakarta_number": 15,
     "arohana": "S R1 G3 M1 N3 S^",
     "avarohana": "S^ N3 M1 G3 R1 S",
@@ -769,6 +833,7 @@
   },
   {
     "name": "Poornalalitha-5",
+    "iastName": "Pūrnalalitha-5",
     "melakarta_number": 15,
     "arohana": "S R1 G3 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 G3 R1 S",
@@ -781,6 +846,7 @@
   },
   {
     "name": "Revagupti",
+    "iastName": "Revagupti",
     "melakarta_number": 15,
     "arohana": "S R1 G3 P D1 S^",
     "avarohana": "S^ D1 P G3 R1 S",
@@ -793,6 +859,7 @@
   },
   {
     "name": "RukhmAmbari",
+    "iastName": "Rukhmāmbari",
     "melakarta_number": 15,
     "arohana": "S R1 G3 P N3 S^",
     "avarohana": "S^ N3 P G3 R1 S",
@@ -805,6 +872,7 @@
   },
   {
     "name": "SAmanthadeepara",
+    "iastName": "Sāmanthadīpara",
     "melakarta_number": 15,
     "arohana": "S R1 G3 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 G3 R1 S",
@@ -817,6 +885,7 @@
   },
   {
     "name": "SalanganAttai",
+    "iastName": "Salanganāttai",
     "melakarta_number": 15,
     "arohana": "S R1 M1 P D1 S^",
     "avarohana": "S^ D1 P G3 R1 S",
@@ -829,6 +898,7 @@
   },
   {
     "name": "TArakagowla",
+    "iastName": "Tārakagowla",
     "melakarta_number": 15,
     "arohana": "S G3 M1 D1 N3 S^",
     "avarohana": "S^ N3 D1 M1 G3 S",
@@ -841,6 +911,7 @@
   },
   {
     "name": "VishArada",
+    "iastName": "Vishārada",
     "melakarta_number": 15,
     "arohana": "S R1 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 R1 S",
@@ -853,6 +924,7 @@
   },
   {
     "name": "ChakravAkam",
+    "iastName": "Chakravākam",
     "melakarta_number": 16,
     "arohana": "S R1 G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R1 S",
@@ -865,6 +937,7 @@
   },
   {
     "name": "ToyavegavAhini",
+    "iastName": "Toyavegavāhini",
     "melakarta_number": 16,
     "arohana": "S R1 G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R1 S",
@@ -877,6 +950,7 @@
   },
   {
     "name": "BhujAngini",
+    "iastName": "Bhujāngini",
     "melakarta_number": 16,
     "arohana": "S R1 G3 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G3 R1 S",
@@ -889,6 +963,7 @@
   },
   {
     "name": "BindhumAlini",
+    "iastName": "Bindhumālini",
     "melakarta_number": 16,
     "arohana": "S G3 R1 G3 M1 P N2 S^",
     "avarohana": "S^ N2 S^ D2 P G3 R1 S",
@@ -901,6 +976,7 @@
   },
   {
     "name": "ChakranArAyani",
+    "iastName": "Chakranārāyani",
     "melakarta_number": 16,
     "arohana": "S R1 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 R1 S",
@@ -913,6 +989,7 @@
   },
   {
     "name": "KokilA",
+    "iastName": "Kokilā",
     "melakarta_number": 16,
     "arohana": "S R1 G3 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G3 R1 S",
@@ -925,6 +1002,7 @@
   },
   {
     "name": "MalayamArutham",
+    "iastName": "Malayamārutham",
     "melakarta_number": 16,
     "arohana": "S R1 G3 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P G3 R1 S",
@@ -937,6 +1015,7 @@
   },
   {
     "name": "MukthAngi",
+    "iastName": "Mukthāngi",
     "melakarta_number": 16,
     "arohana": "S R1 G3 M1 P D2 N2 S^",
     "avarohana": "S^ D2 N2 P M1 G3 R1 S",
@@ -949,6 +1028,7 @@
   },
   {
     "name": "MukundamAlini",
+    "iastName": "Mukundamālini",
     "melakarta_number": 16,
     "arohana": "S R1 G2 P D2 S^",
     "avarohana": "S^ D2 P G2 R1 S",
@@ -961,6 +1041,7 @@
   },
   {
     "name": "Pravritti",
+    "iastName": "Pravritti",
     "melakarta_number": 16,
     "arohana": "S G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 S",
@@ -973,6 +1054,7 @@
   },
   {
     "name": "RAgamanjari",
+    "iastName": "Rāgamanjari",
     "melakarta_number": 16,
     "arohana": "S R1 M1 P D2 S^",
     "avarohana": "S^ N2 D2 M1 R1 S",
@@ -985,6 +1067,7 @@
   },
   {
     "name": "Shree NabhomArgini",
+    "iastName": "Śrī Nabhomārgini",
     "melakarta_number": 16,
     "arohana": "S G3 M1 P D2 N2 S^",
     "avarohana": "S^ D2 P M1 G3 R1 S",
@@ -997,6 +1080,7 @@
   },
   {
     "name": "SubhAshini",
+    "iastName": "Subhāshini",
     "melakarta_number": 16,
     "arohana": "S D2 N2 D2 R1 G3 M1 P",
     "avarohana": "M1 G3 R1 S N2 D2 N2 S",
@@ -1009,6 +1093,7 @@
   },
   {
     "name": "Valachi",
+    "iastName": "Valachi",
     "melakarta_number": 16,
     "arohana": "S G3 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P G3 S",
@@ -1021,6 +1106,7 @@
   },
   {
     "name": "VegavAhini",
+    "iastName": "Vegavāhini",
     "melakarta_number": 16,
     "arohana": "S R1 G3 M1 D2 N2 D2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R1 S",
@@ -1033,6 +1119,7 @@
   },
   {
     "name": "SooryakAntam",
+    "iastName": "Sūryakāntam",
     "melakarta_number": 17,
     "arohana": "S R1 G3 M1 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 G3 R1 S",
@@ -1045,6 +1132,7 @@
   },
   {
     "name": "Jayasamvardhani",
+    "iastName": "Jayasamvardhani",
     "melakarta_number": 17,
     "arohana": "S G3 M1 P D2 N3 S^",
     "avarohana": "S^ N3 P M1 G3 R1 S",
@@ -1057,6 +1145,7 @@
   },
   {
     "name": "JeevantikA",
+    "iastName": "Jīvantikā",
     "melakarta_number": 17,
     "arohana": "S R1 M1 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 R1 S",
@@ -1069,6 +1158,7 @@
   },
   {
     "name": "RohinA",
+    "iastName": "Rohinā",
     "melakarta_number": 17,
     "arohana": "S R1 G2 M1 M2 D2 N2 S^",
     "avarohana": "S^ N2 D2 M2 M1 G2 R1 S",
@@ -1081,6 +1171,7 @@
   },
   {
     "name": "Suddha Gowla",
+    "iastName": "Suddha Gowla",
     "melakarta_number": 17,
     "arohana": "S R1 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 R1 S",
@@ -1093,6 +1184,7 @@
   },
   {
     "name": "VasanthA",
+    "iastName": "Vasanthā",
     "melakarta_number": 17,
     "arohana": "S M1 G3 M1 D2 N3 S^",
     "avarohana": "S^ N3 D2 M1 G3 R1 S",
@@ -1105,6 +1197,7 @@
   },
   {
     "name": "HatakAmbari",
+    "iastName": "Hatakāmbari",
     "melakarta_number": 18,
     "arohana": "S R1 G3 M1 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M1 G3 R1 S",
@@ -1117,6 +1210,7 @@
   },
   {
     "name": "JhankAradhwani",
+    "iastName": "Jhankāradhwani",
     "melakarta_number": 19,
     "arohana": "S R2 G2 M1 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M1 G2 R2 S",
@@ -1129,6 +1223,7 @@
   },
   {
     "name": "BhArathi",
+    "iastName": "Bhārathi",
     "melakarta_number": 19,
     "arohana": "S R2 G2 M1 P S^",
     "avarohana": "S^ P M1 G2 R2 S",
@@ -1141,6 +1236,7 @@
   },
   {
     "name": "Poornalalitha-2",
+    "iastName": "Pūrnalalitha-2",
     "melakarta_number": 19,
     "arohana": "S G2 R2 G2 R2 M1 P S^",
     "avarohana": "S^ N1 D1 P M1 G2 R2 S",
@@ -1153,6 +1249,7 @@
   },
   {
     "name": "Natabhairavi",
+    "iastName": "Natabhairavi",
     "melakarta_number": 20,
     "arohana": "S R2 G2 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G2 R2 S",
@@ -1165,6 +1262,7 @@
   },
   {
     "name": "NArArAthigowla",
+    "iastName": "Nārārāthigowla",
     "melakarta_number": 20,
     "arohana": "S R1 G2 M1 P D1 N2 S^",
     "avarohana": "S^ R2 D1 P M1 G2 R2 S",
@@ -1177,6 +1275,7 @@
   },
   {
     "name": "AmrithavAhini",
+    "iastName": "Amrithavāhini",
     "melakarta_number": 20,
     "arohana": "S R2 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 M1 G2 R2 S",
@@ -1189,6 +1288,7 @@
   },
   {
     "name": "Bhairavi",
+    "iastName": "Bhairavi",
     "melakarta_number": 20,
     "arohana": "S R2 G2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G2 R2 S",
@@ -1201,6 +1301,7 @@
   },
   {
     "name": "GopikAvasantam",
+    "iastName": "Gopikāvasantam",
     "melakarta_number": 20,
     "arohana": "S R2 G2 M1 P D1 P N2",
     "avarohana": "S^ N2 D1 P M1 G2 R2 S",
@@ -1213,6 +1314,7 @@
   },
   {
     "name": "Hindolam",
+    "iastName": "Hindolam",
     "melakarta_number": 20,
     "arohana": "S G2 M1 D1 N2 S^",
     "avarohana": "S^ N2 D1 M1 G2 S",
@@ -1225,6 +1327,7 @@
   },
   {
     "name": "KAtyAyani",
+    "iastName": "Kātyāyani",
     "melakarta_number": 20,
     "arohana": "S R2 G2 P D2 S^",
     "avarohana": "S^ D2 P G2 R2 S",
@@ -1237,6 +1340,7 @@
   },
   {
     "name": "Kshanika",
+    "iastName": "Kshanika",
     "melakarta_number": 20,
     "arohana": "S G2 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 G2 S",
@@ -1249,6 +1353,7 @@
   },
   {
     "name": "Mahathi-3",
+    "iastName": "Mahathi-3",
     "melakarta_number": 20,
     "arohana": "S P P D1 N2 S^",
     "avarohana": "S^ N2 P G2 R2 S",
@@ -1261,6 +1366,7 @@
   },
   {
     "name": "Malkosh",
+    "iastName": "Malkosh",
     "melakarta_number": 20,
     "arohana": "S G2 M1 D1 N2 S^",
     "avarohana": "S^ N2 D1 M1 G2 S",
@@ -1273,6 +1379,7 @@
   },
   {
     "name": "Navarathna VilAsam",
+    "iastName": "Navarathna Vilāsam",
     "melakarta_number": 20,
     "arohana": "S R2 G2 M1 P D1 P S^",
     "avarohana": "S^ D1 P M1 G2 M1 R2 S",
@@ -1285,6 +1392,7 @@
   },
   {
     "name": "SharadapriyA",
+    "iastName": "Śaradapriyā",
     "melakarta_number": 20,
     "arohana": "S R2 G2 P N2 S^",
     "avarohana": "S^ N2 P G2 R2 S",
@@ -1297,6 +1405,7 @@
   },
   {
     "name": "Shree NavarasachandrikA",
+    "iastName": "Śrī Navarasachandrikā",
     "melakarta_number": 20,
     "arohana": "S R2 G2 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 G2 R2 S",
@@ -1309,6 +1418,7 @@
   },
   {
     "name": "Suddha SAlavi",
+    "iastName": "Suddha Sālavi",
     "melakarta_number": 20,
     "arohana": "S G2 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 R2 S",
@@ -1321,6 +1431,7 @@
   },
   {
     "name": "SukumAri",
+    "iastName": "Sukumāri",
     "melakarta_number": 20,
     "arohana": "S G2 M1 P N2 D1 N2 S^",
     "avarohana": "S^ N2 P M1 G2 M1 R2 S",
@@ -1333,6 +1444,7 @@
   },
   {
     "name": "Sushama",
+    "iastName": "Sushama",
     "melakarta_number": 20,
     "arohana": "S R2 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 R2 S",
@@ -1345,6 +1457,7 @@
   },
   {
     "name": "UdayarAga",
+    "iastName": "Udayarāga",
     "melakarta_number": 20,
     "arohana": "S G2 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 G2 S",
@@ -1357,6 +1470,7 @@
   },
   {
     "name": "KeeravAni",
+    "iastName": "Kīravāni",
     "melakarta_number": 21,
     "arohana": "S R2 G2 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 G2 R2 S",
@@ -1369,6 +1483,7 @@
   },
   {
     "name": "Aymmukhan",
+    "iastName": "Aymmukhan",
     "melakarta_number": 21,
     "arohana": "S G2 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 G2 S",
@@ -1381,6 +1496,7 @@
   },
   {
     "name": "BhAnupriya",
+    "iastName": "Bhānupriya",
     "melakarta_number": 21,
     "arohana": "S R2 G2 D1 N3 S^",
     "avarohana": "S^ N3 D1 G2 R2 S",
@@ -1393,6 +1509,7 @@
   },
   {
     "name": "Chandrika",
+    "iastName": "Chandrika",
     "melakarta_number": 21,
     "arohana": "S R2 G2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P G2 R2 S",
@@ -1405,6 +1522,7 @@
   },
   {
     "name": "GaganabhoopAlam",
+    "iastName": "Gaganabhūpālam",
     "melakarta_number": 21,
     "arohana": "S M1 G2 M1 P D1 N3",
     "avarohana": "S^ N3 D1 M1 G2 R2 S",
@@ -1417,6 +1535,7 @@
   },
   {
     "name": "HamsavAhini",
+    "iastName": "Hamsavāhini",
     "melakarta_number": 21,
     "arohana": "S R2 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 R2 S",
@@ -1429,6 +1548,7 @@
   },
   {
     "name": "Kadaram (Chandra/ Chandrakowns)",
+    "iastName": "Kadaram (Chandra/ Chandrakowns)",
     "melakarta_number": 21,
     "arohana": "S G2 M1 D1 N3 S^",
     "avarohana": "S^ N3 D1 M1 G2 S",
@@ -1441,6 +1561,7 @@
   },
   {
     "name": "Priyadarshani",
+    "iastName": "Priyadarshani",
     "melakarta_number": 21,
     "arohana": "S R2 M1 D1 N3 S^",
     "avarohana": "S^ N3 D1 M1 R2 S",
@@ -1453,6 +1574,7 @@
   },
   {
     "name": "SAmapriyA",
+    "iastName": "Sāmapriyā",
     "melakarta_number": 21,
     "arohana": "S R2 M1 P D1 S^",
     "avarohana": "S^ D1 P M1 R2 S",
@@ -1465,6 +1587,7 @@
   },
   {
     "name": "Shrothasvini",
+    "iastName": "Śrothasvini",
     "melakarta_number": 21,
     "arohana": "S G2 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 G2 S",
@@ -1477,6 +1600,7 @@
   },
   {
     "name": "Vasanthamanohari",
+    "iastName": "Vasanthamanohari",
     "melakarta_number": 21,
     "arohana": "S R2 G2 M1 D1 N3 S^",
     "avarohana": "S^ N3 D1 M1 G2 R2 S",
@@ -1489,6 +1613,7 @@
   },
   {
     "name": "Kharaharapriya",
+    "iastName": "Kharaharapriya",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 R2 S",
@@ -1501,6 +1626,7 @@
   },
   {
     "name": "Abhogi",
+    "iastName": "Abhogi",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 D2 S^",
     "avarohana": "S^ D2 M1 G2 R2 S",
@@ -1513,6 +1639,7 @@
   },
   {
     "name": "BAlachandrika",
+    "iastName": "Bālachandrika",
     "melakarta_number": 22,
     "arohana": "S G2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G2 R2 S",
@@ -1525,6 +1652,7 @@
   },
   {
     "name": "BrindAvani",
+    "iastName": "Brindāvani",
     "melakarta_number": 22,
     "arohana": "S R2 M1 P N3 S^",
     "avarohana": "S^ N2 P M1 R2 S",
@@ -1537,6 +1665,7 @@
   },
   {
     "name": "Chitta Ranjani",
+    "iastName": "Chitta Ranjani",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 P D2 N2",
     "avarohana": "N2 D2 P M1 G2 R2 S",
@@ -1549,6 +1678,7 @@
   },
   {
     "name": "Dayavati",
+    "iastName": "Dayavati",
     "melakarta_number": 22,
     "arohana": "S R2 G2 P N2 S^",
     "avarohana": "S^ N2 P M1 G2 S",
@@ -1561,6 +1691,7 @@
   },
   {
     "name": "DevAmruthavarshani",
+    "iastName": "Devāmruthavarshani",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 N2 D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 R2 S",
@@ -1573,6 +1704,7 @@
   },
   {
     "name": "Hamsa Abheri",
+    "iastName": "Hamsa Abheri",
     "melakarta_number": 22,
     "arohana": "S G2 P M1 P N2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 S",
@@ -1585,6 +1717,7 @@
   },
   {
     "name": "Kalika",
+    "iastName": "Kalika",
     "melakarta_number": 22,
     "arohana": "S R2 G2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P G2 R2 S",
@@ -1597,6 +1730,7 @@
   },
   {
     "name": "Kannadagowla",
+    "iastName": "Kannadagowla",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 P N2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 S",
@@ -1609,6 +1743,7 @@
   },
   {
     "name": "KarnAtaka Hindolam",
+    "iastName": "Karnātaka Hindolam",
     "melakarta_number": 22,
     "arohana": "S G2 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G2 S",
@@ -1621,6 +1756,7 @@
   },
   {
     "name": "KarnAtaka KApi",
+    "iastName": "Karnātaka Kāpi",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 R2 S",
@@ -1633,6 +1769,7 @@
   },
   {
     "name": "Karnaranjani",
+    "iastName": "Karnaranjani",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 G2 P D2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 R2 S",
@@ -1645,6 +1782,7 @@
   },
   {
     "name": "Lalitamanohari",
+    "iastName": "Lalitamanohari",
     "melakarta_number": 22,
     "arohana": "S G2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 P M1 G2 R2 S",
@@ -1657,6 +1795,7 @@
   },
   {
     "name": "MadhyamarAvali",
+    "iastName": "Madhyamarāvali",
     "melakarta_number": 22,
     "arohana": "S R2 G2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P G2 R2 S",
@@ -1669,6 +1808,7 @@
   },
   {
     "name": "MadhyamAvathi",
+    "iastName": "Madhyamāvathi",
     "melakarta_number": 22,
     "arohana": "S R2 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 R2 S",
@@ -1681,6 +1821,7 @@
   },
   {
     "name": "MahAnandhi",
+    "iastName": "Mahānandhi",
     "melakarta_number": 22,
     "arohana": "S R2 G2 P D2 S^",
     "avarohana": "S^ D2 P G2 R2 S",
@@ -1693,6 +1834,7 @@
   },
   {
     "name": "Manorama",
+    "iastName": "Manorama",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 P D1 P S^",
     "avarohana": "S^ N2 D1 P M1 G2 R2 S",
@@ -1705,6 +1847,7 @@
   },
   {
     "name": "Moorthee",
+    "iastName": "Mūrthī",
     "melakarta_number": 22,
     "arohana": "S G2 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G2 S",
@@ -1717,6 +1860,7 @@
   },
   {
     "name": "NAdachintAmani",
+    "iastName": "Nādachintāmani",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 N2 D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 R2 S",
@@ -1729,6 +1873,7 @@
   },
   {
     "name": "NAgari",
+    "iastName": "Nāgari",
     "melakarta_number": 22,
     "arohana": "S R2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G2 S",
@@ -1741,6 +1886,7 @@
   },
   {
     "name": "NAgavalli",
+    "iastName": "Nāgavalli",
     "melakarta_number": 22,
     "arohana": "S R2 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 R2 S",
@@ -1753,6 +1899,7 @@
   },
   {
     "name": "NigamagAmini",
+    "iastName": "Nigamagāmini",
     "melakarta_number": 22,
     "arohana": "M1 G2 S^ G2 M1 N2 S^",
     "avarohana": "S^ N2 M1 G2 M1 G2 S",
@@ -1765,6 +1912,7 @@
   },
   {
     "name": "NirmalAngi",
+    "iastName": "Nirmalāngi",
     "melakarta_number": 22,
     "arohana": "S R2 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 R2 S",
@@ -1777,6 +1925,7 @@
   },
   {
     "name": "OmkAri",
+    "iastName": "Omkāri",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 P D2 S^",
     "avarohana": "S^ D2 P M1 G2 R2 S",
@@ -1789,6 +1938,7 @@
   },
   {
     "name": "PoornakalAnidhi",
+    "iastName": "Pūrnakalānidhi",
     "melakarta_number": 22,
     "arohana": "S G2 M1 P D2 N2 S^",
     "avarohana": "S^ D2 P M1 G2 R2 S",
@@ -1801,6 +1951,7 @@
   },
   {
     "name": "Pushpalathika",
+    "iastName": "Pushpalathika",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 G2 R2 S",
@@ -1813,6 +1964,7 @@
   },
   {
     "name": "Ratipatipriya",
+    "iastName": "Ratipatipriya",
     "melakarta_number": 22,
     "arohana": "S R2 G2 P N2 S^",
     "avarohana": "S^ N2 P G2 R2 S",
@@ -1825,6 +1977,7 @@
   },
   {
     "name": "SArang",
+    "iastName": "Sārang",
     "melakarta_number": 22,
     "arohana": "S R2 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 R2 S",
@@ -1837,6 +1990,7 @@
   },
   {
     "name": "SankrAndanapriyA",
+    "iastName": "Sankrāndanapriyā",
     "melakarta_number": 22,
     "arohana": "S R2 G2 P D2 S^",
     "avarohana": "S^ D2 P G2 R2 S",
@@ -1849,6 +2003,7 @@
   },
   {
     "name": "ShivapriyA",
+    "iastName": "Śivapriyā",
     "melakarta_number": 22,
     "arohana": "S R2 G2 P D2 S^",
     "avarohana": "S^ D2 P G2 R2 S",
@@ -1861,6 +2016,7 @@
   },
   {
     "name": "Shivaranjani",
+    "iastName": "Śivaranjani",
     "melakarta_number": 22,
     "arohana": "S R2 G2 P D2 S^",
     "avarohana": "S^ D2 P G2 R2 S",
@@ -1873,6 +2029,7 @@
   },
   {
     "name": "Shree Ranjani",
+    "iastName": "Śrī Ranjani",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G2 R2 S",
@@ -1885,6 +2042,7 @@
   },
   {
     "name": "Suddha Bhairavi",
+    "iastName": "Suddha Bhairavi",
     "melakarta_number": 22,
     "arohana": "S G2 M1 P N2 D2 S^",
     "avarohana": "S^ N2 D2 M1 G2 R2 S",
@@ -1897,6 +2055,7 @@
   },
   {
     "name": "Suddha Hindolam",
+    "iastName": "Suddha Hindolam",
     "melakarta_number": 22,
     "arohana": "S G2 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G2 S",
@@ -1909,6 +2068,7 @@
   },
   {
     "name": "Suddha Manohari",
+    "iastName": "Suddha Manohari",
     "melakarta_number": 22,
     "arohana": "S R2 G2 M1 P D2 S^",
     "avarohana": "S^ N2 P M1 R2 G2 S",
@@ -1921,6 +2081,7 @@
   },
   {
     "name": "Swarabhooshani",
+    "iastName": "Swarabhūshani",
     "melakarta_number": 22,
     "arohana": "S G2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 R2 S",
@@ -1933,6 +2094,7 @@
   },
   {
     "name": "Gowri Manohari",
+    "iastName": "Gowri Manohari",
     "melakarta_number": 23,
     "arohana": "S R2 G2 M1 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 G2 R2 S",
@@ -1945,6 +2107,7 @@
   },
   {
     "name": "Hrudkamali",
+    "iastName": "Hrudkamali",
     "melakarta_number": 23,
     "arohana": "S R2 M1 D2 N3 S^",
     "avarohana": "S^ N3 D2 M1 R2 S",
@@ -1957,6 +2120,7 @@
   },
   {
     "name": "Lavanthika",
+    "iastName": "Lavanthika",
     "melakarta_number": 23,
     "arohana": "S R2 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 R2 S",
@@ -1969,6 +2133,7 @@
   },
   {
     "name": "Vasantashree (Amba Manohari)",
+    "iastName": "Vasantashrī (Amba Manohari)",
     "melakarta_number": 23,
     "arohana": "S R2 G2 M1 D2 N3 S^",
     "avarohana": "S^ N3 D2 M1 G2 R2 S",
@@ -1981,6 +2146,7 @@
   },
   {
     "name": "VelAvali-3",
+    "iastName": "Velāvali-3",
     "melakarta_number": 23,
     "arohana": "S R2 G2 M1 P D2 S^",
     "avarohana": "S^ N3 D2 P M1 G2 S",
@@ -1993,6 +2159,7 @@
   },
   {
     "name": "Varunapriyaa",
+    "iastName": "Varunapriyā",
     "melakarta_number": 24,
     "arohana": "S R2 G2 M1 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M1 G2 R2 S",
@@ -2005,6 +2172,7 @@
   },
   {
     "name": "MAraranjani",
+    "iastName": "Māraranjani",
     "melakarta_number": 25,
     "arohana": "S R2 G3 M1 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M1 G3 R2 S",
@@ -2017,6 +2185,7 @@
   },
   {
     "name": "Jana Sammodhini-1",
+    "iastName": "Jana Sammodhini-1",
     "melakarta_number": 25,
     "arohana": "S R2 G3 P D1 S^",
     "avarohana": "S^ D1 P G3 R2 S",
@@ -2029,6 +2198,7 @@
   },
   {
     "name": "RAjathilaka",
+    "iastName": "Rājathilaka",
     "melakarta_number": 25,
     "arohana": "S R2 G3 M1 P S^",
     "avarohana": "S^ P M1 G3 R2 S",
@@ -2041,6 +2211,7 @@
   },
   {
     "name": "ChArukeshi",
+    "iastName": "Chārukeshi",
     "melakarta_number": 26,
     "arohana": "S R2 G3 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G3 R2 S",
@@ -2053,6 +2224,7 @@
   },
   {
     "name": "Chirswaroopi",
+    "iastName": "Chirswarūpi",
     "melakarta_number": 26,
     "arohana": "S R2 G3 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G3 R2 S",
@@ -2065,6 +2237,7 @@
   },
   {
     "name": "Shiva Manohari",
+    "iastName": "Śiva Manohari",
     "melakarta_number": 26,
     "arohana": "S M1 G3 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G3 R2 S",
@@ -2077,6 +2250,7 @@
   },
   {
     "name": "Shukrajyothi",
+    "iastName": "Śukrajyothi",
     "melakarta_number": 26,
     "arohana": "S R2 G3 M1 P D1 N2 S^",
     "avarohana": "S^ N2 P D1 M1 G3 R2 S",
@@ -2089,6 +2263,7 @@
   },
   {
     "name": "SarasAngi",
+    "iastName": "Sarasāngi",
     "melakarta_number": 27,
     "arohana": "S R2 G3 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 G3 R2 S",
@@ -2101,6 +2276,7 @@
   },
   {
     "name": "Madhulika",
+    "iastName": "Madhulika",
     "melakarta_number": 27,
     "arohana": "S R2 G3 M1 N3 S^",
     "avarohana": "S^ N3 M1 G3 R2 S",
@@ -2113,6 +2289,7 @@
   },
   {
     "name": "NalinakAnthi",
+    "iastName": "Nalinakānthi",
     "melakarta_number": 27,
     "arohana": "S G3 R2 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 G3 R2 S",
@@ -2125,6 +2302,7 @@
   },
   {
     "name": "Neelamani",
+    "iastName": "Nīlamani",
     "melakarta_number": 27,
     "arohana": "S R2 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 R2 S",
@@ -2137,6 +2315,7 @@
   },
   {
     "name": "SarasAnana",
+    "iastName": "Sarasānana",
     "melakarta_number": 27,
     "arohana": "S R2 G3 M1 D1 N3 S^",
     "avarohana": "S^ N3 D1 M1 G3 R2 S",
@@ -2149,6 +2328,7 @@
   },
   {
     "name": "Vasanthi",
+    "iastName": "Vasanthi",
     "melakarta_number": 27,
     "arohana": "S R2 G3 P D1 S^",
     "avarohana": "S^ D1 P G3 R2 S",
@@ -2161,6 +2341,7 @@
   },
   {
     "name": "HarikAmbhoji",
+    "iastName": "Harikāmbhoji",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R2 S",
@@ -2173,6 +2354,7 @@
   },
   {
     "name": "HarikedAragowla",
+    "iastName": "Harikedāragowla",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R2 S",
@@ -2185,6 +2367,7 @@
   },
   {
     "name": "AndolikA",
+    "iastName": "Andolikā",
     "melakarta_number": 28,
     "arohana": "S R2 M1 P N2 S^",
     "avarohana": "S^ N2 D2 M1 R2 S",
@@ -2197,6 +2380,7 @@
   },
   {
     "name": "Ambhojini",
+    "iastName": "Ambhojini",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 D2 S^",
     "avarohana": "S^ D2 M1 G3 R2 S",
@@ -2209,6 +2393,7 @@
   },
   {
     "name": "BhoopAli",
+    "iastName": "Bhūpāli",
     "melakarta_number": 28,
     "arohana": "S R2 G3 P D2 S^",
     "avarohana": "S^ D2 P G3 R2 S",
@@ -2221,6 +2406,7 @@
   },
   {
     "name": "ChAyalagakhamAs",
+    "iastName": "Chāyalagakhamās",
     "melakarta_number": 28,
     "arohana": "S M1 G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R2 S",
@@ -2233,6 +2419,7 @@
   },
   {
     "name": "ChAyatArangini",
+    "iastName": "Chāyatārangini",
     "melakarta_number": 28,
     "arohana": "S R2 M1 G3 M1 P N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R2 S",
@@ -2245,6 +2432,7 @@
   },
   {
     "name": "Chandrahasitham",
+    "iastName": "Chandrahasitham",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G3 R2 S",
@@ -2257,6 +2445,7 @@
   },
   {
     "name": "Dayaranjani",
+    "iastName": "Dayaranjani",
     "melakarta_number": 28,
     "arohana": "S R2 M1 P D2 S^",
     "avarohana": "S^ N2 D2 M1 G3 S",
@@ -2269,6 +2458,7 @@
   },
   {
     "name": "DeshkAr",
+    "iastName": "Deshkār",
     "melakarta_number": 28,
     "arohana": "S R2 G3 P D2 S^",
     "avarohana": "S^ D2 P G3 R2 S",
@@ -2281,6 +2471,7 @@
   },
   {
     "name": "Eeshaivaridhi",
+    "iastName": "Īshaivaridhi",
     "melakarta_number": 28,
     "arohana": "S R2 M1 D2 N2 S^",
     "avarohana": "S^ N2 P M1 R2 S",
@@ -2293,6 +2484,7 @@
   },
   {
     "name": "Guhamanohari",
+    "iastName": "Guhamanohari",
     "melakarta_number": 28,
     "arohana": "S R2 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 R2 S",
@@ -2305,6 +2497,7 @@
   },
   {
     "name": "Guharanjani",
+    "iastName": "Guharanjani",
     "melakarta_number": 28,
     "arohana": "S R2 S^ M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 N2 P M1 G3 S",
@@ -2317,6 +2510,7 @@
   },
   {
     "name": "Hamsaroopini",
+    "iastName": "Hamsarūpini",
     "melakarta_number": 28,
     "arohana": "S R2 G3 P D2 S^",
     "avarohana": "S^ N2 P M1 R2 S",
@@ -2329,6 +2523,7 @@
   },
   {
     "name": "Jaithshree",
+    "iastName": "Jaithshrī",
     "melakarta_number": 28,
     "arohana": "S R2 G3 P D2 S^",
     "avarohana": "S^ D2 P G3 R2 S",
@@ -2341,6 +2536,7 @@
   },
   {
     "name": "Jana Sammodhini-2",
+    "iastName": "Jana Sammodhini-2",
     "melakarta_number": 28,
     "arohana": "S R2 G3 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P G3 R2 S",
@@ -2353,6 +2549,7 @@
   },
   {
     "name": "KamAs",
+    "iastName": "Kamās",
     "melakarta_number": 28,
     "arohana": "S M1 G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R2 S",
@@ -2365,6 +2562,7 @@
   },
   {
     "name": "KarnAtaka KhamAs",
+    "iastName": "Karnātaka Khamās",
     "melakarta_number": 28,
     "arohana": "S G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 S",
@@ -2377,6 +2575,7 @@
   },
   {
     "name": "KeshavapriyA",
+    "iastName": "Keshavapriyā",
     "melakarta_number": 28,
     "arohana": "S R2 S^ M1 P D2 N2 S^",
     "avarohana": "S^ N2 S P M1 G3 R2 S",
@@ -2389,6 +2588,7 @@
   },
   {
     "name": "Kokiladhwani",
+    "iastName": "Kokiladhwani",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 D2 N2 D2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R2 S",
@@ -2401,6 +2601,7 @@
   },
   {
     "name": "Madhurakokila",
+    "iastName": "Madhurakokila",
     "melakarta_number": 28,
     "arohana": "S R2 G3 D2 N2 S^",
     "avarohana": "S^ N2 D2 G3 R2 S",
@@ -2413,6 +2614,7 @@
   },
   {
     "name": "Mattakokila",
+    "iastName": "Mattakokila",
     "melakarta_number": 28,
     "arohana": "S R2 P D2 N2 D2 S^",
     "avarohana": "S^ D2 N2 D2 P R2 S",
@@ -2425,6 +2627,7 @@
   },
   {
     "name": "Mohanam",
+    "iastName": "Mohanam",
     "melakarta_number": 28,
     "arohana": "S R2 G3 P D2 S^",
     "avarohana": "S^ D2 P G3 R2 S",
@@ -2437,6 +2640,7 @@
   },
   {
     "name": "NAdavalli",
+    "iastName": "Nādavalli",
     "melakarta_number": 28,
     "arohana": "S R2 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 R2 S",
@@ -2449,6 +2653,7 @@
   },
   {
     "name": "NAgaswarAvali",
+    "iastName": "Nāgaswarāvali",
     "melakarta_number": 28,
     "arohana": "S G3 M1 P D2 S^",
     "avarohana": "S^ D2 P M1 G3 S",
@@ -2461,6 +2666,7 @@
   },
   {
     "name": "Neela",
+    "iastName": "Nīla",
     "melakarta_number": 28,
     "arohana": "S G3 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G3 S",
@@ -2473,6 +2679,7 @@
   },
   {
     "name": "PashupathipriyA",
+    "iastName": "Pashupathipriyā",
     "melakarta_number": 28,
     "arohana": "S R2 M1 P M1 D2 S^",
     "avarohana": "S^ D2 M1 P R2 M1 S",
@@ -2485,6 +2692,7 @@
   },
   {
     "name": "PoornakAmbhoji",
+    "iastName": "Pūrnakāmbhoji",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 P N2 S^",
     "avarohana": "S^ D2 P M1 G3 R2 S",
@@ -2497,6 +2705,7 @@
   },
   {
     "name": "PratApavarAli",
+    "iastName": "Pratāpavarāli",
     "melakarta_number": 28,
     "arohana": "S R2 M1 P D2 P S^",
     "avarohana": "S^ D2 P M1 G3 R2 S",
@@ -2509,6 +2718,7 @@
   },
   {
     "name": "Pravalajyoti",
+    "iastName": "Pravalajyoti",
     "melakarta_number": 28,
     "arohana": "S R2 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 S",
@@ -2521,6 +2731,7 @@
   },
   {
     "name": "RAgavinodini",
+    "iastName": "Rāgavinodini",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 D2 S^",
     "avarohana": "S^ D2 M1 G3 R2 S",
@@ -2533,6 +2744,7 @@
   },
   {
     "name": "SAvithri",
+    "iastName": "Sāvithri",
     "melakarta_number": 28,
     "arohana": "S G3 M1 P N2 S^",
     "avarohana": "S^ N2 P M1 G3 S",
@@ -2545,6 +2757,7 @@
   },
   {
     "name": "Shankaraharigowla-1",
+    "iastName": "Śankaraharigowla-1",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 P D2 N3 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R2 S",
@@ -2557,6 +2770,7 @@
   },
   {
     "name": "Suddha KhamAs",
+    "iastName": "Suddha Khamās",
     "melakarta_number": 28,
     "arohana": "S M1 G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R2 S",
@@ -2569,6 +2783,7 @@
   },
   {
     "name": "SumanapriyA",
+    "iastName": "Sumanapriyā",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 P D2 P S^",
     "avarohana": "S^ D2 S P M1 G3 R2 S",
@@ -2581,6 +2796,7 @@
   },
   {
     "name": "Thilang-1",
+    "iastName": "Thilang-1",
     "melakarta_number": 28,
     "arohana": "S G3 M1 P N3 S^",
     "avarohana": "S^ N2 P M1 G3 S",
@@ -2593,6 +2809,7 @@
   },
   {
     "name": "Vaishnavi",
+    "iastName": "Vaishnavi",
     "melakarta_number": 28,
     "arohana": "S R2 G3 M1 P D2 S^",
     "avarohana": "S^ D2 P M1 G3 R2 S",
@@ -2605,6 +2822,7 @@
   },
   {
     "name": "Veenavadini",
+    "iastName": "Vīnavadini",
     "melakarta_number": 28,
     "arohana": "S R2 G3 P N2 S^",
     "avarohana": "S^ N2 P G2 R2 S",
@@ -2617,6 +2835,7 @@
   },
   {
     "name": "Dheera ShankarAbharanam",
+    "iastName": "Dhīra Śankarābharanam",
     "melakarta_number": 29,
     "arohana": "S R2 G3 M1 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 G3 R2 S",
@@ -2629,6 +2848,7 @@
   },
   {
     "name": "Anandharoopa",
+    "iastName": "Anandharūpa",
     "melakarta_number": 29,
     "arohana": "S R2 G3 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P G3 R2 S",
@@ -2641,6 +2861,7 @@
   },
   {
     "name": "BehAg",
+    "iastName": "Behāg",
     "melakarta_number": 29,
     "arohana": "S G3 M1 P N3 D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 G3 R2 S",
@@ -2653,6 +2874,7 @@
   },
   {
     "name": "Dharmalakhi",
+    "iastName": "Dharmalakhi",
     "melakarta_number": 29,
     "arohana": "S M1 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 S",
@@ -2665,6 +2887,7 @@
   },
   {
     "name": "GowdamallAr",
+    "iastName": "Gowdamallār",
     "melakarta_number": 29,
     "arohana": "S R2 M1 P D2 S^",
     "avarohana": "S^ N3 M1 G3 R2 S",
@@ -2677,6 +2900,7 @@
   },
   {
     "name": "Hamsadhwani",
+    "iastName": "Hamsadhwani",
     "melakarta_number": 29,
     "arohana": "S R2 G3 P N3 S^",
     "avarohana": "S^ N3 P G3 R2 S",
@@ -2689,6 +2913,7 @@
   },
   {
     "name": "Julavu",
+    "iastName": "Julavu",
     "melakarta_number": 29,
     "arohana": "P D2 N3 S^ R2 G3 M1 P",
     "avarohana": "M1 G3 R2 S N3 D2 P M1",
@@ -2701,6 +2926,7 @@
   },
   {
     "name": "Kathanakuthoohalam",
+    "iastName": "Kathanakuthūhalam",
     "melakarta_number": 29,
     "arohana": "S R2 M1 D2 N3 G3 P S^",
     "avarohana": "S^ N3 D2 P M1 G3 R2 S",
@@ -2713,6 +2939,7 @@
   },
   {
     "name": "KedAram",
+    "iastName": "Kedāram",
     "melakarta_number": 29,
     "arohana": "S M1 G3 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 G3 R2 S",
@@ -2725,6 +2952,7 @@
   },
   {
     "name": "KokilabhAshani",
+    "iastName": "Kokilabhāshani",
     "melakarta_number": 29,
     "arohana": "S R2 G3 M1 P D2 N3 S^",
     "avarohana": "S^ N3 P M1 G3 M1 R2 S",
@@ -2737,6 +2965,7 @@
   },
   {
     "name": "Kurinji",
+    "iastName": "Kurinji",
     "melakarta_number": 29,
     "arohana": "S N3 S^ R2 G3 M1 P D2",
     "avarohana": "D2 P M1 G3 R2 S N3 S",
@@ -2749,6 +2978,7 @@
   },
   {
     "name": "Kutuhala",
+    "iastName": "Kutuhala",
     "melakarta_number": 29,
     "arohana": "S R2 M1 N3 D2 P N3 S^",
     "avarohana": "S^ N3 D2 P M1 G3 R2 S",
@@ -2761,6 +2991,7 @@
   },
   {
     "name": "Niroshta",
+    "iastName": "Niroshta",
     "melakarta_number": 29,
     "arohana": "S R2 G3 D2 N3 S^",
     "avarohana": "S^ N3 D2 G3 R2 S",
@@ -2773,6 +3004,7 @@
   },
   {
     "name": "Rathnabhooshani",
+    "iastName": "Rathnabhūshani",
     "melakarta_number": 29,
     "arohana": "S R2 G3 M1 P S^",
     "avarohana": "S^ P M1 G3 R2 S",
@@ -2785,6 +3017,7 @@
   },
   {
     "name": "ReetuvilAsa",
+    "iastName": "Rītuvilāsa",
     "melakarta_number": 29,
     "arohana": "S G3 M1 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 G3 S",
@@ -2797,6 +3030,7 @@
   },
   {
     "name": "Shankaraharigowla-2",
+    "iastName": "Śankaraharigowla-2",
     "melakarta_number": 29,
     "arohana": "S R2 G3 M1 P D2 N3 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R2 S",
@@ -2809,6 +3043,7 @@
   },
   {
     "name": "Suddha SAveri",
+    "iastName": "Suddha Sāveri",
     "melakarta_number": 29,
     "arohana": "S R2 M1 P D2 S^",
     "avarohana": "S^ D2 P M1 R2 S",
@@ -2821,6 +3056,7 @@
   },
   {
     "name": "Suranandini",
+    "iastName": "Suranandini",
     "melakarta_number": 29,
     "arohana": "S R2 G3 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P G3 R2 S",
@@ -2833,6 +3069,7 @@
   },
   {
     "name": "TAndavam",
+    "iastName": "Tāndavam",
     "melakarta_number": 29,
     "arohana": "S G3 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P G3 S",
@@ -2845,6 +3082,7 @@
   },
   {
     "name": "Vasanthamalai",
+    "iastName": "Vasanthamalai",
     "melakarta_number": 29,
     "arohana": "S R2 M1 P N3 S^",
     "avarohana": "S^ D2 P M1 R2 S",
@@ -2857,6 +3095,7 @@
   },
   {
     "name": "VedhAndhagamana",
+    "iastName": "Vedhāndhagamana",
     "melakarta_number": 29,
     "arohana": "S G3 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 G3 S",
@@ -2869,6 +3108,7 @@
   },
   {
     "name": "VilAsini",
+    "iastName": "Vilāsini",
     "melakarta_number": 29,
     "arohana": "S R2 G3 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 G3 R2 S",
@@ -2881,6 +3121,7 @@
   },
   {
     "name": "NAganandhini",
+    "iastName": "Nāganandhini",
     "melakarta_number": 30,
     "arohana": "S R2 G3 M1 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M1 G3 R2 S",
@@ -2893,6 +3134,7 @@
   },
   {
     "name": "NAgabharanam",
+    "iastName": "Nāgabharanam",
     "melakarta_number": 30,
     "arohana": "S R2 G2 M1 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M1 G2 R2 S",
@@ -2905,6 +3147,7 @@
   },
   {
     "name": "Thilang-2",
+    "iastName": "Thilang-2",
     "melakarta_number": 30,
     "arohana": "S G3 M1 P N3 S^",
     "avarohana": "S^ N2 P M1 G3 S",
@@ -2917,6 +3160,7 @@
   },
   {
     "name": "YAgapriyA",
+    "iastName": "Yāgapriyā",
     "melakarta_number": 31,
     "arohana": "S R3 G3 M1 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M1 G3 R3 S",
@@ -2929,6 +3173,7 @@
   },
   {
     "name": "KalAvathi",
+    "iastName": "Kalāvathi",
     "melakarta_number": 31,
     "arohana": "S R3 G3 M1 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M1 G3 R3 S",
@@ -2941,6 +3186,7 @@
   },
   {
     "name": "Damarugapriya",
+    "iastName": "Damarugapriya",
     "melakarta_number": 31,
     "arohana": "S R3 G3 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P G3 R3 S",
@@ -2953,6 +3199,7 @@
   },
   {
     "name": "Desharanjani",
+    "iastName": "Desharanjani",
     "melakarta_number": 31,
     "arohana": "S R3 M1 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M1 R3 S",
@@ -2965,6 +3212,7 @@
   },
   {
     "name": "Niranjani",
+    "iastName": "Niranjani",
     "melakarta_number": 31,
     "arohana": "S R3 M1 D1 N1 S^",
     "avarohana": "S^ N1 D1 M1 R3 S",
@@ -2977,6 +3225,7 @@
   },
   {
     "name": "RAgavardhani",
+    "iastName": "Rāgavardhani",
     "melakarta_number": 32,
     "arohana": "S R3 G3 M1 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M1 G3 R3 S",
@@ -2989,6 +3238,7 @@
   },
   {
     "name": "RAgachoodAmani",
+    "iastName": "Rāgachūdāmani",
     "melakarta_number": 32,
     "arohana": "S R3 G3 M1 P N2 S^",
     "avarohana": "S^ N2 D1 M1 R3 G3 S",
@@ -3001,6 +3251,7 @@
   },
   {
     "name": "Gangeyabhooshani",
+    "iastName": "Gangeyabhūshani",
     "melakarta_number": 33,
     "arohana": "S R3 G3 M1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M1 G3 R3 S",
@@ -3013,6 +3264,7 @@
   },
   {
     "name": "VAgadeeshwari",
+    "iastName": "Vāgadīshwari",
     "melakarta_number": 34,
     "arohana": "S R3 G3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 G3 R3 S",
@@ -3025,6 +3277,7 @@
   },
   {
     "name": "ChAyanAttai",
+    "iastName": "Chāyanāttai",
     "melakarta_number": 34,
     "arohana": "S R3 G3 M1 P M1 P S^",
     "avarohana": "S^ N2 D2 N2 P M1 R3 S",
@@ -3037,6 +3290,7 @@
   },
   {
     "name": "Maghathi",
+    "iastName": "Maghathi",
     "melakarta_number": 34,
     "arohana": "S R3 M1 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M1 R3 S",
@@ -3049,6 +3303,7 @@
   },
   {
     "name": "Murali",
+    "iastName": "Murali",
     "melakarta_number": 34,
     "arohana": "S R3 G3 M1 D2 N2 S^",
     "avarohana": "S^ N2 D2 M1 G3 R3 S",
@@ -3061,6 +3316,7 @@
   },
   {
     "name": "Vikhavathi",
+    "iastName": "Vikhavathi",
     "melakarta_number": 34,
     "arohana": "S R3 G3 P D2 S^",
     "avarohana": "S^ D2 P G3 R3 S",
@@ -3073,6 +3329,7 @@
   },
   {
     "name": "Shoolini",
+    "iastName": "Śūlini",
     "melakarta_number": 35,
     "arohana": "S R3 G3 M1 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M1 G3 R3 S",
@@ -3085,6 +3342,7 @@
   },
   {
     "name": "CalanAttai",
+    "iastName": "Calanāttai",
     "melakarta_number": 36,
     "arohana": "S R3 G3 M1 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M1 G3 R3 S",
@@ -3097,6 +3355,7 @@
   },
   {
     "name": "GambheeranAttai",
+    "iastName": "Gambhīranāttai",
     "melakarta_number": 36,
     "arohana": "S G3 M1 P N3 S^",
     "avarohana": "S^ N3 P M1 G3 S",
@@ -3109,6 +3368,7 @@
   },
   {
     "name": "SAlagam",
+    "iastName": "Sālagam",
     "melakarta_number": 37,
     "arohana": "S R1 G1 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M2 G1 R1 S",
@@ -3121,6 +3381,7 @@
   },
   {
     "name": "JalArnavam",
+    "iastName": "Jalārnavam",
     "melakarta_number": 38,
     "arohana": "S R1 G1 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G1 R1 S",
@@ -3133,6 +3394,7 @@
   },
   {
     "name": "Jaganmohinam",
+    "iastName": "Jaganmohinam",
     "melakarta_number": 38,
     "arohana": "S R1 G1 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G1 R1 S",
@@ -3145,6 +3407,7 @@
   },
   {
     "name": "JhAlavarAli",
+    "iastName": "Jhālavarāli",
     "melakarta_number": 39,
     "arohana": "S R1 G1 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G1 R1 S",
@@ -3157,6 +3420,7 @@
   },
   {
     "name": "DhAlivarAli",
+    "iastName": "Dhālivarāli",
     "melakarta_number": 39,
     "arohana": "S R1 G1 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G1 R1 S",
@@ -3169,6 +3433,7 @@
   },
   {
     "name": "JAlasugandhi",
+    "iastName": "Jālasugandhi",
     "melakarta_number": 39,
     "arohana": "S R1 G1 M2 P D1 S^",
     "avarohana": "S^ D1 P M2 G1 R1 S",
@@ -3181,6 +3446,7 @@
   },
   {
     "name": "Kokilapanchamam",
+    "iastName": "Kokilapanchamam",
     "melakarta_number": 39,
     "arohana": "S G1 R1 G1 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G1 R1 S",
@@ -3193,6 +3459,7 @@
   },
   {
     "name": "Navaneetham",
+    "iastName": "Navanītham",
     "melakarta_number": 40,
     "arohana": "S R1 G1 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G1 R1 S",
@@ -3205,6 +3472,7 @@
   },
   {
     "name": "PAvani",
+    "iastName": "Pāvani",
     "melakarta_number": 41,
     "arohana": "S R1 G1 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G1 R1 S",
@@ -3217,6 +3485,7 @@
   },
   {
     "name": "Chandrajyothi",
+    "iastName": "Chandrajyothi",
     "melakarta_number": 41,
     "arohana": "S R1 G1 M2 P D2 S^",
     "avarohana": "S^ D2 P M2 G1 R1 S",
@@ -3229,6 +3498,7 @@
   },
   {
     "name": "Raghupriyaa",
+    "iastName": "Raghupriyā",
     "melakarta_number": 42,
     "arohana": "S R1 G1 M2 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M2 G1 R1 S",
@@ -3241,6 +3511,7 @@
   },
   {
     "name": "GhavAmbhodi",
+    "iastName": "Ghavāmbhodi",
     "melakarta_number": 43,
     "arohana": "S R1 G2 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M2 G2 R1 S",
@@ -3253,6 +3524,7 @@
   },
   {
     "name": "KeervAni",
+    "iastName": "Kīrvāni",
     "melakarta_number": 43,
     "arohana": "S R1 G2 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M2 G2 R1 S",
@@ -3265,6 +3537,7 @@
   },
   {
     "name": "Mahathi-2",
+    "iastName": "Mahathi-2",
     "melakarta_number": 43,
     "arohana": "S G2 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M2 G2 S",
@@ -3277,6 +3550,7 @@
   },
   {
     "name": "Suvarnadeepakam",
+    "iastName": "Suvarnadīpakam",
     "melakarta_number": 43,
     "arohana": "S R1 G2 M2 P D1 S^",
     "avarohana": "S^ D1 P M2 G2 R1 S",
@@ -3289,6 +3563,7 @@
   },
   {
     "name": "Bhavapriya",
+    "iastName": "Bhavapriya",
     "melakarta_number": 44,
     "arohana": "S R1 G2 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G2 R1 S",
@@ -3301,6 +3576,7 @@
   },
   {
     "name": "KanchanAvathi",
+    "iastName": "Kanchanāvathi",
     "melakarta_number": 44,
     "arohana": "S R1 G2 M2 P N2 S^",
     "avarohana": "S^ N2 P M2 G2 R1 S",
@@ -3313,6 +3589,7 @@
   },
   {
     "name": "ShubhapanthuvarAli",
+    "iastName": "Śubhapanthuvarāli",
     "melakarta_number": 45,
     "arohana": "S R1 G2 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G2 R1 S",
@@ -3325,6 +3602,7 @@
   },
   {
     "name": "ShivapanthuvarAli",
+    "iastName": "Śivapanthuvarāli",
     "melakarta_number": 45,
     "arohana": "S R1 G2 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G2 R1 S",
@@ -3337,6 +3615,7 @@
   },
   {
     "name": "Parpathi",
+    "iastName": "Parpathi",
     "melakarta_number": 45,
     "arohana": "S G2 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 G2 S",
@@ -3349,6 +3628,7 @@
   },
   {
     "name": "ShekharachandrikA",
+    "iastName": "Śekharachandrikā",
     "melakarta_number": 45,
     "arohana": "S R1 G2 M2 D1 N3 S^",
     "avarohana": "S^ N3 D1 M2 G2 R1 S",
@@ -3361,6 +3641,7 @@
   },
   {
     "name": "ShadvidhamArgini",
+    "iastName": "Śadvidhamārgini",
     "melakarta_number": 46,
     "arohana": "S R1 G2 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G2 R1 S",
@@ -3373,6 +3654,7 @@
   },
   {
     "name": "SthavarAjam",
+    "iastName": "Sthavarājam",
     "melakarta_number": 46,
     "arohana": "S R1 M2 P D2 S^",
     "avarohana": "S^ N2 D2 M2 G2 S",
@@ -3385,6 +3667,7 @@
   },
   {
     "name": "ShreekAnti",
+    "iastName": "Śrīkānti",
     "melakarta_number": 46,
     "arohana": "S G2 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G2 S",
@@ -3397,6 +3680,7 @@
   },
   {
     "name": "SuvarnAngi",
+    "iastName": "Suvarnāngi",
     "melakarta_number": 47,
     "arohana": "S R1 G2 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G2 R1 S",
@@ -3409,6 +3693,7 @@
   },
   {
     "name": "Sowveeram",
+    "iastName": "Sowvīram",
     "melakarta_number": 47,
     "arohana": "S R1 G2 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G2 R1 S",
@@ -3421,6 +3706,7 @@
   },
   {
     "name": "Abhiru",
+    "iastName": "Abhiru",
     "melakarta_number": 47,
     "arohana": "S R1 G2 R1 M2 P N3 S^",
     "avarohana": "S^ D2 P M2 G2 R1 G2 S",
@@ -3433,6 +3719,7 @@
   },
   {
     "name": "RathikA",
+    "iastName": "Rathikā",
     "melakarta_number": 47,
     "arohana": "S M2 G2 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G2 R1 S",
@@ -3445,6 +3732,7 @@
   },
   {
     "name": "Vijayashree",
+    "iastName": "Vijayashrī",
     "melakarta_number": 47,
     "arohana": "S R1 G2 M2 P N2 S^",
     "avarohana": "S^ N2 P M2 G2 R1 S",
@@ -3457,6 +3745,7 @@
   },
   {
     "name": "Divyamani",
+    "iastName": "Divyamani",
     "melakarta_number": 48,
     "arohana": "S R1 G2 M2 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M2 G2 R1 S",
@@ -3469,6 +3758,7 @@
   },
   {
     "name": "JeevanthikA",
+    "iastName": "Jīvanthikā",
     "melakarta_number": 48,
     "arohana": "S M2 P D3 N3 S^",
     "avarohana": "S^ N3 P M2 G2 S",
@@ -3481,6 +3771,7 @@
   },
   {
     "name": "Jeevanthini",
+    "iastName": "Jīvanthini",
     "melakarta_number": 48,
     "arohana": "S M2 P D3 N3 S^",
     "avarohana": "S^ N3 P M2 G2 S",
@@ -3493,6 +3784,7 @@
   },
   {
     "name": "DhavalAmbari",
+    "iastName": "Dhavalāmbari",
     "melakarta_number": 49,
     "arohana": "S R1 G3 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M2 G3 R1 S",
@@ -3505,6 +3797,7 @@
   },
   {
     "name": "Bhinnapauarali",
+    "iastName": "Bhinnapauarali",
     "melakarta_number": 49,
     "arohana": "S M2 P D1 N1 D1 S^",
     "avarohana": "S^ N1 D1 P M2 G3 S",
@@ -3517,6 +3810,7 @@
   },
   {
     "name": "Dharmini",
+    "iastName": "Dharmini",
     "melakarta_number": 49,
     "arohana": "S R1 G3 M2 D1 N1 S^",
     "avarohana": "S^ N1 D1 M2 G3 R1 S",
@@ -3529,6 +3823,7 @@
   },
   {
     "name": "Sudharmini",
+    "iastName": "Sudharmini",
     "melakarta_number": 49,
     "arohana": "S R1 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 M1 G3 R2 S",
@@ -3541,6 +3836,7 @@
   },
   {
     "name": "NAmanArAyani",
+    "iastName": "Nāmanārāyani",
     "melakarta_number": 50,
     "arohana": "S R1 G3 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G3 R1 S",
@@ -3553,6 +3849,7 @@
   },
   {
     "name": "NAmadeshi",
+    "iastName": "Nāmadeshi",
     "melakarta_number": 50,
     "arohana": "S R1 G3 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G3 R1 S",
@@ -3565,6 +3862,7 @@
   },
   {
     "name": "MandAri",
+    "iastName": "Mandāri",
     "melakarta_number": 50,
     "arohana": "S R1 G3 M2 P N2 S^",
     "avarohana": "S^ N2 P M2 G3 R1 S",
@@ -3577,6 +3875,7 @@
   },
   {
     "name": "PanthuvarAli (KAmavardhani)",
+    "iastName": "Panthuvarāli (Kāmavardhani)",
     "melakarta_number": 51,
     "arohana": "S R1 G3 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G3 R1 S",
@@ -3589,6 +3888,7 @@
   },
   {
     "name": "Bhogavasantha",
+    "iastName": "Bhogavasantha",
     "melakarta_number": 51,
     "arohana": "S R1 G3 M2 D1 N3 S^",
     "avarohana": "S^ N3 D1 M2 G3 R1 S",
@@ -3601,6 +3901,7 @@
   },
   {
     "name": "KamalAptapriyA",
+    "iastName": "Kamalāptapriyā",
     "melakarta_number": 51,
     "arohana": "S R1 G3 M2 P D1 S^",
     "avarohana": "S^ D1 P M2 G3 R1 S",
@@ -3613,6 +3914,7 @@
   },
   {
     "name": "TAndavapriyA",
+    "iastName": "Tāndavapriyā",
     "melakarta_number": 51,
     "arohana": "S R1 G3 M2 P S^",
     "avarohana": "S^ P M2 G3 R1 S",
@@ -3625,6 +3927,7 @@
   },
   {
     "name": "RAmapriyA",
+    "iastName": "Rāmapriyā",
     "melakarta_number": 52,
     "arohana": "S R1 G3 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G3 R1 S",
@@ -3637,6 +3940,7 @@
   },
   {
     "name": "Chintaramani",
+    "iastName": "Chintaramani",
     "melakarta_number": 52,
     "arohana": "S G3 M2 P D2 N2 S^",
     "avarohana": "S^ D2 P M2 G3 R1 S",
@@ -3649,6 +3953,7 @@
   },
   {
     "name": "PatalAmbari",
+    "iastName": "Patalāmbari",
     "melakarta_number": 52,
     "arohana": "S R1 G3 M2 D2 S^",
     "avarohana": "S^ D2 M2 G3 R1 S",
@@ -3661,6 +3966,7 @@
   },
   {
     "name": "Rasavinodini",
+    "iastName": "Rasavinodini",
     "melakarta_number": 52,
     "arohana": "S G3 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G3 S",
@@ -3673,6 +3979,7 @@
   },
   {
     "name": "SeemantinipriyA",
+    "iastName": "Sīmantinipriyā",
     "melakarta_number": 52,
     "arohana": "S R1 G3 M2 D2 N2 S^",
     "avarohana": "S^ N2 D2 M2 G3 R1 S",
@@ -3685,6 +3992,7 @@
   },
   {
     "name": "Gamanashramaa",
+    "iastName": "Gamanashramā",
     "melakarta_number": 53,
     "arohana": "S R1 G3 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G3 R1 S",
@@ -3697,6 +4005,7 @@
   },
   {
     "name": "HamsAnandi",
+    "iastName": "Hamsānandi",
     "melakarta_number": 53,
     "arohana": "S R1 G3 M2 D2 N3 S^",
     "avarohana": "S^ N3 D2 M2 G3 R1 S",
@@ -3709,6 +4018,7 @@
   },
   {
     "name": "Poorvi KalyAni",
+    "iastName": "Pūrvi Kalyāni",
     "melakarta_number": 53,
     "arohana": "S R1 G3 M2 P D2 P S^",
     "avarohana": "S^ N3 D2 P M2 G3 R1 S",
@@ -3721,6 +4031,7 @@
   },
   {
     "name": "VishvAmbhari",
+    "iastName": "Vishvāmbhari",
     "melakarta_number": 54,
     "arohana": "S R1 G3 M2 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M2 G3 R1 S",
@@ -3733,6 +4044,7 @@
   },
   {
     "name": "HemAngi",
+    "iastName": "Hemāngi",
     "melakarta_number": 54,
     "arohana": "S R1 G3 M2 D3 S^",
     "avarohana": "S^ D3 M2 G3 R1 S",
@@ -3745,6 +4057,7 @@
   },
   {
     "name": "SuddhakriyA",
+    "iastName": "Suddhakriyā",
     "melakarta_number": 54,
     "arohana": "S R1 M2 M2 P D3 S^",
     "avarohana": "S^ D3 P M2 G3 R1 S",
@@ -3757,6 +4070,7 @@
   },
   {
     "name": "SundarAngi",
+    "iastName": "Sundarāngi",
     "melakarta_number": 54,
     "arohana": "S R1 G3 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P G3 R1 S",
@@ -3769,6 +4083,7 @@
   },
   {
     "name": "Vijayavasantham",
+    "iastName": "Vijayavasantham",
     "melakarta_number": 54,
     "arohana": "S M2 P D3 N3 S^",
     "avarohana": "S^ N3 P M2 G3 S",
@@ -3781,6 +4096,7 @@
   },
   {
     "name": "ShyAmalAngi",
+    "iastName": "Śyāmalāngi",
     "melakarta_number": 55,
     "arohana": "S R2 G2 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M2 G2 R2 S",
@@ -3793,6 +4109,7 @@
   },
   {
     "name": "ShyAmalam",
+    "iastName": "Śyāmalam",
     "melakarta_number": 55,
     "arohana": "S R2 G2 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M2 G2 R2 S",
@@ -3805,6 +4122,7 @@
   },
   {
     "name": "Shanmukhapriyaa",
+    "iastName": "Śanmukhapriyā",
     "melakarta_number": 56,
     "arohana": "S R2 G2 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G2 R2 S",
@@ -3817,6 +4135,7 @@
   },
   {
     "name": "ChAmaram",
+    "iastName": "Chāmaram",
     "melakarta_number": 56,
     "arohana": "S R2 G2 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G2 R2 S",
@@ -3829,6 +4148,7 @@
   },
   {
     "name": "Dhanakari",
+    "iastName": "Dhanakari",
     "melakarta_number": 56,
     "arohana": "S G2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 M2 G2 S",
@@ -3841,6 +4161,7 @@
   },
   {
     "name": "Gopikathilakam",
+    "iastName": "Gopikathilakam",
     "melakarta_number": 56,
     "arohana": "S R2 G2 M2 P N2 S^",
     "avarohana": "S^ N2 P M2 G2 R2 S",
@@ -3853,6 +4174,7 @@
   },
   {
     "name": "SamudrapriyA",
+    "iastName": "Samudrapriyā",
     "melakarta_number": 56,
     "arohana": "S G2 M2 P N2 S^",
     "avarohana": "S^ N2 P M2 G2 S",
@@ -3865,6 +4187,7 @@
   },
   {
     "name": "Shanmukhi (Trimoorti)",
+    "iastName": "Śanmukhi (Trimūrti)",
     "melakarta_number": 56,
     "arohana": "S R1 G2 M2 D1 N2 S^",
     "avarohana": "S^ N2 D1 M2 G2 R1 S",
@@ -3877,6 +4200,7 @@
   },
   {
     "name": "Sumanesharanjani",
+    "iastName": "Sumanesharanjani",
     "melakarta_number": 56,
     "arohana": "S G2 M2 P N2 S^",
     "avarohana": "S^ N2 P M2 G2 S",
@@ -3889,6 +4213,7 @@
   },
   {
     "name": "Simhendra Madhyamam",
+    "iastName": "Simhendra Madhyamam",
     "melakarta_number": 57,
     "arohana": "S R2 G2 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G2 R2 S",
@@ -3901,6 +4226,7 @@
   },
   {
     "name": "Sumadyuthi",
+    "iastName": "Sumadyuthi",
     "melakarta_number": 57,
     "arohana": "S R2 G2 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G2 R2 S",
@@ -3913,6 +4239,7 @@
   },
   {
     "name": "Anandavalli",
+    "iastName": "Anandavalli",
     "melakarta_number": 57,
     "arohana": "S G2 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 G2 S",
@@ -3925,6 +4252,7 @@
   },
   {
     "name": "Ghantana",
+    "iastName": "Ghantana",
     "melakarta_number": 57,
     "arohana": "S R2 G2 M2 D1 N3 S^",
     "avarohana": "S^ N3 D1 M2 G2 R2 S",
@@ -3937,6 +4265,7 @@
   },
   {
     "name": "Suddha-2",
+    "iastName": "Suddha-2",
     "melakarta_number": 57,
     "arohana": "S R2 G2 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 G2 R2 S",
@@ -3949,6 +4278,7 @@
   },
   {
     "name": "UrmikA",
+    "iastName": "Urmikā",
     "melakarta_number": 57,
     "arohana": "S R2 G2 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 G2 R2 S",
@@ -3961,6 +4291,7 @@
   },
   {
     "name": "Vijayasaraswathi",
+    "iastName": "Vijayasaraswathi",
     "melakarta_number": 57,
     "arohana": "S G2 M2 P D1 N3 S^",
     "avarohana": "S^ N3 P M2 G2 R2 S",
@@ -3973,6 +4304,7 @@
   },
   {
     "name": "Hemavathi",
+    "iastName": "Hemavathi",
     "melakarta_number": 58,
     "arohana": "S R2 G2 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G2 R2 S",
@@ -3985,6 +4317,7 @@
   },
   {
     "name": "DeshisimhAravam",
+    "iastName": "Deshisimhāravam",
     "melakarta_number": 58,
     "arohana": "S R2 G2 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G2 R2 S",
@@ -3997,6 +4330,7 @@
   },
   {
     "name": "ChandrarekhA",
+    "iastName": "Chandrarekhā",
     "melakarta_number": 58,
     "arohana": "S R2 G2 M2 P D2 S^",
     "avarohana": "S^ N2 D2 M2 G2 R2 S",
@@ -4009,6 +4343,7 @@
   },
   {
     "name": "Hemapriya",
+    "iastName": "Hemapriya",
     "melakarta_number": 58,
     "arohana": "S R2 G2 M2 D2 S^",
     "avarohana": "S^ D2 M2 G2 R2 S",
@@ -4021,6 +4356,7 @@
   },
   {
     "name": "Kshemakari",
+    "iastName": "Kshemakari",
     "melakarta_number": 58,
     "arohana": "S R2 M2 D2 N2 S^",
     "avarohana": "S^ N2 D2 M2 R2 S",
@@ -4033,6 +4369,7 @@
   },
   {
     "name": "VijayasAranga",
+    "iastName": "Vijayasāranga",
     "melakarta_number": 58,
     "arohana": "S R2 G2 M2 P D2 S^",
     "avarohana": "S^ N2 D2 M2 G2 R2 S",
@@ -4045,6 +4382,7 @@
   },
   {
     "name": "VijayashrAngi",
+    "iastName": "Vijayashrāngi",
     "melakarta_number": 58,
     "arohana": "S R2 G2 M2 P D2 S^",
     "avarohana": "S^ N2 D2 M2 G2 R2 S",
@@ -4057,6 +4395,7 @@
   },
   {
     "name": "YAgini",
+    "iastName": "Yāgini",
     "melakarta_number": 58,
     "arohana": "S R2 M2 P N2 S^",
     "avarohana": "S^ N2 P M2 R2 S",
@@ -4069,6 +4408,7 @@
   },
   {
     "name": "Dharmavathi",
+    "iastName": "Dharmavathi",
     "melakarta_number": 58,
     "arohana": "S R2 G2 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G2 R2 S",
@@ -4081,6 +4421,7 @@
   },
   {
     "name": "DhAmavathi",
+    "iastName": "Dhāmavathi",
     "melakarta_number": 59,
     "arohana": "S R2 G2 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G2 R2 S",
@@ -4093,6 +4434,7 @@
   },
   {
     "name": "KarmukhAvati",
+    "iastName": "Karmukhāvati",
     "melakarta_number": 59,
     "arohana": "S R2 G2 M2 D2 N3 S^",
     "avarohana": "S^ N3 D2 M2 G2 R2 S",
@@ -4105,6 +4447,7 @@
   },
   {
     "name": "Karpoora Bharani",
+    "iastName": "Karpūra Bharani",
     "melakarta_number": 59,
     "arohana": "S R2 G2 P M2 P D2 S^",
     "avarohana": "S^ D2 P M2 P G2 R2 S",
@@ -4117,6 +4460,7 @@
   },
   {
     "name": "Moharanjani",
+    "iastName": "Moharanjani",
     "melakarta_number": 59,
     "arohana": "S R2 G2 P D2 S^",
     "avarohana": "S^ N3 D2 M2 G2 S",
@@ -4129,6 +4473,7 @@
   },
   {
     "name": "Varada",
+    "iastName": "Varada",
     "melakarta_number": 59,
     "arohana": "S R2 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 R2 S",
@@ -4141,6 +4486,7 @@
   },
   {
     "name": "VijayanAgari",
+    "iastName": "Vijayanāgari",
     "melakarta_number": 59,
     "arohana": "S R2 G2 M2 P D2 S^",
     "avarohana": "S^ D2 P M2 G2 R2 S",
@@ -4153,6 +4499,7 @@
   },
   {
     "name": "Neethimathi",
+    "iastName": "Nīthimathi",
     "melakarta_number": 60,
     "arohana": "S R2 G2 M2 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M2 G2 R2 S",
@@ -4165,6 +4512,7 @@
   },
   {
     "name": "HamsanAdham-1",
+    "iastName": "Hamsanādham-1",
     "melakarta_number": 60,
     "arohana": "S R2 M2 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M2 R2 S",
@@ -4177,6 +4525,7 @@
   },
   {
     "name": "HamsanAdham-2",
+    "iastName": "Hamsanādham-2",
     "melakarta_number": 60,
     "arohana": "S R2 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 R2 S",
@@ -4189,6 +4538,7 @@
   },
   {
     "name": "KAnthAmani",
+    "iastName": "Kānthāmani",
     "melakarta_number": 61,
     "arohana": "S R2 G3 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M2 G3 R2 S",
@@ -4201,6 +4551,7 @@
   },
   {
     "name": "KanakakusumAvali",
+    "iastName": "Kanakakusumāvali",
     "melakarta_number": 61,
     "arohana": "S R2 G3 M2 P D2 S^",
     "avarohana": "S^ D2 P M2 G3 R2 S",
@@ -4213,6 +4564,7 @@
   },
   {
     "name": "Shruthiranjani",
+    "iastName": "Śruthiranjani",
     "melakarta_number": 61,
     "arohana": "S R2 G3 M2 P D1 N1",
     "avarohana": "N1 D1 P M2 G3 R2 S",
@@ -4225,6 +4577,7 @@
   },
   {
     "name": "Rishabhapriyaa",
+    "iastName": "Rishabhapriyā",
     "melakarta_number": 62,
     "arohana": "S R2 G3 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G3 R2 S",
@@ -4237,6 +4590,7 @@
   },
   {
     "name": "RathipriyA",
+    "iastName": "Rathipriyā",
     "melakarta_number": 62,
     "arohana": "S R2 G3 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G3 R2 S",
@@ -4249,6 +4603,7 @@
   },
   {
     "name": "Gopriya",
+    "iastName": "Gopriya",
     "melakarta_number": 62,
     "arohana": "S R2 G3 M2 D1 N2 S^",
     "avarohana": "S^ N3 D1 M2 G3 R2 S",
@@ -4261,6 +4616,7 @@
   },
   {
     "name": "RathnabhAnu",
+    "iastName": "Rathnabhānu",
     "melakarta_number": 62,
     "arohana": "S R2 M2 P N2 D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G3 R2 S",
@@ -4273,6 +4629,7 @@
   },
   {
     "name": "Suddha SAranga",
+    "iastName": "Suddha Sāranga",
     "melakarta_number": 62,
     "arohana": "S G3 M2 P N2 S^",
     "avarohana": "S^ D1 P M2 G3 S",
@@ -4285,6 +4642,7 @@
   },
   {
     "name": "LathAngi",
+    "iastName": "Lathāngi",
     "melakarta_number": 63,
     "arohana": "S R2 G3 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G3 R2 S",
@@ -4297,6 +4655,7 @@
   },
   {
     "name": "GeethapriyA",
+    "iastName": "Gīthapriyā",
     "melakarta_number": 63,
     "arohana": "S R2 G3 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G3 R2 S",
@@ -4309,6 +4668,7 @@
   },
   {
     "name": "LalithAngi",
+    "iastName": "Lalithāngi",
     "melakarta_number": 63,
     "arohana": "S R2 G3 M2 D1 N3 S^",
     "avarohana": "S^ N3 D1 M2 G3 R2 S",
@@ -4321,6 +4681,7 @@
   },
   {
     "name": "RathnakAnthi",
+    "iastName": "Rathnakānthi",
     "melakarta_number": 63,
     "arohana": "S R2 G3 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 G3 R2 S",
@@ -4333,6 +4694,7 @@
   },
   {
     "name": "Raviswaroopini",
+    "iastName": "Raviswarūpini",
     "melakarta_number": 63,
     "arohana": "S G3 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G3 S",
@@ -4345,6 +4707,7 @@
   },
   {
     "name": "Skandamanorama",
+    "iastName": "Skandamanorama",
     "melakarta_number": 63,
     "arohana": "S R2 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 R2 S",
@@ -4357,6 +4720,7 @@
   },
   {
     "name": "VAchaspathi",
+    "iastName": "Vāchaspathi",
     "melakarta_number": 64,
     "arohana": "S R2 G3 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G3 R2 S",
@@ -4369,6 +4733,7 @@
   },
   {
     "name": "BhooshAvathi",
+    "iastName": "Bhūshāvathi",
     "melakarta_number": 64,
     "arohana": "S R2 G3 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G3 R2 S",
@@ -4381,6 +4746,7 @@
   },
   {
     "name": "Bhogeeshwari",
+    "iastName": "Bhogīshwari",
     "melakarta_number": 64,
     "arohana": "S R2 G3 P D2 N2 D2 S^",
     "avarohana": "S^ N2 D2 P M2 G3 R2 S",
@@ -4393,6 +4759,7 @@
   },
   {
     "name": "Gaganamohini",
+    "iastName": "Gaganamohini",
     "melakarta_number": 64,
     "arohana": "S G3 P D2 N2 S^",
     "avarohana": "S^ N2 P M2 G3 S",
@@ -4405,6 +4772,7 @@
   },
   {
     "name": "Gurupriya",
+    "iastName": "Gurupriya",
     "melakarta_number": 64,
     "arohana": "S R2 G3 M2 D2 N2 S^",
     "avarohana": "S^ N2 D2 M2 G3 R2 S",
@@ -4417,6 +4785,7 @@
   },
   {
     "name": "Hrdhini",
+    "iastName": "Hrdhini",
     "melakarta_number": 64,
     "arohana": "S G3 M2 P N2 S^",
     "avarohana": "S^ N2 P M2 G3 S",
@@ -4429,6 +4798,7 @@
   },
   {
     "name": "MukthidAyini",
+    "iastName": "Mukthidāyini",
     "melakarta_number": 64,
     "arohana": "S G3 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G3 S",
@@ -4441,6 +4811,7 @@
   },
   {
     "name": "NAdhabrahma",
+    "iastName": "Nādhabrahma",
     "melakarta_number": 64,
     "arohana": "S P M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G3 S",
@@ -4453,6 +4824,7 @@
   },
   {
     "name": "Triveni",
+    "iastName": "Triveni",
     "melakarta_number": 64,
     "arohana": "S R2 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 R2 S",
@@ -4465,6 +4837,7 @@
   },
   {
     "name": "VivAhapriyA",
+    "iastName": "Vivāhapriyā",
     "melakarta_number": 64,
     "arohana": "S R2 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 R2 S",
@@ -4477,6 +4850,7 @@
   },
   {
     "name": "MechakalyAni",
+    "iastName": "Mechakalyāni",
     "melakarta_number": 65,
     "arohana": "S R2 G3 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G3 R2 S",
@@ -4489,6 +4863,7 @@
   },
   {
     "name": "ShAnthakalyAni",
+    "iastName": "Śānthakalyāni",
     "melakarta_number": 65,
     "arohana": "S R2 G3 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G3 R2 S",
@@ -4501,6 +4876,7 @@
   },
   {
     "name": "Amritha BehAg",
+    "iastName": "Amritha Behāg",
     "melakarta_number": 65,
     "arohana": "S M2 G3 P N3 S^",
     "avarohana": "D2 N3 D2 M2 G3 S",
@@ -4513,6 +4889,7 @@
   },
   {
     "name": "KalyAnadAyini",
+    "iastName": "Kalyānadāyini",
     "melakarta_number": 65,
     "arohana": "S R2 G3 M2 D2 N3 S^",
     "avarohana": "S^ N3 D2 M2 G3 R2 S",
@@ -4525,6 +4902,7 @@
   },
   {
     "name": "Kannadamaruva",
+    "iastName": "Kannadamaruva",
     "melakarta_number": 65,
     "arohana": "S G3 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G3 S",
@@ -4537,6 +4915,7 @@
   },
   {
     "name": "Kowmoda",
+    "iastName": "Kowmoda",
     "melakarta_number": 65,
     "arohana": "S R2 G3 M2 N3 S^",
     "avarohana": "S^ N3 P M2 G3 S",
@@ -4549,6 +4928,7 @@
   },
   {
     "name": "KunthalashreekAnti",
+    "iastName": "Kunthalashrīkānti",
     "melakarta_number": 65,
     "arohana": "S G3 M2 P D2 N3 S^",
     "avarohana": "S^ N3 P M2 G3 R2 S",
@@ -4561,6 +4941,7 @@
   },
   {
     "name": "Pramodhini",
+    "iastName": "Pramodhini",
     "melakarta_number": 65,
     "arohana": "S G3 M2 P D2 S^",
     "avarohana": "S^ D2 P M2 G3 S",
@@ -4573,6 +4954,7 @@
   },
   {
     "name": "SAranga TArangini",
+    "iastName": "Sāranga Tārangini",
     "melakarta_number": 65,
     "arohana": "S R2 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 R2 S",
@@ -4585,6 +4967,7 @@
   },
   {
     "name": "Shilangi",
+    "iastName": "Śilangi",
     "melakarta_number": 65,
     "arohana": "S G2 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 G2 S",
@@ -4597,6 +4980,7 @@
   },
   {
     "name": "SunAdavinodini",
+    "iastName": "Sunādavinodini",
     "melakarta_number": 65,
     "arohana": "S G3 M2 D2 N3 S^",
     "avarohana": "S^ N3 D2 M2 G3 S",
@@ -4609,6 +4993,7 @@
   },
   {
     "name": "VandanadhArini",
+    "iastName": "Vandanadhārini",
     "melakarta_number": 65,
     "arohana": "S R2 M2 P D2 S^",
     "avarohana": "S^ D2 P M2 R2 S",
@@ -4621,6 +5006,7 @@
   },
   {
     "name": "Yaman",
+    "iastName": "Yaman",
     "melakarta_number": 65,
     "arohana": "S R2 G3 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G3 R2 S",
@@ -4633,6 +5019,7 @@
   },
   {
     "name": "YamunA KalyAni",
+    "iastName": "Yamunā Kalyāni",
     "melakarta_number": 65,
     "arohana": "S R2 G3 P M2 P D2 S^",
     "avarohana": "S^ D2 P M2 P G3 R2 S",
@@ -4645,6 +5032,7 @@
   },
   {
     "name": "ChitrAmbari",
+    "iastName": "Chitrāmbari",
     "melakarta_number": 66,
     "arohana": "S R2 G3 M2 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M2 G3 R2 S",
@@ -4657,6 +5045,7 @@
   },
   {
     "name": "Amrithavarshini",
+    "iastName": "Amrithavarshini",
     "melakarta_number": 66,
     "arohana": "S G3 M2 P N3 S^",
     "avarohana": "S^ N3 P M2 G3 S",
@@ -4669,6 +5058,7 @@
   },
   {
     "name": "Vijayakoshalam",
+    "iastName": "Vijayakoshalam",
     "melakarta_number": 66,
     "arohana": "S R2 G3 M2 P S^",
     "avarohana": "S^ N3 P M2 G3 S",
@@ -4681,6 +5071,7 @@
   },
   {
     "name": "Sucharitra",
+    "iastName": "Sucharitra",
     "melakarta_number": 67,
     "arohana": "S R3 G3 M2 P D1 N1 S^",
     "avarohana": "S^ N1 D1 P M2 G3 R3 S",
@@ -4693,6 +5084,7 @@
   },
   {
     "name": "SanthAna Manjari",
+    "iastName": "Santhāna Manjari",
     "melakarta_number": 67,
     "arohana": "S R3 G3 M2 P D1 S^",
     "avarohana": "S^ N1 D1 P M2 R3 S",
@@ -4705,6 +5097,7 @@
   },
   {
     "name": "Jyothiswaroopini",
+    "iastName": "Jyothiswarūpini",
     "melakarta_number": 68,
     "arohana": "S R3 G3 M2 P D1 N2 S^",
     "avarohana": "S^ N2 D1 P M2 G3 R3 S",
@@ -4717,6 +5110,7 @@
   },
   {
     "name": "DhAtuvardhani",
+    "iastName": "Dhātuvardhani",
     "melakarta_number": 69,
     "arohana": "S R3 G3 M2 P D1 N3 S^",
     "avarohana": "S^ N3 D1 P M2 G3 R3 S",
@@ -4729,6 +5123,7 @@
   },
   {
     "name": "NAsikabhooshhani",
+    "iastName": "Nāsikabhūshhani",
     "melakarta_number": 70,
     "arohana": "S R3 G3 M2 P D2 N2 S^",
     "avarohana": "S^ N2 D2 P M2 G3 R3 S",
@@ -4741,6 +5136,7 @@
   },
   {
     "name": "NAsAmani",
+    "iastName": "Nāsāmani",
     "melakarta_number": 70,
     "arohana": "S R3 G3 M2 P D2 N2 S^",
     "avarohana": "S^ N3 D2 P M2 G3 R3 S",
@@ -4753,6 +5149,7 @@
   },
   {
     "name": "Kosalam",
+    "iastName": "Kosalam",
     "melakarta_number": 71,
     "arohana": "S R3 G3 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G3 R3 S",
@@ -4765,6 +5162,7 @@
   },
   {
     "name": "KusumAkaram",
+    "iastName": "Kusumākaram",
     "melakarta_number": 71,
     "arohana": "S R3 G3 M2 P D2 N3 S^",
     "avarohana": "S^ N3 D2 P M2 G3 R3 S",
@@ -4777,6 +5175,7 @@
   },
   {
     "name": "Rasikapriya",
+    "iastName": "Rasikapriya",
     "melakarta_number": 72,
     "arohana": "S R3 G3 M2 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M2 G3 R3 S",
@@ -4789,6 +5188,7 @@
   },
   {
     "name": "Rasamanjari",
+    "iastName": "Rasamanjari",
     "melakarta_number": 72,
     "arohana": "S R3 G3 M2 P D3 N3 S^",
     "avarohana": "S^ N3 D3 P M2 G3 R3 S",
