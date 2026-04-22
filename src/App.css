@@ -30,7 +30,7 @@ h1 {
 
 h2 {
   margin-top: 0;
-  font-size: 1.1rem;
+  font-size: 2.1rem;
   color: #e6c36a;
 }
 
@@ -71,11 +71,16 @@ select {
   font-size: 1.05rem;
   margin-top: 8px;
   line-height: 1.35;
+  white-space: nowrap;
 }
 
 .readout.calibrated {
   color: #32d74b;
   text-shadow: 0 0 6px rgba(50, 215, 75, 0.6);
+}
+
+.temperament-group {
+  margin-bottom: 18px;
 }
 
 .hint {
@@ -857,4 +862,48 @@ tr:nth-child(14) {
 .sa-nudge-button:active {
   transform: translateY(1px);
   background: rgba(255, 255, 255, 0.18);
+}
+
+.micro-temperament-group {
+  margin-bottom: 16px;
+}
+
+.micro-sa-readout-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.micro-sa-readout-row .readout {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.micro-reference-card .sa-nudge-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 0;
+}
+
+.landing-text {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+  line-height: 1.6;
+}
+
+.landing-text h1 {
+  color: #ffffff;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+}
+
+.landing-text h2 {
+  margin-top: 2rem;
+}
+
+.landing-text p {
+  margin-bottom: 1.5rem;
 }

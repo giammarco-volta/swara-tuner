@@ -1,3 +1,6 @@
+import { appConfig } from "./config/appConfig";
+import { MODE_UI_CONFIG } from "./config/modeConfig";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import "./App.css";
@@ -10,6 +13,17 @@ import { hindustaniRagas } from "./music/ragas";
 import carnaticRagamsJson from "./data/carnatic_ragas.json";
 
 import { buildDirectionalHindustaniSwaras } from "./music/ragaParsing";
+
+import { c4ToA3Hz } from "./music/referencePitch";
+
+import {
+  TEMPERAMENT_OPTIONS,
+  TEMPERAMENT_NOTE_MAP,
+  type TemperamentId,
+} from "./music/temperaments";
+
+const mode = appConfig.mode;
+const modeUi = MODE_UI_CONFIG[mode];
 
 type RiChoice = "" | "Ri1" | "Ri2" | "Ri3";
 type GaChoice = "" | "Ga1" | "Ga2" | "Ga3";
@@ -376,29 +390,22 @@ function getRagaSearchScore(name: string, search: string): number {
   return Number.POSITIVE_INFINITY;
 }
 
-// function wrapFrequencyToRange(freq: number, minHz: number, maxHz: number): number {
-//   let wrapped = freq;
-
-//   while (wrapped < minHz) wrapped *= 2;
-//   while (wrapped >= maxHz) wrapped /= 2;
-
-//   return wrapped;
-// }
-
 const ALL_RAGAS: RagaPreset[] = [
   ...loadRagasFromJson(hindustaniRagas, "hindustani"),
   ...loadRagasFromJson(carnaticRagamsJson, "carnatic"),
 ];
 
 type PitchDetectorMode = "autocorrelation" | "mpm";
-type TunerViewMode = "meter" | "swara" | "sruti";
+type TunerViewMode = "meter" | "swara" | "sruti" | "octave";
 
 export default function TunerApp() {
   const DRONE_REFERENCE_MIN_HZ = 110; // A2
   const DRONE_REFERENCE_MAX_HZ = 220; // A3
 
-  const [saHz, setSaHz] = useState(midiToFrequency(62));
-  const [toleranceCents, setToleranceCents] = useState(20);
+  const initialSaHz = mode === "micro" ? 440 * Math.pow(2, 300 / 1200) : midiToFrequency(61);
+
+  const [saHz, setSaHz] = useState(initialSaHz);
+  const [toleranceCents, setToleranceCents] = useState(5);
 
   const [isCalibrating, setIsCalibrating] = useState(false);
   const [micStatus, setMicStatus] = useState("Idle");
@@ -411,7 +418,7 @@ export default function TunerApp() {
   const [ragaSearch, setRagaSearch] = useState("");
 
   const [pitchDetectorMode] = useState<PitchDetectorMode>("mpm");
-  const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>("swara");
+  const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>(mode === "micro" ? "octave" : "swara");
 
   const [inputGain, setInputGain] = useState(2.5);
   const [useCompression, setUseCompression] = useState(true);
@@ -425,6 +432,8 @@ export default function TunerApp() {
   const [showDroneSettings, setShowDroneSettings] = useState(false);
 
   const [droneBpm, setDroneBpm] = useState(60);
+
+  const [selectedTemperament, setSelectedTemperament] = useState<TemperamentId>("31tet");
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -502,12 +511,6 @@ export default function TunerApp() {
       while (wrapped >= DRONE_REFERENCE_MAX_HZ) wrapped /= 2;
       return wrapped;
     }, [saHz]);
-
-    // useEffect(() => {
-    //   if (availableRagas.length > 0 && !selectedRagaId) {
-    //     setSelectedRagaId(availableRagas[0].id);
-    //   }
-    // }, [availableRagas, selectedRagaId]);
 
     const selectedRaga = useMemo(
       () => ALL_RAGAS.find((raga) => raga.id === selectedRagaId) ?? null,
@@ -615,31 +618,15 @@ export default function TunerApp() {
     droneBpmRef.current = droneBpm;
   }, [droneBpm]);
 
-  // useEffect(() => {
-  //   async function run() {
-  //     if (!droneEnabled) return;
-
-  //     const ctx = await ensureDroneAudioContext();
-  //     const gainNode = ensureDroneGainNode(ctx);
-  //     gainNode.gain.value = droneVolume;
-
-  //     startDroneGenerator(ctx, gainNode, dronePattern, droneSaHz);
-  //   }
-  //   void run();
-  // }, [dronePattern, droneSaHz, droneVolume]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     stopDroneGenerator();
-  //   };
-  // }, []);
-
   useEffect(() => {
     if (tunerViewMode !== "swara") {
       setSelectedSwaraId(null);
     }
     if (tunerViewMode !== "sruti") {
       setSelectedSrutiKey(null);
+    }
+    if (tunerViewMode !== "octave") {
+      setSelectedOctaveNoteKey(null);
     }
   },[tunerViewMode]);
 
@@ -679,30 +666,6 @@ export default function TunerApp() {
         : analyzeDetectedPitch(tunerFrequencyHz, saHz, config, toleranceCents),
     [isCalibrating, tunerFrequencyHz, saHz, config, toleranceCents]
   );
-
-  //const saCents = useMemo(() => hzToCentsWithinOctave(saHz), [saHz]);
-
-  const swaraColorClass =
-    isCalibrating || !result
-      ? ""
-      : result.allowed === false
-        ? "swara-out"
-        : result.tuningZone === "perfect"
-          ? "swara-perfect"
-          : result.tuningZone === "tolerated"
-            ? "swara-tolerated"
-            : "swara-out";
-
-  const circleSwaraColor =
-    isCalibrating || !result
-      ? "white"
-      : result.allowed === false
-        ? "#ff453a"
-        : result.tuningZone === "perfect"
-          ? "#32d74b"
-          : result.tuningZone === "tolerated"
-            ? "#ffd60a"
-            : "#ff453a";
 
   const meterOffset =
     isCalibrating || !result || result.deviationCents === null
@@ -745,6 +708,21 @@ export default function TunerApp() {
 
   const displayedSaCents = hzToCentsWithinOctave(saHz);
 
+  const displayedReferenceHz = c4ToA3Hz(saHz);
+  const displayedReferenceText =
+    mode === "micro"
+      ? `A3 = ${displayedReferenceHz.toFixed(2)} Hz`
+      : formatWesternNoteWithCentsFromCents(displayedSaCents);
+
+  const octaveLegendText =
+    mode === "swara"
+    ? null
+    : selectedTemperament === "31tet"
+        ? "⅕ tone up and down"
+        : selectedTemperament === "quarter"
+          ? "¼ tone up and down"
+          : null;      
+
   function getStepDurationMs(stepIndex: number, bpm: number): number {
     const unitMs = (60 / bpm) * 1000;
     return stepIndex === 3 ? unitMs * 2 : unitMs;
@@ -781,11 +759,11 @@ export default function TunerApp() {
     const offsetRounded = Math.round(normalized - nearestSemitone * 100);
 
     if (offsetRounded === 0) {
-      return noteNames[noteIndex];
+      return `Sa = ${noteNames[noteIndex]}`;
     }
 
     const sign = offsetRounded > 0 ? "+" : "";
-    return `${noteNames[noteIndex]} ${sign}${offsetRounded}`;
+    return `Sa = ${noteNames[noteIndex]} ${sign}${offsetRounded}`;
   }
 
   function registerDroneSource(source: OscillatorNode | AudioBufferSourceNode) {
@@ -830,7 +808,7 @@ export default function TunerApp() {
     });
   }
 
-  async function playSrutiPreview(cents: number) {
+  async function playSrutiPreview(cents: number, octaveShift: number = 0) {
     const ctx = await ensureDroneAudioContext();
 
     if (srutiPreviewOscRef.current) {
@@ -853,14 +831,14 @@ export default function TunerApp() {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    const freq = saHz * Math.pow(2, cents / 1200);
+    const freq = saHz * Math.pow(2, (cents + 1200 * octaveShift) / 1200);
 
     osc.type = "triangle";
     osc.frequency.value = freq;
 
     gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.14, ctx.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.14, ctx.currentTime + 0.75);
+    gain.gain.exponentialRampToValueAtTime(0.30, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.30, ctx.currentTime + 0.75);
     gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
 
     osc.connect(gain);
@@ -900,7 +878,6 @@ export default function TunerApp() {
     const detectedSa = median(calibrationPitchesRef.current);
     if (detectedSa) {
       setSaHz(detectedSa);
-      //setSaCents(hzToCentsWithinOctave(detectedSa));
       setIsSaCalibrated(true);
     }
 
@@ -1059,10 +1036,6 @@ export default function TunerApp() {
     timeDomainDataRef.current = new Float32Array(analyser.fftSize);
   }
 
-  // function getCentsDistance(aHz: number, bHz: number): number {
-  //   return Math.abs(1200 * Math.log2(aHz / bHz));
-  // }
-
   async function ensureDroneAudioContext(): Promise<AudioContext> {
     if (!audioContextRef.current) {
       audioContextRef.current = new AudioContext();
@@ -1175,24 +1148,6 @@ export default function TunerApp() {
         return [saHz * 1.5, saHz * (15 / 8), saHz * 2, saHz];
     }
   }
-
-  // function scheduleDrone(
-  //   ctx: AudioContext,
-  //   gainNode: GainNode,
-  //   pattern: DronePattern,
-  //   saHz: number,
-  //   bpm: number
-  // ) {
-  //   const unit = 60 / bpm;
-  //   const startTime = ctx.currentTime + 0.005;
-  //   const freqs = getDroneFrequencies(pattern, saHz);
-
-  //   const offsets = [0, 1, 2, 3].map((x) => x * unit);
-
-  //   for (let i = 0; i < 4; i++) {
-  //     playPluck(ctx, freqs[i], startTime + offsets[i], gainNode);
-  //   }
-  // }
 
   function stopDroneGenerator() {
     if (droneStepTimeoutRef.current !== null) {
@@ -1657,9 +1612,24 @@ export default function TunerApp() {
     };
   }
 
-  function getCircleStatusText(): string {
-    if (micStatus !== "Microphone ready" && micStatus !== "Listening...") return "Microphone not enabled";
-    if (isCalibrating) return `Calibrating ${getSwaraLabel("Sa", tradition)}`;
+function getCircleStatusText(): string {
+  if (micStatus !== "Microphone ready" && micStatus !== "Listening...") {
+    return "Microphone not enabled";
+  }
+
+  if (isCalibrating) {
+    return mode === "micro"
+      ? "Listening for reference"
+      : `Calibrating ${getSwaraLabel("Sa", tradition)}`;
+  }
+
+    if (mode === "micro") {
+      if (octaveTuningZone === null) return "No note detected";
+      if (octaveTuningZone === "perfect") return "In tune";
+      if (octaveTuningZone === "tolerated") return "Tolerated";
+      return "Out of tune";
+    }
+
     if (result?.allowed === null || result?.allowed === undefined) return "No note detected";
     if (result.allowed === false) return "Not allowed";
     if (result.tuningZone === "perfect") return "In tune";
@@ -1779,6 +1749,7 @@ export default function TunerApp() {
 
   const [selectedSrutiKey, setSelectedSrutiKey] = useState<string | null>(null);
   const [selectedSwaraId, setSelectedSwaraId] = useState<SwaraId | null>(null);
+  const [selectedOctaveNoteKey, setSelectedOctaveNoteKey] = useState<string | null>(null);
 
   const allowedSwaraIds = useMemo(() => getAllowedSwaraIds(), [config]);
 
@@ -1878,6 +1849,363 @@ export default function TunerApp() {
     { key: "Dha3Ni2", aliases: ["Dha3", "Ni2"] },
     { key: "Ni3", aliases: ["Ni3"] },
   ];
+
+  const octaveNotes = useMemo(() => {
+    return TEMPERAMENT_NOTE_MAP[selectedTemperament] ?? [];
+  }, [selectedTemperament]);
+
+  const octaveViewTicks = useMemo(() => {
+    return octaveNotes.map((note) => {
+      const angle = centsToCircleAngle(note.cents);
+
+      const inner = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius - circleStrokeWidth / 2,
+        angle
+      );
+
+      const outer = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius + circleStrokeWidth / 2,
+        angle
+      );
+
+      return {
+        key: `octave-tick-${note.key}`,
+        cents: note.cents,
+        x1: inner.x,
+        y1: inner.y,
+        x2: outer.x,
+        y2: outer.y,
+      };
+    });
+  }, [octaveNotes]);
+
+  const selectedOctaveNote = useMemo(() => {
+    if (!selectedOctaveNoteKey) return null;
+    return octaveNotes.find((n) => n.key === selectedOctaveNoteKey) ?? null;
+  }, [selectedOctaveNoteKey, octaveNotes]);
+
+  const nearestOctaveNote = useMemo(() => {
+    if (
+      isCalibrating ||
+      !result ||
+      result.centsFromSa === null ||
+      result.centsFromSa === undefined ||
+      octaveNotes.length === 0
+    ) {
+      return null;
+    }
+
+    const target = normalizeCentsToOctave(result.centsFromSa);
+
+    let best: (typeof octaveNotes)[number] | null = null;
+    let bestDistance = Number.POSITIVE_INFINITY;
+
+    for (const note of octaveNotes) {
+      let delta = Math.abs(target - normalizeCentsToOctave(note.cents));
+      if (delta > 600) delta = 1200 - delta;
+
+      if (delta < bestDistance) {
+        bestDistance = delta;
+        best = note;
+      }
+    }
+
+    return best;
+  }, [isCalibrating, result, octaveNotes]);
+
+  const displayedOctaveNote = nearestOctaveNote;
+
+  const circleCenterOctaveText =
+    isCalibrating || !displayedOctaveNote
+      ? "--"
+      : displayedOctaveNote.label;
+
+  const octaveDeviationCents = useMemo(() => {
+    if (
+      isCalibrating ||
+      !result ||
+      result.centsFromSa === null ||
+      result.centsFromSa === undefined ||
+      !displayedOctaveNote
+    ) {
+      return null;
+    }
+
+    const target = normalizeCentsToOctave(result.centsFromSa);
+    const noteCents = normalizeCentsToOctave(displayedOctaveNote.cents);
+
+    let delta = target - noteCents;
+
+    while (delta <= -600) delta += 1200;
+    while (delta > 600) delta -= 1200;
+
+    return delta;
+  }, [isCalibrating, result, displayedOctaveNote]);
+
+  const octaveTuningZone: "perfect" | "tolerated" | "out" | null =
+    octaveDeviationCents === null
+      ? null
+      : Math.abs(octaveDeviationCents) <= 5
+        ? "perfect"
+        : Math.abs(octaveDeviationCents) <= toleranceCents
+          ? "tolerated"
+          : "out";
+
+  const swaraColorClass =
+    mode === "micro"
+      ? isCalibrating || octaveTuningZone === null
+        ? ""
+        : octaveTuningZone === "perfect"
+          ? "swara-perfect"
+          : octaveTuningZone === "tolerated"
+            ? "swara-tolerated"
+            : "swara-out"
+      : isCalibrating || !result
+        ? ""
+        : result.allowed === false
+          ? "swara-out"
+          : result.tuningZone === "perfect"
+            ? "swara-perfect"
+            : result.tuningZone === "tolerated"
+              ? "swara-tolerated"
+              : "swara-out";
+
+  const circleSwaraColor =
+    mode === "micro"
+      ? isCalibrating || octaveTuningZone === null
+        ? "white"
+        : octaveTuningZone === "perfect"
+          ? "#32d74b"
+          : octaveTuningZone === "tolerated"
+            ? "#ffd60a"
+            : "#ff453a"
+      : isCalibrating || !result
+        ? "white"
+        : result.allowed === false
+          ? "#ff453a"
+          : result.tuningZone === "perfect"
+            ? "#32d74b"
+            : result.tuningZone === "tolerated"
+              ? "#ffd60a"
+              : "#ff453a";
+
+  const currentPitchText =
+    mode === "micro"
+      ? displayedOctaveNote && octaveDeviationCents !== null
+        ? `${displayedOctaveNote.label}${
+            Math.round(octaveDeviationCents) === 0
+              ? ""
+              : ` ${octaveDeviationCents > 0 ? "+" : ""}${Math.round(octaveDeviationCents)} cents`
+          }`
+        : "--"
+      : result?.displayedSwara && result.deviationCents !== null && result.deviationCents !== undefined
+        ? `${getSwaraLabel(result.displayedSwara, tradition)}${
+            Math.round(result.deviationCents) === 0
+              ? ""
+              : ` ${result.deviationCents > 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`
+          }`
+        : "--";      
+
+  const octaveViewLabels = useMemo(() => {
+    return octaveNotes.map((note) => {
+      const angle = centsToCircleAngle(note.cents);
+
+      const pos = polarToCartesian(
+        circleCenter,
+        circleCenter,
+        circleRadius + 34,
+        angle
+      );
+
+      return {
+        key: `octave-label-${note.key}`,
+        label: note.label,
+        cents: note.cents,
+        x: pos.x,
+        y: pos.y,
+      };
+    });
+  }, [octaveNotes]);
+
+  const octaveViewAliasLabels = useMemo(() => {
+    return octaveNotes
+      .filter((note) => !!note.alias)
+      .map((note) => {
+        const angle = centsToCircleAngle(note.cents);
+
+        const pos = polarToCartesian(
+          circleCenter,
+          circleCenter,
+          circleRadius + 58,
+          angle
+        );
+
+        return {
+          key: `octave-alias-${note.key}`,
+          alias: note.alias!,
+          cents: note.cents,
+          x: pos.x,
+          y: pos.y,
+        };
+      });
+  }, [octaveNotes]);
+
+  type FifthConnection = {
+    key: string;
+    fromIndex: number;
+    toIndex: number;
+    stroke: string;
+    strokeWidth?: number;
+    dashed?: boolean;
+  };
+
+  const octaveFifthConnections = useMemo<FifthConnection[]>(() => {
+    if (mode !== "micro") return [];
+
+    if (selectedTemperament === "12tet") {
+      return Array.from({ length: 12 }, (_, x) => ({
+        key: `fifth-12-${x}`,
+        fromIndex: x,
+        toIndex: (x + 7) % 12,
+        stroke: "rgba(210,170,175,0.42)",
+      }));
+    }
+
+    if (selectedTemperament === "19tet") {
+      return Array.from({ length: 19 }, (_, x) => ({
+        key: `fifth-19-${x}`,
+        fromIndex: x,
+        toIndex: (x + 11) % 19,
+        stroke: "rgba(210,170,175,0.42)",
+      }));
+    }
+
+    if (selectedTemperament === "31tet") {
+      return Array.from({ length: 31 }, (_, x) => ({
+        key: `fifth-31-${x}`,
+        fromIndex: x,
+        toIndex: (x + 18) % 31,
+        stroke: "rgba(210,170,175,0.42)",
+      }));
+    }
+
+    if (selectedTemperament === "quarter") {
+      return [
+        ...Array.from({ length: 12 }, (_, k) => {
+          const x = k * 2;
+          return {
+            key: `fifth-24-even-${x}`,
+            fromIndex: x,
+            toIndex: (x + 14) % 24,
+            stroke: "rgba(210,170,175,0.42)",
+          };
+        }),
+        ...Array.from({ length: 12 }, (_, k) => {
+          const x = k * 2 + 1;
+          return {
+            key: `fifth-24-odd-${x}`,
+            fromIndex: x,
+            toIndex: (x + 14) % 24,
+            stroke: "rgba(235,210,90,0.42)",
+          };
+        }),
+      ];
+    }
+
+    if (selectedTemperament === "meantone") {
+      return Array.from({ length: 19 }, (_, x) => {
+        const to = (x + 11) % 19;
+        const isWolf =
+          (x === 18 && to === 10) || (x === 10 && to === 18);
+
+        return {
+          key: `fifth-meantone-${x}`,
+          fromIndex: x,
+          toIndex: to,
+          stroke: isWolf
+            ? "rgba(180,165,165,0.28)"
+            : "rgba(210,170,175,0.42)",
+          dashed: isWolf,
+        };
+      });
+    }
+
+    return [];
+  }, [mode, selectedTemperament]);
+
+  const octaveFifthLines = useMemo(() => {
+    const innerConnectionRadius = circleRadius - 12;
+
+    return octaveFifthConnections
+      .map((connection) => {
+        const from = octaveNotes[connection.fromIndex];
+        const to = octaveNotes[connection.toIndex];
+
+        if (!from || !to) return null;
+
+        const fromAngle = centsToCircleAngle(from.cents);
+        const toAngle = centsToCircleAngle(to.cents);
+
+        const p1 = polarToCartesian(
+          circleCenter,
+          circleCenter,
+          innerConnectionRadius,
+          fromAngle
+        );
+
+        const p2 = polarToCartesian(
+          circleCenter,
+          circleCenter,
+          innerConnectionRadius,
+          toAngle
+        );
+
+        return {
+          ...connection,
+          x1: p1.x,
+          y1: p1.y,
+          x2: p2.x,
+          y2: p2.y,
+        };
+      })
+      .filter(Boolean) as Array<
+        FifthConnection & {
+          x1: number;
+          y1: number;
+          x2: number;
+          y2: number;
+        }
+      >;
+  }, [octaveFifthConnections, octaveNotes, circleCenter, circleRadius]);
+
+  const octaveToleranceSegments = useMemo(() => {
+    const segments: Array<{
+      key: string;
+      start: number;
+      end: number;
+      color: string;
+    }> = [];
+
+    for (const note of octaveNotes) {
+      const start = note.cents - toleranceCents;
+      const end = note.cents + toleranceCents;
+
+      for (const seg of splitOctaveArc(start, end)) {
+        segments.push({
+          key: `${note.key}-${seg.start}-${seg.end}`,
+          start: seg.start,
+          end: seg.end,
+          color: "#d6c64b",
+        });
+      }
+    }
+
+    return segments;
+  }, [octaveNotes, toleranceCents]);
 
   function getFirstVisibleSlotSwara(slot: CircleSlot, currentTradition: Tradition): SwaraId | null {
     for (const swara of slot.aliases) {
@@ -2130,6 +2458,18 @@ export default function TunerApp() {
       ? SWARASTHANA_EXTENDED_NAMES[tradition][selectedSwaraId] ?? ""
       : "";
 
+  const displayedOctaveLabel =
+    tunerViewMode === "octave" && selectedOctaveNote
+      ? selectedOctaveNote.alias
+        ? `${selectedOctaveNote.label} / ${selectedOctaveNote.alias}`
+        : selectedOctaveNote.label
+      : "";
+
+  const displayedOctaveCents =
+    tunerViewMode === "octave" && selectedOctaveNote
+      ? selectedOctaveNote.cents
+      : null;      
+
   const displayedSrutiNumber = useMemo(() => {
     if (!displayedSrutiMarker) return null;
 
@@ -2187,6 +2527,44 @@ export default function TunerApp() {
       : micStatus === "Microphone access denied or unavailable"
         ? "is-error"
         : "";
+
+  function handleOctaveRingPointer(
+    event: React.MouseEvent<SVGCircleElement, MouseEvent>
+  ) {
+    const svg = event.currentTarget.ownerSVGElement;
+    if (!svg || octaveViewLabels.length === 0) return;
+
+    const rect = svg.getBoundingClientRect();
+
+    const scaleX = circleSize / rect.width;
+    const scaleY = circleSize / rect.height;
+
+    const x = (event.clientX - rect.left) * scaleX;
+    const y = (event.clientY - rect.top) * scaleY;
+
+    const dx = x - circleCenter;
+    const dy = y - circleCenter;
+    const angle = Math.atan2(dy, dx);
+
+    let best = octaveViewLabels[0];
+    let bestDist = Number.POSITIVE_INFINITY;
+
+    for (const label of octaveViewLabels) {
+      const labelAngle = centsToCircleAngle(label.cents);
+      const dist = angleDistance(angle, labelAngle);
+
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = label;
+      }
+    }
+
+    const matchedNote = octaveNotes.find((n) => n.cents === best.cents);
+    if (!matchedNote) return;
+
+    setSelectedOctaveNoteKey(matchedNote.key);
+    void playSrutiPreview(matchedNote.cents, -1);
+  }
 
   function angleDistance(a: number, b: number): number {
     let d = Math.abs(a - b);
@@ -2496,22 +2874,187 @@ export default function TunerApp() {
     </div>
   );
 
+const octaveCircleSvg = (
+  <div className="circle-container">
+    <svg
+      viewBox={`0 0 ${circleSize} ${circleSize}`}
+      role="img"
+      aria-label="Octave circle"
+      className="circle-svg"
+    >
+      <circle
+        cx={circleCenter}
+        cy={circleCenter}
+        r={circleRadius}
+        fill="none"
+        stroke="rgba(255,255,255,0.16)"
+        strokeWidth={circleStrokeWidth}
+      />
+
+      {octaveToleranceSegments.map((segment) => (
+        <path
+          key={`octave-tolerance-${segment.key}`}
+          d={describeArcPath(
+            circleCenter,
+            circleCenter,
+            circleRadius,
+            segment.start,
+            segment.end
+          )}
+          fill="none"
+          stroke="#d6c64b"
+          strokeWidth={circleStrokeWidth}
+          strokeLinecap="butt"
+          opacity={0.95}
+        />
+      ))}
+
+      {mode === "micro" &&
+        octaveFifthLines.map((line) => (
+          <line
+            key={line.key}
+            x1={line.x1}
+            y1={line.y1}
+            x2={line.x2}
+            y2={line.y2}
+            stroke={line.stroke}
+            strokeWidth={line.strokeWidth ?? 1.5}
+            strokeDasharray={line.dashed ? "5 4" : undefined}
+            strokeLinecap="round"
+          />
+        ))}
+
+      {octaveViewTicks.map((tick) => (
+        <line
+          key={tick.key}
+          x1={tick.x1}
+          y1={tick.y1}
+          x2={tick.x2}
+          y2={tick.y2}
+          stroke="#000"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+        />
+      ))}
+
+      {circleNeedleEnd && (
+        <>
+          <line
+            x1={circleCenter}
+            y1={circleCenter}
+            x2={circleNeedleEnd.x}
+            y2={circleNeedleEnd.y}
+            stroke="white"
+            strokeWidth={3}
+            strokeLinecap="round"
+          />
+          <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
+        </>
+      )}
+
+      {octaveViewLabels.map((label) => (
+        <g
+          key={label.key}
+          onClick={() => {
+            const matchedNote = octaveNotes.find((n) => n.cents === label.cents);
+            if (!matchedNote) return;
+            setSelectedOctaveNoteKey(matchedNote.key);
+            void playSrutiPreview(label.cents, -1);
+          }}
+          style={{ cursor: "pointer" }}
+        >
+          <circle
+            cx={label.x}
+            cy={label.y}
+            r={16}
+            fill="transparent"
+          />
+          <text
+            x={label.x}
+            y={label.y}
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fill="#4A7FD1"
+            fontSize={12}
+            fontWeight={400}
+          >
+            {label.label}
+          </text>
+        </g>
+      ))}
+
+      {octaveViewAliasLabels.map((label) => (
+          <g
+            key={label.key}
+            onClick={() => {
+              const matchedNote = octaveNotes.find((n) => n.cents === label.cents);
+              if (!matchedNote) return;
+              setSelectedOctaveNoteKey(matchedNote.key);
+              void playSrutiPreview(label.cents, -1);
+            }}
+            style={{ cursor: "pointer" }}
+          >
+            <circle
+              cx={label.x}
+              cy={label.y}
+              r={14}
+              fill="transparent"
+            />
+            <text
+              x={label.x}
+              y={label.y}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill="#4A7FD1"
+              fontSize={12}
+              fontWeight={400}
+            >
+              {label.alias}
+            </text>
+          </g>
+        ))}
+
+        <text
+          x={circleCenter}
+          y={circleCenter - 8}
+          textAnchor="middle"
+          fill={circleSwaraColor}
+          fontSize="36"
+          fontWeight="700"
+        >
+          {circleCenterOctaveText}
+        </text>
+
+        <text
+          x={circleCenter}
+          y={circleCenter + 24}
+          textAnchor="middle"
+          fill="rgba(255,255,255,0.88)"
+          fontSize="15"
+        >
+          {circleStatusText}
+        </text>
+
+        <circle
+          cx={circleCenter}
+          cy={circleCenter}
+          r={circleRadius + 58}
+          fill="none"
+          stroke="transparent"
+          strokeWidth={34}
+          pointerEvents="stroke"
+          onClick={handleOctaveRingPointer}
+        />
+      </svg>
+    </div>
+  );
+
   return (
     <main id="tuner" className="app">
-      <h2>Swara Tuner</h2>
+      <h2>{modeUi.appTitle}</h2>
 
       <section className="panel tuner-panel">
         <div className="tuner-toolbar">
-          {/* {!smoothedDetectedPitch && (
-            <div style={{
-              textAlign: "center",
-              fontSize: "1rem",
-              color: "#aaa",
-              marginBottom: "10px"
-            }}>
-              🎤 Sing a note to begin
-            </div>
-          )} */}
           <div className="mic-toolbar-group">
             <button
               type="button"
@@ -2538,54 +3081,79 @@ export default function TunerApp() {
             >
               Meter view
             </button>
-            <button
-              type="button"
-              onClick={() => setTunerViewMode("swara")}
-              className={tunerViewMode === "swara" ? "active" : ""}
-            >
-              Swara view
-            </button>
-            <button
-              type="button"
-              onClick={() => setTunerViewMode("sruti")}
-              className={tunerViewMode === "sruti" ? "active" : ""}
-            >
-              Sruti view
-            </button>
+            {modeUi.showSwaraView && (
+              <button
+                type="button"
+                onClick={() => setTunerViewMode("swara")}
+                className={tunerViewMode === "swara" ? "active" : ""}
+              >
+                Swara view
+              </button>
+            )}
+            {modeUi.showSrutiView && (
+              <button
+                type="button"
+                onClick={() => setTunerViewMode("sruti")}
+                className={tunerViewMode === "sruti" ? "active" : ""}
+              >
+                Śruti view
+              </button>
+            )}
+            {modeUi.showOctaveView && (
+              <button
+                type="button"
+                onClick={() => setTunerViewMode("octave")}
+                className={tunerViewMode === "octave" ? "active" : ""}
+              >
+                Octave view
+              </button>
+            )}
           </div>
 
-          <div className="raga-toolbar">
-            <div
-              style={{
-                fontSize: 15,
-                fontWeight: 600,
-                color: "rgba(255,255,255,0.88)",
-              }}
-            >
-              {currentRagaName}
+          {modeUi.showRagaRef && (
+            <div className="raga-toolbar">
+              <div
+                style={{
+                  fontSize: 15,
+                  fontWeight: 600,
+                  color: "rgba(255,255,255,0.88)",
+                }}
+              >
+                {currentRagaName}
+              </div>
+
+              <a href="#music-panel" className="panel-link">
+                {tradition === "hindustani" ? "Change Rāg" : "Change Ragam"}
+              </a>
             </div>
-
-            <a href="#music-panel" className="panel-link">
-              {tradition === "hindustani" ? "Change Rāg" : "Change Ragam"}
-            </a>
-          </div>
+          )}
         </div>
 
         {tunerViewMode === "meter" ? (
           <>
+
             <div className={`current-swara ${swaraColorClass}`}>
               {isCalibrating
-                ? `Calibrating ${getSwaraLabel("Sa", tradition)}...`
-                : result?.displayedSwara
-                  ? getSwaraLabel(result.displayedSwara, tradition)
-                  : "--"}
+                ? mode === "micro"
+                  ? "Listening..."
+                  : `Calibrating ${getSwaraLabel("Sa", tradition)}...`
+                : mode === "micro"
+                  ? displayedOctaveNote?.label ?? "--"
+                  : result?.displayedSwara
+                    ? getSwaraLabel(result.displayedSwara, tradition)
+                    : "--"}
             </div>
+
             <div className="current-cents">
               {isCalibrating
                 ? ""
-                : result?.deviationCents === null || result?.deviationCents === undefined
-                  ? "--"
-                  : `${result.deviationCents >= 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`}
+                : mode === "micro"
+                  ? octaveDeviationCents === null
+                    ? "--"
+                    : `${octaveDeviationCents >= 0 ? "+" : ""}${Math.round(octaveDeviationCents)} cents`
+                  : result?.deviationCents === null || result?.deviationCents === undefined
+                    ? "--"
+                    : `${result.deviationCents >= 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`}
             </div>
 
             <div className="meter">
@@ -2620,27 +3188,15 @@ export default function TunerApp() {
             </div>
 
             <div className="led-row">
-              <div className="led-text">
-                {micStatus !== "Microphone ready" && micStatus !== "Listening..."
-                  ? "Enable the microphone to start tuning"
-                  : isCalibrating
-                    ? "Calibrating Sa"
-                    : result?.allowed === null || result?.allowed === undefined
-                      ? "No note detected"
-                      : result.allowed === false
-                        ? "Not allowed"
-                        : result.tuningZone === "perfect"
-                          ? "Perfectly in tune"
-                          : result.tuningZone === "tolerated"
-                            ? "Tolerated"
-                            : "Out of tune"}
-              </div>
+              <div className="led-text">{circleStatusText}</div>
             </div>
           </>
         ) : tunerViewMode === "swara" ? (
           swaraCircleSvg
-        ) : (
+        ) : tunerViewMode === "sruti" ? (
           srutiCircleSvg
+        ) : (
+          octaveCircleSvg
         )}
 
         {tunerViewMode === "sruti" && (
@@ -2669,7 +3225,34 @@ export default function TunerApp() {
           </div>
         )}
 
-        <div
+         {tunerViewMode === "octave" && (
+          <div
+            className="hint"
+            style={{
+              marginTop: "52px",
+              textAlign: "center",
+              color: "rgba(255,255,255,0.75)",
+            }}
+          >
+            Tap a note to hear it
+          </div>
+        )}
+
+        {octaveLegendText && (
+          <text
+            x={24}
+            y={circleSize - 34}
+            textAnchor="start"
+            fill="rgba(255,255,255,0.75)"
+            style={{ fontSize: 16, fontWeight: 400 }}
+          >
+            <tspan x={24} dy="0">
+              Symbols + and - indicate {octaveLegendText}
+            </tspan>
+          </text>
+        )}
+
+       <div
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -2678,30 +3261,32 @@ export default function TunerApp() {
             gap: "16px",
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-            <button
-              type="button"
-              className="panel-link"
-              onClick={openDroneSettings}
-              style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
-            >
-              Drone settings
-            </button>
+          {modeUi.showDroneControls && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+              <button
+                type="button"
+                className="panel-link"
+                onClick={openDroneSettings}
+                style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
+              >
+                Drone settings
+              </button>
 
-            <button
-              onClick={() => setDroneEnabled(prev => !prev)}
-              style={{
-                fontSize: "1.2rem",
-                padding: "6px 10px",
-                borderRadius: "6px",
-                background: droneEnabled ? "#444" : "#222",
-                color: "white",
-                border: "1px solid #666"
-              }}
-            >
-              {droneEnabled ? "Drone ⏹" : "Drone ▶"}
-            </button>
-          </div>
+              <button
+                onClick={() => setDroneEnabled(prev => !prev)}
+                style={{
+                  fontSize: "1.2rem",
+                  padding: "6px 10px",
+                  borderRadius: "6px",
+                  background: droneEnabled ? "#444" : "#222",
+                  color: "white",
+                  border: "1px solid #666"
+                }}
+              >
+                {droneEnabled ? "Drone ⏹" : "Drone ▶"}
+              </button>
+            </div>
+          )}
 
           <div
             style={{
@@ -2732,14 +3317,47 @@ export default function TunerApp() {
               {displayedSwaraLabel}
             </div>
           )}
+
+          {tunerViewMode === "octave" && displayedOctaveLabel && (
+            <>
+              <div style={{ fontWeight: 600 }}>
+                {displayedOctaveLabel}
+              </div>
+              {displayedOctaveCents !== null && (
+                <div style={{ fontSize: "0.8rem", color: "#aaa" }}>
+                  {displayedOctaveCents.toFixed(2)} cents
+                </div>
+              )}
+            </>
+          )}
+
           </div>
         </div>
 
         <div className="tuner-controls">
-            <div className="tuner-control-card">
-              <div className="sa-readout-row">
+            <div className={`tuner-control-card ${mode === "micro" ? "micro-reference-card" : ""}`}>
+              {modeUi.showTemperamentSelector && (
+                <div className={`control-group ${mode === "micro" ? "micro-temperament-group" : ""}`}>
+                  <select
+                    id="temperament-select"
+                    className="select-input"
+                    value={selectedTemperament}
+                    onChange={(e) =>
+                      setSelectedTemperament(e.target.value as TemperamentId)
+                    }
+                  >
+                    {TEMPERAMENT_OPTIONS.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className={`sa-readout-row ${mode === "micro" ? "micro-sa-readout-row" : ""}`}>
                 <div className={`readout ${isSaCalibrated ? "calibrated" : ""}`}>
-                  Sa = {formatWesternNoteWithCentsFromCents(displayedSaCents)}
+                  {displayedReferenceText}
                 </div>
 
                 <div className="sa-nudge-controls">
@@ -2747,8 +3365,8 @@ export default function TunerApp() {
                     type="button"
                     className="sa-nudge-button"
                     onClick={nudgeSaUp}
-                    aria-label="Increase Sa by 10 cents"
-                    title="Increase Sa by 10 cents"
+                    aria-label="Increase by 10 cents"
+                    title="Increase 10 by cents"
                   >
                     ▲
                   </button>
@@ -2757,39 +3375,43 @@ export default function TunerApp() {
                     type="button"
                     className="sa-nudge-button"
                     onClick={nudgeSaDown}
-                    aria-label="Decrease Sa by 10 cents"
-                    title="Decrease Sa by 10 cents"
+                    aria-label="Decrease by 10 cents"
+                    title="Decrease by 10 cents"
                   >
                     ▼
                   </button>
                 </div>
               </div>
 
-              <button
-                type="button"
-                className="primary-action"
-                onMouseDown={startSaCalibration}
-                onMouseUp={stopSaCalibration}
-                onMouseLeave={() => {
-                  if (isCalibrating) stopSaCalibration();
-                }}
-                onTouchStart={(e) => {
-                  e.preventDefault();
-                  void startSaCalibration();
-                }}
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                  stopSaCalibration();
-                }}
-              >
-                Hold and sing your Sa
-              </button>
+              {modeUi.showSaSingButton && (
+                <button
+                  type="button"
+                  className="primary-action"
+                  onMouseDown={startSaCalibration}
+                  onMouseUp={stopSaCalibration}
+                  onMouseLeave={() => {
+                    if (isCalibrating) stopSaCalibration();
+                  }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    void startSaCalibration();
+                  }}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    stopSaCalibration();
+                  }}
+                >
+                  Hold and sing your Sa
+                </button>
+              )}
 
-              <div className="hint">
-                {isCalibrating
-                  ? "Keep holding the button and sing steadily."
-                  : "Press and hold to calibrate Sa from your voice."}
-              </div>
+              {modeUi.showSaSingButton && (
+                <div className="hint">
+                  {isCalibrating
+                    ? "Keep holding the button and sing steadily."
+                    : "Press and hold to calibrate Sa from your voice."}
+                </div>
+              )}
             </div>
           <div className="tuner-control-card">
             <div className="subsection-label">Tolerance</div>
@@ -2804,112 +3426,107 @@ export default function TunerApp() {
             />
 
             <div className="readout">±{toleranceCents} cents</div>
-            <div className="hint current-pitch">
-              Current pitch:{" "}
-              {result?.displayedSwara && result.deviationCents !== null && result.deviationCents !== undefined
-                ? `${getSwaraLabel(result.displayedSwara, tradition)}${
-                    Math.round(result.deviationCents) === 0
-                      ? ""
-                      : ` ${result.deviationCents > 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`
-                  }`
-                : "--"}
-            </div>            
+              <div className="hint current-pitch">
+                Current pitch: {currentPitchText}
+              </div>
           </div>
         </div>
       </section>
 
       <div className="top-controls-grid">
-        <section id="music-panel" className="panel music-panel">
-          <div className="subsection-label">Tradition</div>
+        {modeUi.showRagaPanel && (
+          <section id="music-panel" className="panel music-panel">
+            <div className="subsection-label">Tradition</div>
 
-          <div className="tradition-toggle" role="radiogroup" aria-label="Tradition">
-            <button
-              type="button"
-              className={tradition === "hindustani" ? "active" : ""}
-              onClick={() => setTradition("hindustani")}
-            >
-              Hindustani
-            </button>
-
-            <button
-              type="button"
-              className={tradition === "carnatic" ? "active" : ""}
-              onClick={() => setTradition("carnatic")}
-            >
-              Carnatic
-            </button>
-          </div>
-
-          <div className="panel-spacer" />
-
-          <div className="raga-header-row">
-            <div className="subsection-label">
-              {tradition === "hindustani" ? "Rāg" : "Ragam"}
-            </div>
-
-            <div className="hint raga-found-count">
-              {availableRagas.length}{" "}
-              {tradition === "hindustani"
-                ? availableRagas.length === 1
-                  ? "rāg found"
-                  : "rāgs found"
-                : availableRagas.length === 1
-                  ? "ragam found"
-                  : "ragams found"}
-            </div>
-          </div>
-
-          <div className="raga-select-row">
-            <input
-              type="text"
-              placeholder={tradition === "hindustani" ? "Search rāg..." : "Search ragam..."}
-              value={ragaSearch}
-              onChange={(e) => setRagaSearch(e.target.value)}
-            />
-
-            {availableRagas.length > 0 ? (
-              <select
-                value={selectedRagaId}
-                onChange={(e) => setSelectedRagaId(e.target.value)}
+            <div className="tradition-toggle" role="radiogroup" aria-label="Tradition">
+              <button
+                type="button"
+                className={tradition === "hindustani" ? "active" : ""}
+                onClick={() => setTradition("hindustani")}
               >
-                <option value="">— none —</option>
-                {availableRagas.map((raga) => (
-                  <option key={raga.id} value={raga.id}>
-                    {raga.name}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <div className="hint raga-no-matches">No matches found</div>
-            )}
-          </div>
+                Hindustani
+              </button>
 
-          <div className="panel-spacer" />
+              <button
+                type="button"
+                className={tradition === "carnatic" ? "active" : ""}
+                onClick={() => setTradition("carnatic")}
+              >
+                Carnatic
+              </button>
+            </div>
 
-          <h2>{tradition === "hindustani" ? "Arohana" : "Aroganam"}</h2>
-          <div className="scale-grid">
-            <ChoiceCycleButton title="Sa" value={"Sa"} options={["Sa"]} tradition={tradition} isFixed />
-            <ChoiceCycleButton title="Ri" value={arohanaChoices.ri} options={visibleRiOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ri: newValue }))} />
-            <ChoiceCycleButton title="Ga" value={arohanaChoices.ga} options={visibleGaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ga: newValue }))} />
-            <ChoiceCycleButton title="Ma" value={arohanaChoices.ma} options={visibleMaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ma: newValue }))} />
-            <ChoiceCycleButton title="Pa" value={arohanaChoices.pa} options={visiblePaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, pa: newValue }))} />
-            <ChoiceCycleButton title="Dha" value={arohanaChoices.dha} options={visibleDhaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, dha: newValue }))} />
-            <ChoiceCycleButton title="Ni" value={arohanaChoices.ni} options={visibleNiOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ni: newValue }))} />
-          </div>
+            <div className="panel-spacer" />
 
-          <h2 className="section-title-spaced">
-            {tradition === "hindustani" ? "Avarohana" : "Avaroganam"}
-          </h2>
-          <div className="scale-grid">
-            <ChoiceCycleButton title="Ni" value={avarohanaChoices.ni} options={visibleNiOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ni: newValue }))} />
-            <ChoiceCycleButton title="Dha" value={avarohanaChoices.dha} options={visibleDhaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, dha: newValue }))} />
-            <ChoiceCycleButton title="Pa" value={avarohanaChoices.pa} options={visiblePaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, pa: newValue }))} />
-            <ChoiceCycleButton title="Ma" value={avarohanaChoices.ma} options={visibleMaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ma: newValue }))} />
-            <ChoiceCycleButton title="Ga" value={avarohanaChoices.ga} options={visibleGaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ga: newValue }))} />
-            <ChoiceCycleButton title="Ri" value={avarohanaChoices.ri} options={visibleRiOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ri: newValue }))} />
-            <ChoiceCycleButton title="Sa" value={"Sa"} options={["Sa"]} tradition={tradition} isFixed />
-          </div>
-        </section>
+            <div className="raga-header-row">
+              <div className="subsection-label">
+                {tradition === "hindustani" ? "Rāg" : "Ragam"}
+              </div>
+
+              <div className="hint raga-found-count">
+                {availableRagas.length}{" "}
+                {tradition === "hindustani"
+                  ? availableRagas.length === 1
+                    ? "rāg found"
+                    : "rāgs found"
+                  : availableRagas.length === 1
+                    ? "ragam found"
+                    : "ragams found"}
+              </div>
+            </div>
+
+            <div className="raga-select-row">
+              <input
+                type="text"
+                placeholder={tradition === "hindustani" ? "Search rāg..." : "Search ragam..."}
+                value={ragaSearch}
+                onChange={(e) => setRagaSearch(e.target.value)}
+              />
+
+              {availableRagas.length > 0 ? (
+                <select
+                  value={selectedRagaId}
+                  onChange={(e) => setSelectedRagaId(e.target.value)}
+                >
+                  <option value="">— none —</option>
+                  {availableRagas.map((raga) => (
+                    <option key={raga.id} value={raga.id}>
+                      {raga.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <div className="hint raga-no-matches">No matches found</div>
+              )}
+            </div>
+
+            <div className="panel-spacer" />
+
+            <h2>{tradition === "hindustani" ? "Arohana" : "Aroganam"}</h2>
+            <div className="scale-grid">
+              <ChoiceCycleButton title="Sa" value={"Sa"} options={["Sa"]} tradition={tradition} isFixed />
+              <ChoiceCycleButton title="Ri" value={arohanaChoices.ri} options={visibleRiOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ri: newValue }))} />
+              <ChoiceCycleButton title="Ga" value={arohanaChoices.ga} options={visibleGaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ga: newValue }))} />
+              <ChoiceCycleButton title="Ma" value={arohanaChoices.ma} options={visibleMaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ma: newValue }))} />
+              <ChoiceCycleButton title="Pa" value={arohanaChoices.pa} options={visiblePaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, pa: newValue }))} />
+              <ChoiceCycleButton title="Dha" value={arohanaChoices.dha} options={visibleDhaOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, dha: newValue }))} />
+              <ChoiceCycleButton title="Ni" value={arohanaChoices.ni} options={visibleNiOptions} tradition={tradition} onChange={(newValue) => setArohanaChoices((prev) => ({ ...prev, ni: newValue }))} />
+            </div>
+
+            <h2 className="section-title-spaced">
+              {tradition === "hindustani" ? "Avarohana" : "Avaroganam"}
+            </h2>
+            <div className="scale-grid">
+              <ChoiceCycleButton title="Ni" value={avarohanaChoices.ni} options={visibleNiOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ni: newValue }))} />
+              <ChoiceCycleButton title="Dha" value={avarohanaChoices.dha} options={visibleDhaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, dha: newValue }))} />
+              <ChoiceCycleButton title="Pa" value={avarohanaChoices.pa} options={visiblePaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, pa: newValue }))} />
+              <ChoiceCycleButton title="Ma" value={avarohanaChoices.ma} options={visibleMaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ma: newValue }))} />
+              <ChoiceCycleButton title="Ga" value={avarohanaChoices.ga} options={visibleGaOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ga: newValue }))} />
+              <ChoiceCycleButton title="Ri" value={avarohanaChoices.ri} options={visibleRiOptions} tradition={tradition} onChange={(newValue) => setAvarohanaChoices((prev) => ({ ...prev, ri: newValue }))} />
+              <ChoiceCycleButton title="Sa" value={"Sa"} options={["Sa"]} tradition={tradition} isFixed />
+            </div>
+          </section>
+        )}
 
         <section id="mic-panel" className="panel mic-panel">
           <h2>Microphone input</h2>
@@ -2954,7 +3571,7 @@ export default function TunerApp() {
           <div className="hint">RMS: {inputLevel.toFixed(4)}</div>
         </section>
 
-        {showDroneSettings && (
+        {showDroneSettings && modeUi.showDroneSettings && (
         <section
           id="drone-panel"
           className="panel drone-panel"

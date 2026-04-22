@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:swara": "vite --mode swara",
+    "dev:micro": "vite --mode micro",
+    "build:swara": "tsc -b && vite build --mode swara",
+    "build:micro": "tsc -b && vite build --mode micro"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
