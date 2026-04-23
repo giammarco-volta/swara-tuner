@@ -28,6 +28,13 @@ export default function MicroLanding() {
           </ul>
 
           <p>
+            These systems are often described using two equivalent notations: 
+            <strong>TET</strong> (tone equal temperament) and <strong>EDO</strong> (equal 
+            divisions of the octave). For example, <strong>31-TET</strong> is also known as 
+            <strong>31-EDO</strong>, or 31 equal divisions of the octave.
+          </p>
+
+          <p>
             All of these belong to the world of <strong>microtonal</strong> music, where intervals smaller 
             than the semitone — <em>microintervals</em> — play a central role.
           </p>
@@ -142,7 +149,7 @@ export default function MicroLanding() {
       <p>
         Suggestions, corrections, or ideas are very welcome.
         <br />
-        <a href="mailto:feedback@naadalab.com?subject=Swara Tuner Feedback">
+        <a href="mailto:feedback@naadalab.com?subject=Microtonal Tuner Feedback">
           Send feedback
         </a>
       </p>
