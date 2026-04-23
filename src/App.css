@@ -503,7 +503,7 @@ td:last-child {
   text-align: right;
 }
 
-td:thead {
+td:head {
   text-align: left;
 }
 
