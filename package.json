@@ -8,8 +8,13 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+
+    "prebuild:swara": "copy /Y public\\sitemap-swara.xml public\\sitemap.xml",
+    "prebuild:micro": "copy /Y public\\sitemap-micro.xml public\\sitemap.xml",
+
     "dev:swara": "vite --mode swara",
     "dev:micro": "vite --mode micro",
+
     "build:swara": "tsc -b && vite build --mode swara",
     "build:micro": "tsc -b && vite build --mode micro"
   },
