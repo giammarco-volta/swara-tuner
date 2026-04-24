@@ -120,44 +120,44 @@ function getSwaraLabel(swara: string, tradition: Tradition): string {
 
   if (tradition === "carnatic") {
     const carnaticMap: Record<string, string> = {
-      Sa: "sa",
-      Ri1: "r1",
-      Ri2: "r2",
-      Ri3: "r3",
-      Ga1: "g1",
-      Ga2: "g2",
-      Ga3: "g3",
-      Ma1: "m1",
-      Ma2: "m2",
-      Pa: "pa",
+      Sa:   "sa",
+      Ri1:  "r1",
+      Ri2:  "r2",
+      Ri3:  "r3",
+      Ga1:  "g1",
+      Ga2:  "g2",
+      Ga3:  "g3",
+      Ma1:  "m1",
+      Ma2:  "m2",
+      Pa:   "pa",
       Dha1: "d1",
       Dha2: "d2",
       Dha3: "d3",
-      Ni1: "n1",
-      Ni2: "n2",
-      Ni3: "n3",
+      Ni1:  "n1",
+      Ni2:  "n2",
+      Ni3:  "n3",
     };
 
     return carnaticMap[swara] ?? swara;
   }
 
   const hindustaniMap: Record<string, string> = {
-    Sa: "S",
-    Ri1: "r",
-    Ri2: "R",
-    Ri3: "",
-    Ga1: "",
-    Ga2: "g",
-    Ga3: "G",
-    Ma1: "M",
-    Ma2: "M'",
-    Pa: "P",
+    Sa:   "S",
+    Ri1:  "r",
+    Ri2:  "R",
+    Ri3:  "",
+    Ga1:  "",
+    Ga2:  "g",
+    Ga3:  "G",
+    Ma1:  "M",
+    Ma2:  "M'",
+    Pa:   "P",
     Dha1: "d",
     Dha2: "D",
-    Dha3: "",
-    Ni1: "",
-    Ni2: "n",
-    Ni3: "N",
+    Dha3:  "",
+    Ni1:  "",
+    Ni2:  "n",
+    Ni3:  "N",
   };
 
   return hindustaniMap[swara] ?? "";
@@ -418,7 +418,7 @@ export default function TunerApp() {
   const [ragaSearch, setRagaSearch] = useState("");
 
   const [pitchDetectorMode] = useState<PitchDetectorMode>("mpm");
-  const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>(mode === "micro" ? "octave" : "swara");
+  const [tunerViewMode, setTunerViewMode] = useState<TunerViewMode>("octave");
 
   const [inputGain, setInputGain] = useState(2.5);
   const [useCompression, setUseCompression] = useState(true);
@@ -619,16 +619,12 @@ export default function TunerApp() {
   }, [droneBpm]);
 
   useEffect(() => {
-    if (tunerViewMode !== "swara") {
-      setSelectedSwaraId(null);
-    }
-    if (tunerViewMode !== "sruti") {
-      setSelectedSrutiKey(null);
-    }
     if (tunerViewMode !== "octave") {
+      setSelectedSwaraId(null);
+      setSelectedSrutiKey(null);
       setSelectedOctaveNoteKey(null);
     }
-  },[tunerViewMode]);
+  }, [tunerViewMode]);
 
   useEffect(() => {
     droneSaHzRef.current = droneSaHz;
@@ -1993,23 +1989,6 @@ function getCircleStatusText(): string {
               ? "#ffd60a"
               : "#ff453a";
 
-  const currentPitchText =
-    mode === "micro"
-      ? displayedOctaveNote && octaveDeviationCents !== null
-        ? `${displayedOctaveNote.label}${
-            Math.round(octaveDeviationCents) === 0
-              ? ""
-              : ` ${octaveDeviationCents > 0 ? "+" : ""}${Math.round(octaveDeviationCents)} cents`
-          }`
-        : "--"
-      : result?.displayedSwara && result.deviationCents !== null && result.deviationCents !== undefined
-        ? `${getSwaraLabel(result.displayedSwara, tradition)}${
-            Math.round(result.deviationCents) === 0
-              ? ""
-              : ` ${result.deviationCents > 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`
-          }`
-        : "--";      
-
   const octaveViewLabels = useMemo(() => {
     return octaveNotes.map((note) => {
       const angle = centsToCircleAngle(note.cents);
@@ -2296,7 +2275,7 @@ function getCircleStatusText(): string {
         const labelPos = polarToCartesian(
           circleCenter,
           circleCenter,
-          circleRadius + 26,
+          circleRadius + 52,
           angle
         );
 
@@ -2398,36 +2377,36 @@ function getCircleStatusText(): string {
     });
   }, [circleSwaraLabels]);
 
-  const srutiViewTicks = useMemo(() => {
-    return srutiMarkers.map((marker) => {
-      const angle = centsToCircleAngle(marker.cents);
+  // const srutiViewTicks = useMemo(() => {
+  //   return srutiMarkers.map((marker) => {
+  //     const angle = centsToCircleAngle(marker.cents);
 
-      const inner = polarToCartesian(
-        circleCenter,
-        circleCenter,
-        circleRadius - circleStrokeWidth / 2,
-        angle
-      );
+  //     const inner = polarToCartesian(
+  //       circleCenter,
+  //       circleCenter,
+  //       circleRadius - circleStrokeWidth / 2,
+  //       angle
+  //     );
 
-      const outer = polarToCartesian(
-        circleCenter,
-        circleCenter,
-        circleRadius + circleStrokeWidth / 2,
-        angle
-      );
+  //     const outer = polarToCartesian(
+  //       circleCenter,
+  //       circleCenter,
+  //       circleRadius + circleStrokeWidth / 2,
+  //       angle
+  //     );
 
-      return {
-        key: `sruti-tick-${marker.key}`,
-        swara: marker.swara,
-        cents: marker.cents,
-        isDefault: marker.isDefault,
-        x1: inner.x,
-        y1: inner.y,
-        x2: outer.x,
-        y2: outer.y,
-      };
-    });
-  }, [srutiMarkers]);
+  //     return {
+  //       key: `sruti-tick-${marker.key}`,
+  //       swara: marker.swara,
+  //       cents: marker.cents,
+  //       isDefault: marker.isDefault,
+  //       x1: inner.x,
+  //       y1: inner.y,
+  //       x2: outer.x,
+  //       y2: outer.y,
+  //     };
+  //   });
+  // }, [srutiMarkers]);
 
   const srutiViewLabels = useMemo(() => {
     return srutiMarkers.map((marker, index) => {
@@ -2436,7 +2415,7 @@ function getCircleStatusText(): string {
       const pos = polarToCartesian(
         circleCenter,
         circleCenter,
-        circleRadius + 34,
+        circleRadius + 26,
         angle
       );
 
@@ -2481,7 +2460,7 @@ function getCircleStatusText(): string {
     return best;
   }, [isCalibrating, result, srutiMarkers]);
   
-  const displayedSrutiMarker = selectedSrutiMarker ?? nearestSrutiMarker;
+  const displayedSrutiMarker = nearestSrutiMarker ?? selectedSrutiMarker;
 
   const displayedSrutiLabel = isCalibrating
     ? ""
@@ -2514,15 +2493,40 @@ function getCircleStatusText(): string {
     return match ? match.index : null;
   }, [displayedSrutiMarker, srutiViewLabels]);
 
-  const nearestSrutiNumber = useMemo(() => {
-    if (!nearestSrutiMarker) return null;
+  const currentPitchText =
+    mode === "micro"
+      ? displayedOctaveNote && octaveDeviationCents !== null
+        ? `${displayedOctaveNote.label}${
+            Math.round(octaveDeviationCents) === 0
+              ? ""
+              : ` ${octaveDeviationCents > 0 ? "+" : ""}${Math.round(octaveDeviationCents)} cents`
+          }`
+        : "--"
+      : result?.displayedSwara
+        ? `${getSwaraLabel(result.displayedSwara, tradition)}${
+            result.deviationCents !== null && result.deviationCents !== undefined
+              ? Math.round(result.deviationCents) === 0
+                ? ""
+                : ` ${result.deviationCents > 0 ? "+" : ""}${Math.round(result.deviationCents)} cents`
+              : ""
+          }${
+            displayedSrutiMarker && displayedSrutiNumber !== null
+              ? ` (${displayedSrutiNumber}: ${displayedSrutiMarker.label})`
+              : ""
+          }`
+        : selectedSrutiMarker && displayedSrutiNumber !== null
+          ? `${getSwaraLabel(selectedSrutiMarker.swara, tradition)} (${displayedSrutiNumber}: ${selectedSrutiMarker.label})`
+          : "--";
 
-    const match = srutiViewLabels.find(
-      (label) => label.key === `sruti-label-${nearestSrutiMarker.key}`
-    );
+  // const nearestSrutiNumber = useMemo(() => {
+  //   if (!nearestSrutiMarker) return null;
 
-    return match ? match.index : null;
-  }, [nearestSrutiMarker, srutiViewLabels]);
+  //   const match = srutiViewLabels.find(
+  //     (label) => label.key === `sruti-label-${nearestSrutiMarker.key}`
+  //   );
+
+  //   return match ? match.index : null;
+  // }, [nearestSrutiMarker, srutiViewLabels]);
 
   const circleNeedleAngle =
     isCalibrating || !result || result.centsFromSa === null
@@ -2540,11 +2544,11 @@ function getCircleStatusText(): string {
       ? getSwaraLabel(result.displayedSwara, tradition)
       : "--";
 
-  const circleCenterSrutiText = isCalibrating
-    ? "--"
-    : nearestSrutiNumber !== null
-      ? String(nearestSrutiNumber)
-      : "--";
+  // const circleCenterSrutiText = isCalibrating
+  //   ? "--"
+  //   : nearestSrutiNumber !== null
+  //     ? String(nearestSrutiNumber)
+  //     : "--";
 
   const circleStatusText = getCircleStatusText();
 
@@ -2607,40 +2611,40 @@ function getCircleStatusText(): string {
     return d;
   }
 
-  function handleSrutiRingPointer(
-    event: React.MouseEvent<SVGCircleElement, MouseEvent>
-  ) {
-    const svg = event.currentTarget.ownerSVGElement;
-    if (!svg) return;
+  // function handleSrutiRingPointer(
+  //   event: React.MouseEvent<SVGCircleElement, MouseEvent>
+  // ) {
+  //   const svg = event.currentTarget.ownerSVGElement;
+  //   if (!svg) return;
 
-    const rect = svg.getBoundingClientRect();
+  //   const rect = svg.getBoundingClientRect();
 
-    const scaleX = circleSize / rect.width;
-    const scaleY = circleSize / rect.height;
+  //   const scaleX = circleSize / rect.width;
+  //   const scaleY = circleSize / rect.height;
 
-    const x = (event.clientX - rect.left) * scaleX;
-    const y = (event.clientY - rect.top) * scaleY;
+  //   const x = (event.clientX - rect.left) * scaleX;
+  //   const y = (event.clientY - rect.top) * scaleY;
 
-    const dx = x - circleCenter;
-    const dy = y - circleCenter;
-    const angle = Math.atan2(dy, dx);
+  //   const dx = x - circleCenter;
+  //   const dy = y - circleCenter;
+  //   const angle = Math.atan2(dy, dx);
 
-    let best = srutiViewLabels[0];
-    let bestDist = Number.POSITIVE_INFINITY;
+  //   let best = srutiViewLabels[0];
+  //   let bestDist = Number.POSITIVE_INFINITY;
 
-    for (const label of srutiViewLabels) {
-      const labelAngle = centsToCircleAngle(label.cents);
-      const dist = angleDistance(angle, labelAngle);
+  //   for (const label of srutiViewLabels) {
+  //     const labelAngle = centsToCircleAngle(label.cents);
+  //     const dist = angleDistance(angle, labelAngle);
 
-      if (dist < bestDist) {
-        bestDist = dist;
-        best = label;
-      }
-    }
+  //     if (dist < bestDist) {
+  //       bestDist = dist;
+  //       best = label;
+  //     }
+  //   }
 
-    setSelectedSrutiKey(best.key.replace("sruti-label-", ""));
-    void playSrutiPreview(best.cents);
-  }
+  //   setSelectedSrutiKey(best.key.replace("sruti-label-", ""));
+  //   void playSrutiPreview(best.cents);
+  // }
 
   const swaraCircleSvg = (
     <div className="circle-container">
@@ -2707,6 +2711,42 @@ function getCircleStatusText(): string {
             strokeLinecap="round"
           />
         ))}
+
+        {srutiViewLabels.map((label) => {
+          const isInRaga =
+            config.arohana.includes(label.swara) ||
+            config.avarohana.includes(label.swara);
+
+          return (
+            <g
+              key={`combined-${label.key}`}
+              onClick={() => {
+                setSelectedSrutiKey(label.key.replace("sruti-label-", ""));
+                void playSrutiPreview(label.cents);
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              <circle
+                cx={label.x}
+                cy={label.y}
+                r={10}
+                fill="transparent"
+              />
+
+              <text
+                x={label.x}
+                y={label.y}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill={isInRaga ? "rgba(255,255,255,0.82)" : "rgba(255,255,255,0.32)"}
+                fontSize={label.isDefault ? 11 : 9}
+                fontWeight={label.isDefault ? 700 : 500}
+              >
+                {label.index}
+              </text>
+            </g>
+          );
+        })}
 
         {circleNeedleEnd && (
           <>
@@ -2776,137 +2816,137 @@ function getCircleStatusText(): string {
     </div>
   );
 
-  const srutiCircleSvg = (
-    <div className="circle-container">
-      <svg
-        viewBox={`0 0 ${circleSize} ${circleSize}`}
-        role="img"
-        aria-label="Sruti circle"
-        className="circle-svg"
-      >
-        <circle
-          cx={circleCenter}
-          cy={circleCenter}
-          r={circleRadius}
-          fill="none"
-          stroke="rgba(255,255,255,0.16)"
-          strokeWidth={circleStrokeWidth}
-        />
+  // const srutiCircleSvg = (
+  //   <div className="circle-container">
+  //     <svg
+  //       viewBox={`0 0 ${circleSize} ${circleSize}`}
+  //       role="img"
+  //       aria-label="Sruti circle"
+  //       className="circle-svg"
+  //     >
+  //       <circle
+  //         cx={circleCenter}
+  //         cy={circleCenter}
+  //         r={circleRadius}
+  //         fill="none"
+  //         stroke="rgba(255,255,255,0.16)"
+  //         strokeWidth={circleStrokeWidth}
+  //       />
 
-        {circleSegments.outerSegments.map((segment) => (
-          <path
-            key={`sruti-${segment.key}`}
-            d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
-            fill="none"
-            stroke={segment.color}
-            strokeWidth={circleStrokeWidth}
-            strokeLinecap="butt"
-            opacity={0.95}
-          />
-        ))}
+  //       {circleSegments.outerSegments.map((segment) => (
+  //         <path
+  //           key={`sruti-${segment.key}`}
+  //           d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
+  //           fill="none"
+  //           stroke={segment.color}
+  //           strokeWidth={circleStrokeWidth}
+  //           strokeLinecap="butt"
+  //           opacity={0.95}
+  //         />
+  //       ))}
 
-        {circleSegments.centralSegments.map((segment) => (
-          <path
-            key={`sruti-${segment.key}`}
-            d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
-            fill="none"
-            stroke={segment.color}
-            strokeWidth={circleStrokeWidth}
-            strokeLinecap="butt"
-          />
-        ))}
+  //       {circleSegments.centralSegments.map((segment) => (
+  //         <path
+  //           key={`sruti-${segment.key}`}
+  //           d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
+  //           fill="none"
+  //           stroke={segment.color}
+  //           strokeWidth={circleStrokeWidth}
+  //           strokeLinecap="butt"
+  //         />
+  //       ))}
 
-        {srutiViewTicks.map((tick) => (
-          <line
-            key={tick.key}
-            x1={tick.x1}
-            y1={tick.y1}
-            x2={tick.x2}
-            y2={tick.y2}
-            stroke={tick.isDefault ? "#000" : "rgba(0,0,0,0.35)"}
-            strokeWidth={tick.isDefault ? 1.6 : 1.2}
-            strokeLinecap="round"
-          />
-        ))}
+  //       {srutiViewTicks.map((tick) => (
+  //         <line
+  //           key={tick.key}
+  //           x1={tick.x1}
+  //           y1={tick.y1}
+  //           x2={tick.x2}
+  //           y2={tick.y2}
+  //           stroke={tick.isDefault ? "#000" : "rgba(0,0,0,0.35)"}
+  //           strokeWidth={tick.isDefault ? 1.6 : 1.2}
+  //           strokeLinecap="round"
+  //         />
+  //       ))}
 
-        {circleNeedleEnd && (
-          <>
-            <line
-              x1={circleCenter}
-              y1={circleCenter}
-              x2={circleNeedleEnd.x}
-              y2={circleNeedleEnd.y}
-              stroke="white"
-              strokeWidth={3}
-              strokeLinecap="round"
-            />
-            <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
-          </>
-        )}
+  //       {circleNeedleEnd && (
+  //         <>
+  //           <line
+  //             x1={circleCenter}
+  //             y1={circleCenter}
+  //             x2={circleNeedleEnd.x}
+  //             y2={circleNeedleEnd.y}
+  //             stroke="white"
+  //             strokeWidth={3}
+  //             strokeLinecap="round"
+  //           />
+  //           <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
+  //         </>
+  //       )}
 
-        {srutiViewLabels.map((label) => {
-          const isInRaga =
-            config.arohana.includes(label.swara) ||
-            config.avarohana.includes(label.swara);
+  //       {srutiViewLabels.map((label) => {
+  //         const isInRaga =
+  //           config.arohana.includes(label.swara) ||
+  //           config.avarohana.includes(label.swara);
 
-          return (
-            <g key={label.key}>
-              <circle
-                cx={label.x}
-                cy={label.y}
-                r={12}
-                fill="transparent"
-              />
+  //         return (
+  //           <g key={label.key}>
+  //             <circle
+  //               cx={label.x}
+  //               cy={label.y}
+  //               r={12}
+  //               fill="transparent"
+  //             />
 
-              <text
-                x={label.x}
-                y={label.y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill={isInRaga ? "#4A7FD1" : "#666"}
-                fontSize={label.isDefault ? 13 : 11}
-                fontWeight={label.isDefault ? 700 : 500}
-              >
-                {label.index}
-              </text>
-            </g>
-          );
-        })}
+  //             <text
+  //               x={label.x}
+  //               y={label.y}
+  //               textAnchor="middle"
+  //               dominantBaseline="middle"
+  //               fill={isInRaga ? "#4A7FD1" : "#666"}
+  //               fontSize={label.isDefault ? 13 : 11}
+  //               fontWeight={label.isDefault ? 700 : 500}
+  //             >
+  //               {label.index}
+  //             </text>
+  //           </g>
+  //         );
+  //       })}
 
-        <text
-          x={circleCenter}
-          y={circleCenter - 8}
-          textAnchor="middle"
-          fill={circleSwaraColor}
-          fontSize="36"
-          fontWeight="700"
-        >
-          {circleCenterSrutiText}
-        </text>
+  //       <text
+  //         x={circleCenter}
+  //         y={circleCenter - 8}
+  //         textAnchor="middle"
+  //         fill={circleSwaraColor}
+  //         fontSize="36"
+  //         fontWeight="700"
+  //       >
+  //         {circleCenterSrutiText}
+  //       </text>
 
-        <text
-          x={circleCenter}
-          y={circleCenter + 24}
-          textAnchor="middle"
-          fill="rgba(255,255,255,0.88)"
-          fontSize="15"
-        >
-          {circleStatusText}
-        </text>
+  //       <text
+  //         x={circleCenter}
+  //         y={circleCenter + 24}
+  //         textAnchor="middle"
+  //         fill="rgba(255,255,255,0.88)"
+  //         fontSize="15"
+  //       >
+  //         {circleStatusText}
+  //       </text>
 
-        <circle
-          cx={circleCenter}
-          cy={circleCenter}
-          r={circleRadius + 34}
-          fill="none"
-          stroke="transparent"
-          strokeWidth={28}
-          pointerEvents="stroke"
-          onClick={handleSrutiRingPointer}
-        />
-      </svg>
-    </div>
-  );
+  //       <circle
+  //         cx={circleCenter}
+  //         cy={circleCenter}
+  //         r={circleRadius + 34}
+  //         fill="none"
+  //         stroke="transparent"
+  //         strokeWidth={28}
+  //         pointerEvents="stroke"
+  //         onClick={handleSrutiRingPointer}
+  //       />
+  //     </svg>
+  //   </div>
+  // );
 
 const octaveCircleSvg = (
   <div className="circle-container">
@@ -3106,42 +3146,23 @@ const octaveCircleSvg = (
               Mic settings
             </a>
           </div>
-          <div className="view-toggle">
-            <button
-              type="button"
-              onClick={() => setTunerViewMode("meter")}
-              className={tunerViewMode === "meter" ? "active" : ""}
-            >
-              Meter view
-            </button>
-            {modeUi.showSwaraView && (
+            <div className="view-toggle">
               <button
                 type="button"
-                onClick={() => setTunerViewMode("swara")}
-                className={tunerViewMode === "swara" ? "active" : ""}
+                onClick={() => setTunerViewMode("meter")}
+                className={tunerViewMode === "meter" ? "active" : ""}
               >
-                Swara view
+                Meter view
               </button>
-            )}
-            {modeUi.showSrutiView && (
-              <button
-                type="button"
-                onClick={() => setTunerViewMode("sruti")}
-                className={tunerViewMode === "sruti" ? "active" : ""}
-              >
-                Śruti view
-              </button>
-            )}
-            {modeUi.showOctaveView && (
+
               <button
                 type="button"
                 onClick={() => setTunerViewMode("octave")}
                 className={tunerViewMode === "octave" ? "active" : ""}
               >
-                Octave view
+                {mode === "swara" ? "Sthāyi view" : "Octave view"}
               </button>
-            )}
-          </div>
+            </div>
 
           {modeUi.showRagaRef && (
             <div className="raga-toolbar">
@@ -3224,50 +3245,24 @@ const octaveCircleSvg = (
               <div className="led-text">{circleStatusText}</div>
             </div>
           </>
-        ) : tunerViewMode === "swara" ? (
+        ) : mode === "swara" ? (
           swaraCircleSvg
-        ) : tunerViewMode === "sruti" ? (
-          srutiCircleSvg
         ) : (
           octaveCircleSvg
         )}
 
-        {tunerViewMode === "sruti" && (
+        {tunerViewMode === "octave" && (
           <div
             className="hint"
             style={{
-              marginTop: "6px",
+              marginTop: mode === "swara" ? "32px" : "52px",
               textAlign: "center",
               color: "rgba(255,255,255,0.75)",
             }}
           >
-            Tap a sruti to hear it
-          </div>
-        )}
-
-        {tunerViewMode === "swara" && (
-          <div
-            className="hint"
-            style={{
-              marginTop: "6px",
-              textAlign: "center",
-              color: "rgba(255,255,255,0.75)",
-            }}
-          >
-            Tap a swara to hear it
-          </div>
-        )}
-
-         {tunerViewMode === "octave" && (
-          <div
-            className="hint"
-            style={{
-              marginTop: "52px",
-              textAlign: "center",
-              color: "rgba(255,255,255,0.75)",
-            }}
-          >
-            Tap a note to hear it
+            {mode === "swara"
+              ? "Tap a swara or sruti to hear it"
+              : "Tap a note to hear it"}
           </div>
         )}
 
@@ -3460,7 +3455,7 @@ const octaveCircleSvg = (
 
             <div className="readout">±{toleranceCents} cents</div>
               <div className="hint current-pitch">
-                Current pitch: {currentPitchText}
+                {currentPitchText}
               </div>
           </div>
         </div>
