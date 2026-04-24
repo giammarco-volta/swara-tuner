@@ -503,10 +503,6 @@ td:last-child {
   text-align: right;
 }
 
-td:head {
-  text-align: left;
-}
-
 tr:nth-child(1),
 tr:nth-child(14) {
   font-weight: bold;

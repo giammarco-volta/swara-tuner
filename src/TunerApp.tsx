@@ -2060,7 +2060,6 @@ function getCircleStatusText(): string {
     toIndex: number;
     stroke: string;
     strokeWidth?: number;
-    dashed?: boolean;
   };
 
   const octaveFifthConnections = useMemo<FifthConnection[]>(() => {
@@ -2082,6 +2081,44 @@ function getCircleStatusText(): string {
         toIndex: (x + 11) % 19,
         stroke: "rgba(210,170,175,0.42)",
       }));
+    }
+
+    const AS_INDEX = 15;
+    const GB_INDEX = 8;
+
+    if (selectedTemperament === "pythagorean") {
+      return Array.from({ length: 17 }, (_, x) => ({
+        key: `fifth-17-${x}`,
+        fromIndex: x,
+        toIndex: (x + 10) % 17,
+        stroke: "rgba(210,170,175,0.42)",
+      })).filter(edge => !(edge.fromIndex === AS_INDEX && edge.toIndex === GB_INDEX));
+    }
+
+    const F2_INDEX = 10;
+    const FS1_INDEX = 11;
+    const FS2_INDEX = 12;
+    const DB1_INDEX = 1;
+    const DB2_INDEX = 2;
+    const D1_INDEX = 3;
+
+    const excludedEdges = [
+      [F2_INDEX, DB1_INDEX],   // F' -> D♭
+      [FS1_INDEX, DB2_INDEX],  // F♯ -> D♭'
+      [FS2_INDEX, D1_INDEX],   // F♯' -> D
+    ];
+
+    if (selectedTemperament === "indian") {
+      return Array.from({ length: 22 }, (_, x) => ({
+        key: `fifth-22-${x}`,
+        fromIndex: x,
+        toIndex: (x + 13) % 22,
+        stroke: "rgba(210,170,175,0.42)",
+      })).filter(edge =>
+        !excludedEdges.some(
+          ([from, to]) => edge.fromIndex === from && edge.toIndex === to
+        )
+      );
     }
 
     if (selectedTemperament === "31tet") {
@@ -2119,19 +2156,16 @@ function getCircleStatusText(): string {
     if (selectedTemperament === "meantone") {
       return Array.from({ length: 19 }, (_, x) => {
         const to = (x + 11) % 19;
-        const isWolf =
-          (x === 18 && to === 10) || (x === 10 && to === 18);
 
         return {
           key: `fifth-meantone-${x}`,
           fromIndex: x,
           toIndex: to,
-          stroke: isWolf
-            ? "rgba(180,165,165,0.28)"
-            : "rgba(210,170,175,0.42)",
-          dashed: isWolf,
+          stroke: "rgba(210,170,175,0.42)",
         };
-      });
+      }).filter(edge =>
+        !(edge.fromIndex === 18 && edge.toIndex === 10)
+      );
     }
 
     return [];
@@ -2919,7 +2953,6 @@ const octaveCircleSvg = (
             y2={line.y2}
             stroke={line.stroke}
             strokeWidth={line.strokeWidth ?? 1.5}
-            strokeDasharray={line.dashed ? "5 4" : undefined}
             strokeLinecap="round"
           />
         ))}

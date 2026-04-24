@@ -74,6 +74,21 @@ export default function MicroLanding() {
             two interleaved 12-TET systems, offset by a quarter tone.
           </p>
 
+          <p>
+            This tuner also includes the traditional 22 śruti division of the octave from Indian classical music,
+            as it naturally aligns with a microtonal approach to pitch. However, these 22 positions should not be understood
+            as fixed notes. With the exception of the tonic (Sa) and the fifth (Pa), which are treated as stable reference points,
+            the other swaras are better interpreted as pairs of closely spaced śruti defining a range rather than a single pitch.
+            Within these ranges, intonation is fluid: performers may favor one extreme, the other, or intermediate positions
+            depending on the expressive context and the specific raga, each of which has its own nuanced intonational identity.
+
+            If you would like to explore this system in more depth or challenge yourself with these microtonal nuances,
+            you can try the dedicated{" "}
+            <a href="https://swaratuner.naadalab.com" target="_blank" rel="noopener noreferrer">
+              Swara Tuner
+            </a> application.
+          </p>
+
           <h2>Listening Examples</h2>
 
             <p>

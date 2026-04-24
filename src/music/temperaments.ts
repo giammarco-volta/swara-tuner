@@ -3,7 +3,9 @@ export type TemperamentId =
   | "19tet"
   | "31tet"
   | "quarter"
-  | "meantone";
+  | "meantone"
+  | "pythagorean"
+  | "indian";
 
 export interface TemperamentOption {
   id: TemperamentId;
@@ -16,6 +18,8 @@ export const TEMPERAMENT_OPTIONS: TemperamentOption[] = [
   { id: "quarter", label: "24-TET" },
   { id: "31tet", label: "31-TET" },
   { id: "meantone", label: "Meantone 1/4 comma" },
+  { id: "pythagorean", label: "Pythagorean" },
+  { id: "indian", label: "Indian" },
 ];
 
 export interface OctaveNoteDef {
@@ -144,5 +148,50 @@ export const TEMPERAMENT_NOTE_MAP: Record<TemperamentId, OctaveNoteDef[]> = {
     { key: "bb", label: "B♭",	alias: "",	cents: 1006.84 },
     { key: "b",  label: "B",  alias: "",	cents: 1082.89 },
     { key: "bs", label: "B♯",	alias: "",	cents: 1158.94 },
+  ],
+
+  "pythagorean": [
+    { key: "c",  label: "C",  alias: "",	cents: 0 },
+    { key: "db", label: "D♭",	alias: "",	cents: 90 },
+    { key: "cs", label: "C♯",	alias: "",	cents: 114 },
+    { key: "d",  label: "D",  alias: "",	cents: 204 },
+    { key: "eb", label: "E♭",	alias: "",	cents: 294 },
+    { key: "ds", label: "D♯",	alias: "",	cents: 318 },
+    { key: "e",  label: "E",  alias: "",	cents: 408 },
+    { key: "f",  label: "F",  alias: "",	cents: 498 },
+    { key: "gb", label: "G♭",	alias: "",	cents: 588 },
+    { key: "fs", label: "F♯",	alias: "",	cents: 612 },
+    { key: "g",  label: "G",	alias: "",	cents: 702 },
+    { key: "ab", label: "A♭",	alias: "",	cents: 792 },
+    { key: "gs", label: "G♯",	alias: "",	cents: 816 },
+    { key: "a",  label: "A",  alias: "",	cents: 906 },
+    { key: "bb", label: "B♭",	alias: "",	cents: 996 },
+    { key: "as", label: "A♯",	alias: "",	cents: 1020 },
+    { key: "b",  label: "B",  alias: "",	cents: 1110 },
+  ],
+
+  "indian": [
+    { key: "c",   label: "C",   alias: "",     cents: 0 },
+    { key: "db1", label: "D♭",  alias: "",     cents: 90 },
+    { key: "db2", label: "D♭'",	alias: "",     cents: 112 },
+    { key: "d1",  label: "D",   alias: "E♭♭",  cents: 182 },
+    { key: "d2",  label: "D'",  alias: "E♭♭'", cents: 204 },
+    { key: "eb1", label: "E♭",	alias: "D♯",   cents: 294 },
+    { key: "eb2", label: "E♭'",	alias: "D♯'",  cents: 316 },
+    { key: "e1",  label: "E",	  alias: "",     cents: 386 },
+    { key: "e2",  label: "E'",	alias: "",     cents: 408 },
+    { key: "f1",  label: "F",   alias: "",     cents: 498 },
+    { key: "f2",  label: "F'",  alias: "",     cents: 520 },
+    { key: "fs1", label: "F♯",  alias: "",     cents: 590 },
+    { key: "fs2", label: "F♯'", alias: "",     cents: 610 },
+    { key: "g",   label: "G",	  alias: "",     cents: 702 },
+    { key: "ab1", label: "A♭",	alias: "",     cents: 792 },
+    { key: "ab2", label: "A♭'",	alias: "",     cents: 814 },
+    { key: "a1",  label: "A",   alias: "B♭♭",  cents: 884 },
+    { key: "a2",  label: "A'",  alias: "B♭♭'", cents: 906 },
+    { key: "bb1", label: "B♭",	alias: "A♯",   cents: 996 },
+    { key: "bb2", label: "B♭'",	alias: "A♯'",  cents: 1018 },
+    { key: "b1",  label: "B",   alias: "",     cents: 1088 },
+    { key: "b2",  label: "B'",  alias: "",     cents: 1110 },
   ],
 };
