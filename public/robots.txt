@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://microtonaltuner.naadalab.com/sitemap.xml
+Sitemap: https://swaratuner.naadalab.com/sitemap.xml

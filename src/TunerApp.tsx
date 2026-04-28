@@ -717,7 +717,18 @@ export default function TunerApp() {
         ? "⅕ tone up and down"
         : selectedTemperament === "quarter"
           ? "¼ tone up and down"
-          : null;      
+          : null;
+
+  const hasDirectionalSwaras = config.arohana.some(
+    (swara) => !config.avarohana.includes(swara)
+  ) || config.avarohana.some(
+    (swara) => !config.arohana.includes(swara)
+  );
+
+  const swaraLegendText =
+    mode === "swara" && hasDirectionalSwaras
+      ? "Arrows ↑ and ↓ indicate swaras used only in arohana or only in avarohana"
+      : null;          
 
   function getStepDurationMs(stepIndex: number, bpm: number): number {
     const unitMs = (60 / bpm) * 1000;
@@ -2518,16 +2529,6 @@ function getCircleStatusText(): string {
           ? `${getSwaraLabel(selectedSrutiMarker.swara, tradition)} (${displayedSrutiNumber}: ${selectedSrutiMarker.label})`
           : "--";
 
-  // const nearestSrutiNumber = useMemo(() => {
-  //   if (!nearestSrutiMarker) return null;
-
-  //   const match = srutiViewLabels.find(
-  //     (label) => label.key === `sruti-label-${nearestSrutiMarker.key}`
-  //   );
-
-  //   return match ? match.index : null;
-  // }, [nearestSrutiMarker, srutiViewLabels]);
-
   const circleNeedleAngle =
     isCalibrating || !result || result.centsFromSa === null
       ? null
@@ -2543,12 +2544,6 @@ function getCircleStatusText(): string {
     : result?.displayedSwara
       ? getSwaraLabel(result.displayedSwara, tradition)
       : "--";
-
-  // const circleCenterSrutiText = isCalibrating
-  //   ? "--"
-  //   : nearestSrutiNumber !== null
-  //     ? String(nearestSrutiNumber)
-  //     : "--";
 
   const circleStatusText = getCircleStatusText();
 
@@ -2815,138 +2810,6 @@ function getCircleStatusText(): string {
       </svg>
     </div>
   );
-
-  // const srutiCircleSvg = (
-  //   <div className="circle-container">
-  //     <svg
-  //       viewBox={`0 0 ${circleSize} ${circleSize}`}
-  //       role="img"
-  //       aria-label="Sruti circle"
-  //       className="circle-svg"
-  //     >
-  //       <circle
-  //         cx={circleCenter}
-  //         cy={circleCenter}
-  //         r={circleRadius}
-  //         fill="none"
-  //         stroke="rgba(255,255,255,0.16)"
-  //         strokeWidth={circleStrokeWidth}
-  //       />
-
-  //       {circleSegments.outerSegments.map((segment) => (
-  //         <path
-  //           key={`sruti-${segment.key}`}
-  //           d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
-  //           fill="none"
-  //           stroke={segment.color}
-  //           strokeWidth={circleStrokeWidth}
-  //           strokeLinecap="butt"
-  //           opacity={0.95}
-  //         />
-  //       ))}
-
-  //       {circleSegments.centralSegments.map((segment) => (
-  //         <path
-  //           key={`sruti-${segment.key}`}
-  //           d={describeArcPath(circleCenter, circleCenter, circleRadius, segment.start, segment.end)}
-  //           fill="none"
-  //           stroke={segment.color}
-  //           strokeWidth={circleStrokeWidth}
-  //           strokeLinecap="butt"
-  //         />
-  //       ))}
-
-  //       {srutiViewTicks.map((tick) => (
-  //         <line
-  //           key={tick.key}
-  //           x1={tick.x1}
-  //           y1={tick.y1}
-  //           x2={tick.x2}
-  //           y2={tick.y2}
-  //           stroke={tick.isDefault ? "#000" : "rgba(0,0,0,0.35)"}
-  //           strokeWidth={tick.isDefault ? 1.6 : 1.2}
-  //           strokeLinecap="round"
-  //         />
-  //       ))}
-
-  //       {circleNeedleEnd && (
-  //         <>
-  //           <line
-  //             x1={circleCenter}
-  //             y1={circleCenter}
-  //             x2={circleNeedleEnd.x}
-  //             y2={circleNeedleEnd.y}
-  //             stroke="white"
-  //             strokeWidth={3}
-  //             strokeLinecap="round"
-  //           />
-  //           <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
-  //         </>
-  //       )}
-
-  //       {srutiViewLabels.map((label) => {
-  //         const isInRaga =
-  //           config.arohana.includes(label.swara) ||
-  //           config.avarohana.includes(label.swara);
-
-  //         return (
-  //           <g key={label.key}>
-  //             <circle
-  //               cx={label.x}
-  //               cy={label.y}
-  //               r={12}
-  //               fill="transparent"
-  //             />
-
-  //             <text
-  //               x={label.x}
-  //               y={label.y}
-  //               textAnchor="middle"
-  //               dominantBaseline="middle"
-  //               fill={isInRaga ? "#4A7FD1" : "#666"}
-  //               fontSize={label.isDefault ? 13 : 11}
-  //               fontWeight={label.isDefault ? 700 : 500}
-  //             >
-  //               {label.index}
-  //             </text>
-  //           </g>
-  //         );
-  //       })}
-
-  //       <text
-  //         x={circleCenter}
-  //         y={circleCenter - 8}
-  //         textAnchor="middle"
-  //         fill={circleSwaraColor}
-  //         fontSize="36"
-  //         fontWeight="700"
-  //       >
-  //         {circleCenterSrutiText}
-  //       </text>
-
-  //       <text
-  //         x={circleCenter}
-  //         y={circleCenter + 24}
-  //         textAnchor="middle"
-  //         fill="rgba(255,255,255,0.88)"
-  //         fontSize="15"
-  //       >
-  //         {circleStatusText}
-  //       </text>
-
-  //       <circle
-  //         cx={circleCenter}
-  //         cy={circleCenter}
-  //         r={circleRadius + 34}
-  //         fill="none"
-  //         stroke="transparent"
-  //         strokeWidth={28}
-  //         pointerEvents="stroke"
-  //         onClick={handleSrutiRingPointer}
-  //       />
-  //     </svg>
-  //   </div>
-  // );
 
 const octaveCircleSvg = (
   <div className="circle-container">
@@ -3266,7 +3129,7 @@ const octaveCircleSvg = (
           </div>
         )}
 
-        {octaveLegendText && (
+        {(octaveLegendText || swaraLegendText) && (
           <text
             x={24}
             y={circleSize - 34}
@@ -3275,7 +3138,9 @@ const octaveCircleSvg = (
             style={{ fontSize: 16, fontWeight: 400 }}
           >
             <tspan x={24} dy="0">
-              Symbols + and - indicate {octaveLegendText}
+              {mode === "swara"
+                ? swaraLegendText
+                : `Symbols + and - indicate ${octaveLegendText}`}
             </tspan>
           </text>
         )}
