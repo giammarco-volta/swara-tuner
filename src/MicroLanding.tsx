@@ -25,6 +25,10 @@ export default function MicroLanding() {
             <li>in <strong>19-TET</strong>, there are 19 equal third-tones</li>
             <li>in <strong>24-TET</strong>, there are 24 equal <em>quarter tones</em></li>
             <li>in <strong>31-TET</strong>, there are 31 equal fifth-tones</li>
+            <li>in <strong>43-TET</strong>, there are 43 equal seventh-tones</li>
+            <li>in <strong>45-TET</strong>, there are 45 equal seventh-tones</li>
+            <li>in <strong>53-TET</strong>, there are 53 equal ninth-tones</li>
+            <li>in <strong>55-TET</strong>, there are 55 equal ninth-tones</li>
           </ul>
 
           <p>

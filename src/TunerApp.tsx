@@ -396,7 +396,7 @@ const ALL_RAGAS: RagaPreset[] = [
 ];
 
 type PitchDetectorMode = "autocorrelation" | "mpm";
-type TunerViewMode = "meter" | "swara" | "sruti" | "octave";
+type TunerViewMode = "meter" | "swara" | "sruti" | "octave" | "spiral";
 
 export default function TunerApp() {
   const DRONE_REFERENCE_MIN_HZ = 110; // A2
@@ -556,6 +556,11 @@ export default function TunerApp() {
   }
 
   const currentRagaName = selectedRaga?.iastName ?? selectedRaga?.name ?? "";
+
+  const effectiveTunerViewMode =
+  mode === "micro" && tunerViewMode === "octave"
+    ? "spiral"
+    : tunerViewMode;
 
   useEffect(() => {
     if (!selectedRagaId) return;
@@ -1861,6 +1866,97 @@ function getCircleStatusText(): string {
     return TEMPERAMENT_NOTE_MAP[selectedTemperament] ?? [];
   }, [selectedTemperament]);
 
+  const octaveSpiralNotes = useMemo(() => {
+    if (octaveNotes.length === 0) return [];
+
+    return [
+      ...octaveNotes.map((note) => ({
+        ...note,
+        spiralCents: note.cents,  // posizione grafica
+        playCents: note.cents,    // altezza dentro l'ottava
+        playOctaveShift: -1,      // ottava bassa
+      })),
+      {
+        ...octaveNotes[0],
+        key: `${octaveNotes[0].key}-upper-octave`,
+        label: octaveNotes[0].label,
+        alias: octaveNotes[0].alias,
+        cents: octaveNotes[0].cents,
+        spiralCents: 1200,        // fine spirale
+        playCents: octaveNotes[0].cents,
+        playOctaveShift: 0,       // ottava sopra rispetto al C iniziale
+      },
+    ];
+  }, [octaveNotes]);
+  
+  function centsToSpiralPoint(cents: number, lane: "main" | "alias" = "main") {
+    const turns = cents / 1200;
+
+    const angle = turns * Math.PI * 2 - Math.PI / 2;
+
+    const startRadius =
+      lane === "main"
+        ? circleRadius + 24
+        : circleRadius + 36;
+
+    const endRadius =
+      lane === "main"
+        ? circleRadius + 48
+        : circleRadius + 60;
+
+    const radius =
+      startRadius + (endRadius - startRadius) * turns;
+
+    return polarToCartesian(
+      circleCenter,
+      circleCenter,
+      radius,
+      angle
+    );
+  }
+
+  const octaveSpiralLabels = useMemo(() => {
+    return octaveSpiralNotes.map((note) => {
+      const pos = centsToSpiralPoint(note.spiralCents);
+
+      return {
+        key: `octave-spiral-label-${note.key}`,
+        noteKey: note.key.endsWith("-upper-octave")
+          ? octaveNotes[0].key
+          : note.key,
+        label: note.label,
+        cents: note.cents,
+        spiralCents: note.spiralCents,
+        playCents: note.playCents,
+        playOctaveShift: note.playOctaveShift,
+        x: pos.x,
+        y: pos.y,
+      };
+    });
+  }, [octaveSpiralNotes, octaveNotes, circleCenter, circleRadius]);
+
+  const octaveSpiralAliasLabels = useMemo(() => {
+    return octaveSpiralNotes
+      .filter((note) => !!note.alias)
+      .map((note) => {
+        const pos = centsToSpiralPoint(note.spiralCents, "alias");
+
+        return {
+          key: `octave-spiral-alias-${note.key}`,
+          noteKey: note.key.endsWith("-upper-octave")
+            ? octaveNotes[0].key
+            : note.key,
+          alias: note.alias!,
+          cents: note.cents,
+          spiralCents: note.spiralCents,
+          playCents: note.playCents,
+          playOctaveShift: note.playOctaveShift,
+          x: pos.x,
+          y: pos.y,
+        };
+      });
+  }, [octaveSpiralNotes, octaveNotes, circleCenter, circleRadius]);
+
   const octaveViewTicks = useMemo(() => {
     return octaveNotes.map((note) => {
       const angle = centsToCircleAngle(note.cents);
@@ -2013,6 +2109,7 @@ function getCircleStatusText(): string {
 
       return {
         key: `octave-label-${note.key}`,
+        noteKey: note.key,
         label: note.label,
         cents: note.cents,
         x: pos.x,
@@ -2036,6 +2133,7 @@ function getCircleStatusText(): string {
 
         return {
           key: `octave-alias-${note.key}`,
+          noteKey: note.key,
           alias: note.alias!,
           cents: note.cents,
           x: pos.x,
@@ -2052,114 +2150,151 @@ function getCircleStatusText(): string {
     strokeWidth?: number;
   };
 
+  type FifthEndpointMarker = {
+    key: string;
+    x: number;
+    y: number;
+    stroke: string;
+  };
+
   const octaveFifthConnections = useMemo<FifthConnection[]>(() => {
     if (mode !== "micro") return [];
 
-    if (selectedTemperament === "12tet") {
-      return Array.from({ length: 12 }, (_, x) => ({
-        key: `fifth-12-${x}`,
-        fromIndex: x,
-        toIndex: (x + 7) % 12,
-        stroke: "rgba(210,170,175,0.42)",
-      }));
-    }
+    const MIN_FIFTH_CENTS = 694.5;
+    const MAX_FIFTH_CENTS = 702.5;
 
-    if (selectedTemperament === "19tet") {
-      return Array.from({ length: 19 }, (_, x) => ({
-        key: `fifth-19-${x}`,
-        fromIndex: x,
-        toIndex: (x + 11) % 19,
-        stroke: "rgba(210,170,175,0.42)",
-      }));
-    }
-
-    const AS_INDEX = 15;
-    const GB_INDEX = 8;
-
-    if (selectedTemperament === "pythagorean") {
-      return Array.from({ length: 17 }, (_, x) => ({
-        key: `fifth-17-${x}`,
-        fromIndex: x,
-        toIndex: (x + 10) % 17,
-        stroke: "rgba(210,170,175,0.42)",
-      })).filter(edge => !(edge.fromIndex === AS_INDEX && edge.toIndex === GB_INDEX));
-    }
-
-    const F2_INDEX = 10;
-    const FS1_INDEX = 11;
-    const FS2_INDEX = 12;
-    const DB1_INDEX = 1;
-    const DB2_INDEX = 2;
-    const D1_INDEX = 3;
-
-    const excludedEdges = [
-      [F2_INDEX, DB1_INDEX],   // F' -> D♭
-      [FS1_INDEX, DB2_INDEX],  // F♯ -> D♭'
-      [FS2_INDEX, D1_INDEX],   // F♯' -> D
+    const chainColors = [
+      "rgba(210,170,175,0.42)",
+      "rgba(120,200,255,0.45)",
+      "rgba(235,210,90,0.50)",
+      "rgba(180,220,150,0.45)",
     ];
 
-    if (selectedTemperament === "indian") {
-      return Array.from({ length: 22 }, (_, x) => ({
-        key: `fifth-22-${x}`,
-        fromIndex: x,
-        toIndex: (x + 13) % 22,
-        stroke: "rgba(210,170,175,0.42)",
-      })).filter(edge =>
-        !excludedEdges.some(
-          ([from, to]) => edge.fromIndex === from && edge.toIndex === to
-        )
-      );
-    }
+    const rawEdges = octaveNotes.flatMap((from, fromIndex) =>
+      octaveNotes
+        .map((to, toIndex) => {
+          if (fromIndex === toIndex) return null;
 
-    if (selectedTemperament === "31tet") {
-      return Array.from({ length: 31 }, (_, x) => ({
-        key: `fifth-31-${x}`,
-        fromIndex: x,
-        toIndex: (x + 18) % 31,
-        stroke: "rgba(210,170,175,0.42)",
-      }));
-    }
+          const interval = (to.cents - from.cents + 1200) % 1200;
 
-    if (selectedTemperament === "quarter") {
-      return [
-        ...Array.from({ length: 12 }, (_, k) => {
-          const x = k * 2;
+          if (
+            interval < MIN_FIFTH_CENTS ||
+            interval > MAX_FIFTH_CENTS
+          ) {
+            return null;
+          }
+
           return {
-            key: `fifth-24-even-${x}`,
-            fromIndex: x,
-            toIndex: (x + 14) % 24,
-            stroke: "rgba(210,170,175,0.42)",
+            fromIndex,
+            toIndex,
           };
-        }),
-        ...Array.from({ length: 12 }, (_, k) => {
-          const x = k * 2 + 1;
-          return {
-            key: `fifth-24-odd-${x}`,
-            fromIndex: x,
-            toIndex: (x + 14) % 24,
-            stroke: "rgba(235,210,90,0.42)",
-          };
-        }),
-      ];
+        })
+        .filter((edge): edge is { fromIndex: number; toIndex: number } => edge !== null)
+    );
+
+    const adjacency = Array.from(
+      { length: octaveNotes.length },
+      () => [] as number[]
+    );
+
+    rawEdges.forEach(({ fromIndex, toIndex }) => {
+      adjacency[fromIndex].push(toIndex);
+      adjacency[toIndex].push(fromIndex);
+    });
+
+    const componentByIndex = new Array<number>(octaveNotes.length).fill(-1);
+    let component = 0;
+
+    for (let i = 0; i < octaveNotes.length; i++) {
+      if (componentByIndex[i] !== -1) continue;
+
+      const stack = [i];
+      componentByIndex[i] = component;
+
+      while (stack.length > 0) {
+        const current = stack.pop()!;
+
+        adjacency[current].forEach((next) => {
+          if (componentByIndex[next] === -1) {
+            componentByIndex[next] = component;
+            stack.push(next);
+          }
+        });
+      }
+
+      component++;
     }
 
-    if (selectedTemperament === "meantone") {
-      return Array.from({ length: 19 }, (_, x) => {
-        const to = (x + 11) % 19;
+    return rawEdges.map(({ fromIndex, toIndex }) => {
+      const chain = componentByIndex[fromIndex];
+
+      return {
+        key: `fifth-${selectedTemperament}-${octaveNotes[fromIndex].key}-${octaveNotes[toIndex].key}`,
+        fromIndex,
+        toIndex,
+        stroke: chainColors[chain % chainColors.length],
+      };
+    });
+  }, [mode, selectedTemperament, octaveNotes]);
+
+  const fifthEndpointIndices = useMemo(() => {
+    const degree = new Array(octaveNotes.length).fill(0);
+
+    octaveFifthConnections.forEach(({ fromIndex, toIndex }) => {
+      degree[fromIndex]++;
+      degree[toIndex]++;
+    });
+
+    return new Set(
+      degree
+        .map((value, index) => ({ value, index }))
+        .filter(({ value }) => value === 1)
+        .map(({ index }) => index)
+    );
+  }, [octaveFifthConnections, octaveNotes.length]);
+
+  const fifthEndpointMarkers = useMemo<FifthEndpointMarker[]>(() => {
+    const markerRadius = circleRadius - 12;
+
+    // Mappa: nodo -> colore (prendiamo il colore della prima connessione)
+    const colorByIndex = new Map<number, string>();
+
+    octaveFifthConnections.forEach(({ fromIndex, toIndex, stroke }) => {
+      if (!colorByIndex.has(fromIndex)) {
+        colorByIndex.set(fromIndex, stroke);
+      }
+      if (!colorByIndex.has(toIndex)) {
+        colorByIndex.set(toIndex, stroke);
+      }
+    });
+
+    return octaveNotes
+      .map((note, index) => {
+        if (!fifthEndpointIndices.has(index)) return null;
+
+        const angle = centsToCircleAngle(note.cents);
+        const pos = polarToCartesian(
+          circleCenter,
+          circleCenter,
+          markerRadius,
+          angle
+        );
 
         return {
-          key: `fifth-meantone-${x}`,
-          fromIndex: x,
-          toIndex: to,
-          stroke: "rgba(210,170,175,0.42)",
+          key: `fifth-endpoint-${note.key}`,
+          x: pos.x,
+          y: pos.y,
+          stroke: colorByIndex.get(index) ?? "rgba(255,230,150,0.95)",
         };
-      }).filter(edge =>
-        !(edge.fromIndex === 18 && edge.toIndex === 10)
-      );
-    }
-
-    return [];
-  }, [mode, selectedTemperament]);
+      })
+      .filter((m): m is FifthEndpointMarker => m !== null);
+  }, [
+    octaveNotes,
+    fifthEndpointIndices,
+    octaveFifthConnections,
+    circleCenter,
+    circleRadius,
+  ]);
 
   const octaveFifthLines = useMemo(() => {
     const innerConnectionRadius = circleRadius - 12;
@@ -2482,17 +2617,20 @@ function getCircleStatusText(): string {
       ? SWARASTHANA_EXTENDED_NAMES[tradition][selectedSwaraId] ?? ""
       : "";
 
-  const displayedOctaveLabel =
-    tunerViewMode === "octave" && selectedOctaveNote
-      ? selectedOctaveNote.alias
-        ? `${selectedOctaveNote.label} / ${selectedOctaveNote.alias}`
-        : selectedOctaveNote.label
-      : "";
+  const displayedOctaveInfo =
+    mode === "micro" && (effectiveTunerViewMode === "octave" || effectiveTunerViewMode === "spiral")
+      ? nearestOctaveNote ?? selectedOctaveNote
+      : null;
 
-  const displayedOctaveCents =
-    tunerViewMode === "octave" && selectedOctaveNote
-      ? selectedOctaveNote.cents
-      : null;      
+  const displayedOctaveLabel = displayedOctaveInfo
+    ? displayedOctaveInfo.alias
+      ? `${displayedOctaveInfo.label} / ${displayedOctaveInfo.alias}`
+      : displayedOctaveInfo.label
+    : "";
+
+  const displayedOctaveCents = displayedOctaveInfo
+    ? displayedOctaveInfo.cents
+    : null;
 
   const displayedSrutiNumber = useMemo(() => {
     if (!displayedSrutiMarker) return null;
@@ -2605,41 +2743,6 @@ function getCircleStatusText(): string {
     if (d > Math.PI) d = Math.PI * 2 - d;
     return d;
   }
-
-  // function handleSrutiRingPointer(
-  //   event: React.MouseEvent<SVGCircleElement, MouseEvent>
-  // ) {
-  //   const svg = event.currentTarget.ownerSVGElement;
-  //   if (!svg) return;
-
-  //   const rect = svg.getBoundingClientRect();
-
-  //   const scaleX = circleSize / rect.width;
-  //   const scaleY = circleSize / rect.height;
-
-  //   const x = (event.clientX - rect.left) * scaleX;
-  //   const y = (event.clientY - rect.top) * scaleY;
-
-  //   const dx = x - circleCenter;
-  //   const dy = y - circleCenter;
-  //   const angle = Math.atan2(dy, dx);
-
-  //   let best = srutiViewLabels[0];
-  //   let bestDist = Number.POSITIVE_INFINITY;
-
-  //   for (const label of srutiViewLabels) {
-  //     const labelAngle = centsToCircleAngle(label.cents);
-  //     const dist = angleDistance(angle, labelAngle);
-
-  //     if (dist < bestDist) {
-  //       bestDist = dist;
-  //       best = label;
-  //     }
-  //   }
-
-  //   setSelectedSrutiKey(best.key.replace("sruti-label-", ""));
-  //   void playSrutiPreview(best.cents);
-  // }
 
   const swaraCircleSvg = (
     <div className="circle-container">
@@ -2811,14 +2914,14 @@ function getCircleStatusText(): string {
     </div>
   );
 
-const octaveCircleSvg = (
-  <div className="circle-container">
-    <svg
-      viewBox={`0 0 ${circleSize} ${circleSize}`}
-      role="img"
-      aria-label="Octave circle"
-      className="circle-svg"
-    >
+  const octaveCircleSvg = (
+    <div className="circle-container">
+      <svg
+        viewBox={`0 0 ${circleSize} ${circleSize}`}
+        role="img"
+        aria-label="Octave circle"
+        className="circle-svg"
+      >
       <circle
         cx={circleCenter}
         cy={circleCenter}
@@ -2860,130 +2963,164 @@ const octaveCircleSvg = (
           />
         ))}
 
-      {octaveViewTicks.map((tick) => (
-        <line
-          key={tick.key}
-          x1={tick.x1}
-          y1={tick.y1}
-          x2={tick.x2}
-          y2={tick.y2}
-          stroke="#000"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-        />
-      ))}
+        {mode === "micro" &&
+          fifthEndpointMarkers.map((marker) => (
+            <circle
+              key={marker.key}
+              cx={marker.x}
+              cy={marker.y}
+              r={2}
+              fill="none"
+              stroke={marker.stroke}
+              strokeWidth={1.8}
+            />
+          ))}
 
-      {circleNeedleEnd && (
-        <>
+        {octaveViewTicks.map((tick) => (
           <line
-            x1={circleCenter}
-            y1={circleCenter}
-            x2={circleNeedleEnd.x}
-            y2={circleNeedleEnd.y}
-            stroke="white"
-            strokeWidth={3}
+            key={tick.key}
+            x1={tick.x1}
+            y1={tick.y1}
+            x2={tick.x2}
+            y2={tick.y2}
+            stroke="#000"
+            strokeWidth={1.5}
             strokeLinecap="round"
           />
-          <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
-        </>
-      )}
+        ))}
 
-      {octaveViewLabels.map((label) => (
-        <g
-          key={label.key}
-          onClick={() => {
-            const matchedNote = octaveNotes.find((n) => n.cents === label.cents);
-            if (!matchedNote) return;
-            setSelectedOctaveNoteKey(matchedNote.key);
-            void playSrutiPreview(label.cents, -1);
-          }}
-          style={{ cursor: "pointer" }}
-        >
-          <circle
-            cx={label.x}
-            cy={label.y}
-            r={16}
-            fill="transparent"
-          />
-          <text
-            x={label.x}
-            y={label.y}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fill="#4A7FD1"
-            fontSize={12}
-            fontWeight={400}
-          >
-            {label.label}
-          </text>
-        </g>
-      ))}
+        {circleNeedleEnd && (
+          <>
+            <line
+              x1={circleCenter}
+              y1={circleCenter}
+              x2={circleNeedleEnd.x}
+              y2={circleNeedleEnd.y}
+              stroke="white"
+              strokeWidth={3}
+              strokeLinecap="round"
+            />
+            <circle cx={circleCenter} cy={circleCenter} r={6} fill="white" />
+          </>
+        )}
 
-      {octaveViewAliasLabels.map((label) => (
-          <g
-            key={label.key}
-            onClick={() => {
-              const matchedNote = octaveNotes.find((n) => n.cents === label.cents);
-              if (!matchedNote) return;
-              setSelectedOctaveNoteKey(matchedNote.key);
-              void playSrutiPreview(label.cents, -1);
-            }}
-            style={{ cursor: "pointer" }}
-          >
+        {(effectiveTunerViewMode === "spiral"
+          ? octaveSpiralLabels
+          : octaveViewLabels.map((label) => ({
+              ...label,
+              spiralCents: normalizeCentsToOctave(label.cents),
+              playCents: normalizeCentsToOctave(label.cents),
+              playOctaveShift: -1,
+            }))
+        ).map((label) => (
+          <g key={label.key}>
             <circle
               cx={label.x}
               cy={label.y}
-              r={14}
+              r={8}
               fill="transparent"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setSelectedOctaveNoteKey(label.noteKey);
+
+                if (effectiveTunerViewMode === "spiral") {
+                  void playSrutiPreview(label.playCents, label.playOctaveShift);
+                } else {
+                  void playSrutiPreview(normalizeCentsToOctave(label.cents), -1);
+                }
+              }}
             />
             <text
               x={label.x}
               y={label.y}
+              pointerEvents="none"
               textAnchor="middle"
               dominantBaseline="middle"
               fill="#4A7FD1"
               fontSize={12}
               fontWeight={400}
             >
-              {label.alias}
+            {label.label}
             </text>
           </g>
         ))}
 
-        <text
-          x={circleCenter}
-          y={circleCenter - 8}
-          textAnchor="middle"
-          fill={circleSwaraColor}
-          fontSize="36"
-          fontWeight="700"
-        >
-          {circleCenterOctaveText}
-        </text>
+        {(effectiveTunerViewMode === "spiral"
+            ? octaveSpiralAliasLabels
+            : octaveViewAliasLabels.map((label) => ({
+                ...label,
+                spiralCents: normalizeCentsToOctave(label.cents),
+                playCents: normalizeCentsToOctave(label.cents),
+                playOctaveShift: -1,
+              }))
+          ).map((label) => (
+          <g key={label.key}>
+            <circle
+              cx={label.x}
+              cy={label.y}
+              r={8}
+              fill="transparent"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setSelectedOctaveNoteKey(label.noteKey);
 
-        <text
-          x={circleCenter}
-          y={circleCenter + 24}
-          textAnchor="middle"
-          fill="rgba(255,255,255,0.88)"
-          fontSize="15"
-        >
-          {circleStatusText}
-        </text>
+                if (effectiveTunerViewMode === "spiral") {
+                  void playSrutiPreview(label.playCents, label.playOctaveShift);
+                } else {
+                  void playSrutiPreview(normalizeCentsToOctave(label.cents), -1);
+                }
+              }}              
+            />
+            <text
+                x={label.x}
+                y={label.y}
+                pointerEvents="none"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="#4A7FD1"
+                fontSize={12}
+                fontWeight={400}
+              >
+                {label.alias}
+              </text>
+            </g>
+          ))}
 
-        <circle
-          cx={circleCenter}
-          cy={circleCenter}
-          r={circleRadius + 58}
-          fill="none"
-          stroke="transparent"
-          strokeWidth={34}
-          pointerEvents="stroke"
-          onClick={handleOctaveRingPointer}
-        />
-      </svg>
-    </div>
-  );
+          <text
+            x={circleCenter}
+            y={circleCenter - 8}
+            textAnchor="middle"
+            fill={circleSwaraColor}
+            fontSize="36"
+            fontWeight="700"
+          >
+            {circleCenterOctaveText}
+          </text>
+
+          <text
+            x={circleCenter}
+            y={circleCenter + 24}
+            textAnchor="middle"
+            fill="rgba(255,255,255,0.88)"
+            fontSize="15"
+          >
+            {circleStatusText}
+          </text>
+          {effectiveTunerViewMode !== "spiral" && (
+            <circle
+              cx={circleCenter}
+              cy={circleCenter}
+              r={circleRadius + 58}
+              fill="none"
+              stroke="transparent"
+              strokeWidth={34}
+              pointerEvents="stroke"
+              onClick={handleOctaveRingPointer}
+            />
+          )}
+        </svg>
+      </div>
+    );
 
   return (
     <main id="tuner" className="app">
@@ -3013,7 +3150,7 @@ const octaveCircleSvg = (
               <button
                 type="button"
                 onClick={() => setTunerViewMode("meter")}
-                className={tunerViewMode === "meter" ? "active" : ""}
+                className={effectiveTunerViewMode === "meter" ? "active" : ""}
               >
                 Meter view
               </button>
@@ -3021,7 +3158,7 @@ const octaveCircleSvg = (
               <button
                 type="button"
                 onClick={() => setTunerViewMode("octave")}
-                className={tunerViewMode === "octave" ? "active" : ""}
+                className={effectiveTunerViewMode === "octave" ? "active" : ""}
               >
                 {mode === "swara" ? "Sthāyi view" : "Octave view"}
               </button>
@@ -3046,7 +3183,7 @@ const octaveCircleSvg = (
           )}
         </div>
 
-        {tunerViewMode === "meter" ? (
+        {effectiveTunerViewMode === "meter" ? (
           <>
 
             <div className={`current-swara ${swaraColorClass}`}>
@@ -3114,7 +3251,7 @@ const octaveCircleSvg = (
           octaveCircleSvg
         )}
 
-        {tunerViewMode === "octave" && (
+        {effectiveTunerViewMode === "octave" && (
           <div
             className="hint"
             style={{
@@ -3129,21 +3266,22 @@ const octaveCircleSvg = (
           </div>
         )}
 
-        {(octaveLegendText || swaraLegendText) && (
-          <text
-            x={24}
-            y={circleSize - 34}
-            textAnchor="start"
-            fill="rgba(255,255,255,0.75)"
-            style={{ fontSize: 16, fontWeight: 400 }}
-          >
-            <tspan x={24} dy="0">
-              {mode === "swara"
-                ? swaraLegendText
-                : `Symbols + and - indicate ${octaveLegendText}`}
-            </tspan>
-          </text>
-        )}
+      {(octaveLegendText || swaraLegendText) && (
+        <div
+          style={{
+            marginTop: effectiveTunerViewMode === "spiral" ? "24px" : "8px",
+            paddingLeft: "24px",
+            color: "rgba(255,255,255,0.75)",
+            fontSize: 16,
+            fontWeight: 400,
+            textAlign: "center",
+          }}
+        >
+          {mode === "swara"
+            ? swaraLegendText
+            : `Symbols + and - indicate ${octaveLegendText}`}
+        </div>
+      )}
 
        <div
           style={{
@@ -3154,64 +3292,65 @@ const octaveCircleSvg = (
             gap: "16px",
           }}
         >
-          {modeUi.showDroneControls && (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-              <button
-                type="button"
-                className="panel-link"
-                onClick={openDroneSettings}
-                style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
-              >
-                Drone settings
-              </button>
+        {modeUi.showDroneControls && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+            <button
+              type="button"
+              className="panel-link"
+              onClick={openDroneSettings}
+              style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
+            >
+              Drone settings
+            </button>
 
-              <button
-                onClick={() => setDroneEnabled(prev => !prev)}
-                style={{
-                  fontSize: "1.2rem",
-                  padding: "6px 10px",
-                  borderRadius: "6px",
-                  background: droneEnabled ? "#444" : "#222",
-                  color: "white",
-                  border: "1px solid #666"
-                }}
-              >
-                {droneEnabled ? "Drone ⏹" : "Drone ▶"}
-              </button>
+            <button
+              onClick={() => setDroneEnabled(prev => !prev)}
+              style={{
+                fontSize: "1.2rem",
+                padding: "6px 10px",
+                borderRadius: "6px",
+                background: droneEnabled ? "#444" : "#222",
+                color: "white",
+                border: "1px solid #666"
+              }}
+            >
+              {droneEnabled ? "Drone ⏹" : "Drone ▶"}
+            </button>
+          </div>
+        )}
+
+        <div
+          style={{
+            textAlign: "right",
+            minHeight: "2.6em",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            color: "rgba(255,255,255,0.88)",
+            fontSize: "0.95rem",
+          }}
+        >
+          
+        {effectiveTunerViewMode === "sruti" && displayedSrutiLabel && (
+          <>
+            <div style={{ fontWeight: 600 }}>
+              {displayedSrutiLabel}
             </div>
-          )}
-
-          <div
-            style={{
-              textAlign: "right",
-              minHeight: "2.6em",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              color: "rgba(255,255,255,0.88)",
-              fontSize: "0.95rem",
-            }}
-          >
-          {tunerViewMode === "sruti" && displayedSrutiLabel && (
-            <>
-              <div style={{ fontWeight: 600 }}>
-                {displayedSrutiLabel}
+            {displayedSrutiNumber !== null && (
+              <div style={{ fontSize: "0.8rem", color: "#aaa" }}>
+                Sruti {displayedSrutiNumber}
               </div>
-              {displayedSrutiNumber !== null && (
-                <div style={{ fontSize: "0.8rem", color: "#aaa" }}>
-                  Sruti {displayedSrutiNumber}
-                </div>
-              )}
-            </>
-          )}
+            )}
+          </>
+        )}
 
-          {tunerViewMode === "swara" && displayedSwaraLabel && (
+          {effectiveTunerViewMode === "swara" && displayedSwaraLabel && (
             <div style={{ fontWeight: 600 }}>
               {displayedSwaraLabel}
             </div>
           )}
 
-          {tunerViewMode === "octave" && displayedOctaveLabel && (
+          {(effectiveTunerViewMode === "octave" || effectiveTunerViewMode === "spiral") && displayedOctaveLabel && (
             <>
               <div style={{ fontWeight: 600 }}>
                 {displayedOctaveLabel}
