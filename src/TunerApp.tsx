@@ -3251,7 +3251,7 @@ function getCircleStatusText(): string {
           octaveCircleSvg
         )}
 
-        {effectiveTunerViewMode === "octave" && (
+        {(effectiveTunerViewMode === "octave" || effectiveTunerViewMode === "spiral") && (
           <div
             className="hint"
             style={{
