@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1090" height="190" viewBox="-20 20 1090 190"
+     role="img" aria-labelledby="title desc">
+  <title id="title">NaadaLab wordmark</title>
+  <desc id="desc">Lowercase NaadaLab wordmark in brand gold.</desc>
+
+  <g fill="none"
+     stroke="#ffad24"
+     stroke-width="30"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+    <path d="M 0 190 L 0 135 A 55 55 0 0 1 110 135 L 110 190"/>
+    <path transform="translate(150 0)"
+          d="M 110 190 L 110 135 A 55 55 0 1 0 55 190 L 72 190"/>
+    <path transform="translate(300 0)"
+          d="M 110 190 L 110 135 A 55 55 0 1 0 55 190 L 72 190"/>
+    <path transform="translate(450 0)"
+          d="M 110 40 L 110 135 A 55 55 0 1 1 55 80 L 72 80"/>
+    <path transform="translate(600 0)"
+          d="M 110 190 L 110 135 A 55 55 0 1 0 55 190 L 72 190"/>
+    <path transform="translate(750 0)" d="M 0 40 L 0 190"/>
+    <path transform="translate(790 0)"
+          d="M 110 190 L 110 135 A 55 55 0 1 0 55 190 L 72 190"/>
+    <path transform="translate(940 0)"
+          d="M 0 40 L 0 135 A 55 55 0 1 0 55 80 L 38 80"/>
+  </g>
+</svg>

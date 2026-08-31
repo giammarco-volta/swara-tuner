@@ -434,6 +434,9 @@ export default function TunerApp() {
   const [droneBpm, setDroneBpm] = useState(60);
 
   const [selectedTemperament, setSelectedTemperament] = useState<TemperamentId>("31tet");
+  const selectedTemperamentLabel =
+    TEMPERAMENT_OPTIONS.find((option) => option.id === selectedTemperament)?.label ??
+    selectedTemperament;
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -3124,10 +3127,27 @@ function getCircleStatusText(): string {
 
   return (
     <main id="tuner" className="app">
+      <a
+        href="https://naadalab.com/"
+        aria-label="NaadaLab homepage"
+        style={{
+          display: "block",
+          width: "clamp(220px, 32vw, 360px)",
+          maxWidth: "80%",
+          margin: "0 auto 1rem",
+        }}
+      >
+        <img
+          src="/naadalab-hero.svg"
+          alt="NaadaLab"
+          style={{ display: "block", width: "100%", height: "auto" }}
+        />
+      </a>
+
       <h2>{modeUi.appTitle}</h2>
 
       <section className="panel tuner-panel">
-        <div className="tuner-toolbar">
+        <div className="tuner-toolbar" style={{ position: "relative" }}>
           <div className="mic-toolbar-group">
             <button
               type="button"
@@ -3146,23 +3166,42 @@ function getCircleStatusText(): string {
               Mic settings
             </a>
           </div>
-            <div className="view-toggle">
-              <button
-                type="button"
-                onClick={() => setTunerViewMode("meter")}
-                className={effectiveTunerViewMode === "meter" ? "active" : ""}
-              >
-                Meter view
-              </button>
 
-              <button
-                type="button"
-                onClick={() => setTunerViewMode("octave")}
-                className={effectiveTunerViewMode === "octave" ? "active" : ""}
-              >
-                {mode === "swara" ? "Sthāyi view" : "Octave view"}
-              </button>
-            </div>
+          {modeUi.showTemperamentSelector && (
+            <span
+              aria-live="polite"
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+                color: "rgba(255,255,255,0.88)",
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {selectedTemperamentLabel}
+            </span>
+          )}
+
+          <div className="view-toggle">
+            <button
+              type="button"
+              onClick={() => setTunerViewMode("meter")}
+              className={effectiveTunerViewMode === "meter" ? "active" : ""}
+            >
+              Meter view
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTunerViewMode("octave")}
+              className={effectiveTunerViewMode === "octave" ? "active" : ""}
+            >
+              {mode === "swara" ? "Sthāyi view" : "Octave view"}
+            </button>
+          </div>
 
           {modeUi.showRagaRef && (
             <div className="raga-toolbar">

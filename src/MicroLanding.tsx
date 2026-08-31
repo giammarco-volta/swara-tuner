@@ -103,7 +103,7 @@ export default function MicroLanding() {
 
             <p>
               All examples are performed using a digital <em>arciorgano</em> developed by <strong>NaadaLab</strong>, 
-              inspired by historical instruments such as the archicembalo.
+              inspired by historical instruments such as the archicembalo or the arciorgano.
             </p>
 
             <ul>
